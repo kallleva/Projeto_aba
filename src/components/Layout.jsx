@@ -27,6 +27,9 @@ const navigation = [
   { name: 'Metas Terapêuticas', href: '/metas-terapeuticas', icon: Target, allowedFor: ['Profissional'] },
   { name: 'Registro Diário', href: '/registro-diario', icon: Calendar, allowedFor: ['Profissional'] },
   { name: 'Relatórios', href: '/relatorios', icon: BarChart3, allowedFor: ['Profissional', 'Responsavel'] },
+  { name: 'Formulário', href: '/formulario', icon: FileText, allowedFor: ['Profissional'] }, // novo
+  { name: 'Pergunta', href: '/pergunta', icon: Target, allowedFor: ['Profissional'] },      // novo
+  { name: 'Resposta', href: '/resposta', icon: Calendar, allowedFor: ['Profissional'] },    // novo
 ]
 
 export default function Layout({ children }) {
@@ -58,7 +61,7 @@ export default function Layout({ children }) {
         <div className="flex flex-col flex-grow pt-5 bg-white overflow-y-auto border-r">
           <div className="flex items-center flex-shrink-0 px-4">
             <Heart className="h-8 w-8 text-primary" />
-            <span className="ml-2 text-xl font-semibold text-gray-900">Projeto Farol</span>
+            <span className="ml-2 text-xl font-semibold text-gray-900">Projeto Aurora</span>
           </div>
           <div className="mt-8 flex-grow flex flex-col">
             <nav className="flex-1 px-2 space-y-1">
@@ -105,7 +108,7 @@ export default function Layout({ children }) {
                   <div className="flex flex-col h-full">
                     <div className="flex items-center h-16 px-4 border-b">
                       <Heart className="h-6 w-6 text-primary" />
-                      <span className="ml-2 text-lg font-semibold">Projeto Farol</span>
+                      <span className="ml-2 text-lg font-semibold">Projeto Aurora</span>
                     </div>
                     <nav className="flex-1 px-2 py-4 space-y-1">
                       {filteredNavigation.map((item) => {
@@ -134,7 +137,7 @@ export default function Layout({ children }) {
               {/* Logo mobile */}
               <div className="flex items-center md:hidden ml-2">
                 <Heart className="h-6 w-6 text-primary" />
-                <span className="ml-2 text-lg font-semibold">Projeto Farol</span>
+                <span className="ml-2 text-lg font-semibold">Projeto Aurora</span>
               </div>
             </div>
 

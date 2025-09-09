@@ -1,4 +1,4 @@
-const API_BASE_URL = 'https://zmhqivcg0d3q.manus.space/api'
+const API_BASE_URL = 'http://127.0.0.1:5000/api'
 
 class ApiService {
   async request(endpoint, options = {}) {
@@ -21,7 +21,36 @@ class ApiService {
     return response.json()
   }
 
-  // Métodos para Pacientes
+  // ========================
+  // Usuários
+  // ========================
+  async getUsers() {
+    return this.request('/users')
+  }
+
+  async createUser(data) {
+    return this.request('/users', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    })
+  }
+
+  async updateUser(id, data) {
+    return this.request(`/users/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(data),
+    })
+  }
+
+  async deleteUser(id) {
+    return this.request(`/users/${id}`, {
+      method: 'DELETE',
+    })
+  }
+
+  // ========================
+  // Pacientes
+  // ========================
   async getPacientes() {
     return this.request('/pacientes')
   }
@@ -46,7 +75,9 @@ class ApiService {
     })
   }
 
-  // Métodos para Profissionais
+  // ========================
+  // Profissionais
+  // ========================
   async getProfissionais() {
     return this.request('/profissionais')
   }
@@ -71,7 +102,9 @@ class ApiService {
     })
   }
 
-  // Métodos para Planos Terapêuticos
+  // ========================
+  // Planos Terapêuticos
+  // ========================
   async getPlanosTerapeuticos() {
     return this.request('/planos-terapeuticos')
   }
@@ -96,7 +129,9 @@ class ApiService {
     })
   }
 
-  // Métodos para Metas Terapêuticas
+  // ========================
+  // Metas Terapêuticas
+  // ========================
   async getMetasTerapeuticas() {
     return this.request('/metas-terapeuticas')
   }
@@ -132,7 +167,9 @@ class ApiService {
     })
   }
 
-  // Métodos para Checklist Diário
+  // ========================
+  // Checklist Diário
+  // ========================
   async getChecklistsDiarios() {
     return this.request('/checklists-diarios')
   }
@@ -157,7 +194,9 @@ class ApiService {
     })
   }
 
-  // Métodos para Relatórios
+  // ========================
+  // Relatórios
+  // ========================
   async getDadosDashboard() {
     return this.request('/relatorios/dashboard')
   }
@@ -191,7 +230,37 @@ class ApiService {
     })
     return this.request(`/relatorios/periodo?${params.toString()}`)
   }
+
+  // ========================
+  // Formulários
+  // ========================
+  async getFormularios() {
+    return this.request('/formularios')
+  }
+
+  async getFormulario(id) {
+    return this.request(`/formularios/${id}`)
+  }
+
+  async createFormulario(data) {
+    return this.request('/formularios', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    })
+  }
+
+  async updateFormulario(id, data) {
+    return this.request(`/formularios/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(data),
+    })
+  }
+
+  async deleteFormulario(id) {
+    return this.request(`/formularios/${id}`, {
+      method: 'DELETE',
+    })
+  }
 }
 
 export default new ApiService()
-

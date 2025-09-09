@@ -11,6 +11,9 @@ import PlanosTerapeuticos from '@/components/pages/PlanosTerapeuticos'
 import MetasTerapeuticas from '@/components/pages/MetasTerapeuticas'
 import RegistroDiario from '@/components/pages/RegistroDiario'
 import Relatorios from '@/components/pages/Relatorios'
+import Formulario from '@/components/pages/Formulario'
+import Pergunta from '@/components/pages/Pergunta'
+import Resposta from '@/components/pages/Resposta'
 import './App.css'
 
 function App() {
@@ -51,6 +54,21 @@ function App() {
                       </ProtectedRoute>
                     } />
                     <Route path="/relatorios" element={<Relatorios />} />
+                    <Route path="/formulario" element={
+                      <ProtectedRoute requireProfissional={true}>
+                        <Formulario />
+                      </ProtectedRoute>
+                    } />
+                    <Route path="/pergunta" element={
+                      <ProtectedRoute requireProfissional={true}>
+                        <Pergunta />
+                      </ProtectedRoute>
+                    } />
+                    <Route path="/resposta" element={
+                      <ProtectedRoute requireProfissional={true}>
+                        <Resposta />
+                      </ProtectedRoute>
+                    } />
                   </Routes>
                 </Layout>
               </ProtectedRoute>

@@ -52,7 +52,7 @@ export default function Login() {
             <Heart className="h-12 w-12 text-primary" />
           </div>
           <h2 className="mt-6 text-3xl font-extrabold text-gray-900">
-            Projeto Farol
+            Projeto Aurora
           </h2>
           <p className="mt-2 text-sm text-gray-600">
             Sistema de Acompanhamento Terapêutico
