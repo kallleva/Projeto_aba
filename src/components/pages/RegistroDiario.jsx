@@ -1,3 +1,4 @@
+// React + Tailwind ajustado para metas com formulários embutidos e edição completa
 import { useState, useEffect } from 'react'
 import {
   Card, CardContent, CardDescription, CardHeader, CardTitle
@@ -6,7 +7,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { useToast } from '@/hooks/use-toast'
 import { Plus, Edit, Trash2 } from 'lucide-react'
@@ -14,7 +15,6 @@ import ApiService from '@/lib/api'
 
 export default function RegistroDiario() {
   const [registros, setRegistros] = useState([])
-  const [formularios, setFormularios] = useState([])
   const [metas, setMetas] = useState([])
   const [loading, setLoading] = useState(true)
   const [dialogOpen, setDialogOpen] = useState(false)
@@ -37,13 +37,11 @@ export default function RegistroDiario() {
   const loadData = async () => {
     try {
       setLoading(true)
-      const [registrosData, formulariosData, metasData] = await Promise.all([
+      const [registrosData, metasData] = await Promise.all([
         ApiService.getChecklistsDiarios(),
-        ApiService.getFormularios(),
-        ApiService.getMetasTerapeuticas()
+        ApiService.getMetasTerapeuticas() // já retorna metas com formulários e perguntas
       ])
       setRegistros(registrosData)
-      setFormularios(formulariosData)
       setMetas(metasData)
     } catch (error) {
       toast({ title: 'Erro', description: 'Erro ao carregar dados: ' + error.message, variant: 'destructive' })
@@ -88,15 +86,26 @@ export default function RegistroDiario() {
   }
 
   const handleEdit = (registro) => {
+    if (!registro) return
+
+    const metaSelecionada = metas.find(m => m.id.toString() === registro.meta_id?.toString())
+    const formularioSelecionado = metaSelecionada?.formularios.find(f => f.id.toString() === registro.formulario_id?.toString())
+
+    const respostasInit = {}
+    formularioSelecionado?.perguntas.forEach(p => {
+      respostasInit[p.id] = registro.respostas?.[p.id] ?? (p.tipo === 'BOOLEANO' ? false : '')
+    })
+
     setEditingRegistro(registro)
     setFormData({
-      formulario_id: registro.formulario_id.toString(),
-      meta_id: registro.meta_id.toString(),
-      data: registro.data,
+      meta_id: registro.meta_id?.toString() || '',
+      formulario_id: registro.formulario_id?.toString() || '',
+      data: registro.data || new Date().toISOString().split('T')[0],
       nota: registro.nota || '',
       observacao: registro.observacao || '',
-      respostas: registro.respostas || {}
+      respostas: respostasInit
     })
+
     setDialogOpen(true)
   }
 
@@ -123,8 +132,12 @@ export default function RegistroDiario() {
     setEditingRegistro(null)
   }
 
+  const formulariosFiltrados = formData.meta_id
+    ? metas.find(m => m.id.toString() === formData.meta_id)?.formularios || []
+    : []
+
   const renderPerguntas = () => {
-    const formularioAtual = formularios.find(f => f.id.toString() === formData.formulario_id)?.perguntas || []
+    const formularioAtual = formulariosFiltrados.find(f => f.id.toString() === formData.formulario_id)?.perguntas || []
     return formularioAtual
       .sort((a, b) => a.ordem - b.ordem)
       .map((p) => (
@@ -195,104 +208,97 @@ export default function RegistroDiario() {
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <h2 className="text-3xl font-bold">Registro Diário</h2>
-        <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-          <DialogTrigger asChild>
-            <Button onClick={resetForm}>
-              <Plus className="mr-2 h-4 w-4" />
-              Novo Registro
-            </Button>
-          </DialogTrigger>
-          <DialogContent className="sm:max-w-[600px]">
-            <DialogHeader>
-              <DialogTitle>{editingRegistro ? 'Editar Registro' : 'Novo Registro'}</DialogTitle>
-              <DialogDescription>Preencha as respostas do formulário</DialogDescription>
-            </DialogHeader>
-            <form onSubmit={handleSubmit} className="grid gap-4 py-4">
-
-              {/* Formulário */}
-              <div className="grid gap-2">
-                <Label>Formulário</Label>
-                <Select
-                  value={formData.formulario_id}
-                  onValueChange={(v) => setFormData({ ...formData, formulario_id: v })}
-                  required
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Selecione o formulário" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {formularios.map(f => (
-                      <SelectItem key={f.id} value={f.id.toString()}>{f.titulo}</SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-
-              {/* Meta Terapêutica */}
-              <div className="grid gap-2">
-                <Label>Meta Terapêutica</Label>
-                <Select
-                  value={formData.meta_id}
-                  onValueChange={(v) => setFormData({ ...formData, meta_id: v })}
-                  required
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Selecione a meta" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {metas.map(m => (
-                      <SelectItem key={m.id} value={m.id.toString()}>{m.descricao}</SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-
-              {/* Data */}
-              <div className="grid gap-2">
-                <Label>Data</Label>
-                <Input
-                  type="date"
-                  value={formData.data}
-                  onChange={(e) => setFormData({ ...formData, data: e.target.value })}
-                  required
-                />
-              </div>
-
-              {/* Nota */}
-              <div className="grid gap-2">
-                <Label>Nota (1 a 5)</Label>
-                <Input
-                  type="number"
-                  min="1"
-                  max="5"
-                  value={formData.nota || ""}
-                  onChange={(e) => setFormData({ ...formData, nota: e.target.value })}
-                />
-              </div>
-
-              {/* Observação */}
-              <div className="grid gap-2">
-                <Label>Observação</Label>
-                <Input
-                  type="text"
-                  value={formData.observacao || ""}
-                  onChange={(e) => setFormData({ ...formData, observacao: e.target.value })}
-                />
-              </div>
-
-              {/* Perguntas do formulário */}
-              {renderPerguntas()}
-
-              <DialogFooter>
-                <Button type="button" variant="outline" onClick={() => setDialogOpen(false)}>Cancelar</Button>
-                <Button type="submit">{editingRegistro ? 'Atualizar' : 'Registrar'}</Button>
-              </DialogFooter>
-            </form>
-          </DialogContent>
-        </Dialog>
+        <Button onClick={() => { resetForm(); setDialogOpen(true) }}>
+          <Plus className="mr-2 h-4 w-4" />
+          Novo Registro
+        </Button>
       </div>
 
-      {/* Lista de registros */}
+      <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+        <DialogContent className="sm:max-w-[600px]">
+          <DialogHeader>
+            <DialogTitle>{editingRegistro ? 'Editar Registro' : 'Novo Registro'}</DialogTitle>
+            <DialogDescription>Preencha as respostas do formulário</DialogDescription>
+          </DialogHeader>
+          <form onSubmit={handleSubmit} className="grid gap-4 py-4">
+
+            <div className="grid gap-2">
+              <Label>Meta Terapêutica</Label>
+              <Select
+                value={formData.meta_id}
+                onValueChange={(v) => setFormData({ ...formData, meta_id: v, formulario_id: '' })}
+                required
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Selecione a meta" />
+                </SelectTrigger>
+                <SelectContent>
+                  {metas.map(m => (
+                    <SelectItem key={m.id} value={m.id.toString()}>{m.descricao}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="grid gap-2">
+              <Label>Formulário</Label>
+              <Select
+                value={formData.formulario_id}
+                onValueChange={(v) => setFormData({ ...formData, formulario_id: v })}
+                disabled={!formData.meta_id}
+                required
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Selecione o formulário" />
+                </SelectTrigger>
+                <SelectContent>
+                  {formulariosFiltrados.map(f => (
+                    <SelectItem key={f.id} value={f.id.toString()}>{f.nome}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="grid gap-2">
+              <Label>Data</Label>
+              <Input
+                type="date"
+                value={formData.data}
+                onChange={(e) => setFormData({ ...formData, data: e.target.value })}
+                required
+              />
+            </div>
+
+            <div className="grid gap-2">
+              <Label>Nota (1 a 5)</Label>
+              <Input
+                type="number"
+                min="1"
+                max="5"
+                value={formData.nota || ""}
+                onChange={(e) => setFormData({ ...formData, nota: e.target.value })}
+              />
+            </div>
+
+            <div className="grid gap-2">
+              <Label>Observação</Label>
+              <Input
+                type="text"
+                value={formData.observacao || ""}
+                onChange={(e) => setFormData({ ...formData, observacao: e.target.value })}
+              />
+            </div>
+
+            {renderPerguntas()}
+
+            <DialogFooter>
+              <Button type="button" variant="outline" onClick={() => setDialogOpen(false)}>Cancelar</Button>
+              <Button type="submit">{editingRegistro ? 'Atualizar' : 'Registrar'}</Button>
+            </DialogFooter>
+          </form>
+        </DialogContent>
+      </Dialog>
+
       <Card>
         <CardHeader>
           <CardTitle>Histórico de Registros</CardTitle>
@@ -320,11 +326,15 @@ export default function RegistroDiario() {
                   <TableRow key={r.id}>
                     <TableCell>{new Date(r.data).toLocaleDateString('pt-BR')}</TableCell>
                     <TableCell>{r.meta_descricao}</TableCell>
-                    <TableCell>{r.formulario_titulo}</TableCell>
+                    <TableCell>{r.formulario_nome}</TableCell>
                     <TableCell className="text-right">
                       <div className="flex justify-end gap-2">
-                        <Button variant="outline" size="sm" onClick={() => handleEdit(r)}><Edit className="h-4 w-4" /></Button>
-                        <Button variant="outline" size="sm" onClick={() => handleDelete(r.id)}><Trash2 className="h-4 w-4" /></Button>
+                        <Button variant="outline" size="sm" onClick={() => handleEdit(r)}>
+                          <Edit className="h-4 w-4" />
+                        </Button>
+                        <Button variant="outline" size="sm" onClick={() => handleDelete(r.id)}>
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
                       </div>
                     </TableCell>
                   </TableRow>
