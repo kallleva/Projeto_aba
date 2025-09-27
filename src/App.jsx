@@ -12,6 +12,7 @@ import MetasTerapeuticas from '@/components/pages/MetasTerapeuticas'
 import RegistroDiario from '@/components/pages/RegistroDiario'
 import Relatorios from '@/components/pages/Relatorios'
 import Formulario from '@/components/pages/Formulario'
+import FormularioEditor from '@/components/pages/FormularioEditor'
 import Pergunta from '@/components/pages/Pergunta'
 import Resposta from '@/components/pages/Resposta'
 import './App.css'
@@ -54,11 +55,28 @@ function App() {
                       </ProtectedRoute>
                     } />
                     <Route path="/relatorios" element={<Relatorios />} />
-                    <Route path="/formulario" element={
+
+                    {/* Lista de protocolos */}
+                    <Route path="/Protocolo" element={
                       <ProtectedRoute requireProfissional={true}>
                         <Formulario />
                       </ProtectedRoute>
                     } />
+
+                    {/* Criar novo protocolo */}
+                    <Route path="/Protocolo/novo" element={
+                      <ProtectedRoute requireProfissional={true}>
+                        <FormularioEditor /> {/* Abre formulário em branco */}
+                      </ProtectedRoute>
+                    } />
+
+                    {/* Editar protocolo existente */}
+                    <Route path="/Protocolo/:id" element={
+                      <ProtectedRoute requireProfissional={true}>
+                        <FormularioEditor /> {/* Carrega dados do protocolo pelo ID */}
+                      </ProtectedRoute>
+                    } />
+
                     <Route path="/pergunta" element={
                       <ProtectedRoute requireProfissional={true}>
                         <Pergunta />
@@ -82,4 +100,3 @@ function App() {
 }
 
 export default App
-

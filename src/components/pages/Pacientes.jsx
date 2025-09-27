@@ -8,7 +8,7 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { Badge } from '@/components/ui/badge'
 import { useToast } from '@/hooks/use-toast'
-import { Plus, Edit, Trash2, Calendar } from 'lucide-react'
+import { Plus, Edit, Trash2, Calendar, Search } from 'lucide-react' // 🔹 adiciona Search
 import ApiService from '@/lib/api'
 
 export default function Pacientes() {
@@ -23,6 +23,7 @@ export default function Pacientes() {
     contato: '',
     diagnostico: ''
   })
+  const [search, setSearch] = useState('') // 🔹 estado para o filtro
   const { toast } = useToast()
 
   useEffect(() => {
@@ -135,6 +136,13 @@ export default function Pacientes() {
     }
   }
 
+  // 🔹 filtra os pacientes pelo search
+  const filteredPacientes = pacientes.filter(p =>
+    p.nome.toLowerCase().includes(search.toLowerCase()) ||
+    p.responsavel.toLowerCase().includes(search.toLowerCase()) ||
+    (p.diagnostico || '').toLowerCase().includes(search.toLowerCase())
+  )
+
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
@@ -242,11 +250,22 @@ export default function Pacientes() {
           </CardDescription>
         </CardHeader>
         <CardContent>
+          {/* 🔎 Campo de busca */}
+          <div className="flex items-center gap-4 max-w-sm pl-8 mb-4">
+            <Search className="h-4 w-4 text-muted-foreground" />
+            <Input
+              className="p-2"
+              placeholder="Buscar paciente..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+            />
+          </div>
+
           {loading ? (
             <div className="text-center py-4">Carregando...</div>
-          ) : pacientes.length === 0 ? (
+          ) : filteredPacientes.length === 0 ? (
             <div className="text-center py-8 text-muted-foreground">
-              Nenhum paciente cadastrado ainda.
+              Nenhum paciente encontrado.
             </div>
           ) : (
             <Table>
@@ -261,7 +280,7 @@ export default function Pacientes() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {pacientes.map((paciente) => (
+                {filteredPacientes.map((paciente) => (
                   <TableRow key={paciente.id}>
                     <TableCell className="font-medium">{paciente.nome}</TableCell>
                     <TableCell>{calcularIdade(paciente.data_nascimento)}</TableCell>
@@ -300,4 +319,3 @@ export default function Pacientes() {
     </div>
   )
 }
-

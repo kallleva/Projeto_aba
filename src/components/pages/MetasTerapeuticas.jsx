@@ -8,7 +8,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select"
 import { Textarea } from "@/components/ui/textarea"
-import { Plus, Edit, Trash2, CheckCircle, Calendar, Clock } from "lucide-react"
+import { Plus, Edit, Trash2, CheckCircle, Calendar } from "lucide-react"
 import { useToast } from "@/hooks/use-toast"
 import ApiService from "@/lib/api"
 
@@ -16,16 +16,25 @@ export default function MetasTerapeuticasKanban() {
   const [metas, setMetas] = useState([])
   const [planos, setPlanos] = useState([])
   const [formularios, setFormularios] = useState([])
+
+  // Controle do modal
   const [dialogOpen, setDialogOpen] = useState(false)
   const [editingMeta, setEditingMeta] = useState(null)
+
+  // Filtros
+  const [search, setSearch] = useState("")
+  const [planoFiltro, setPlanoFiltro] = useState("all")
+  const [statusFiltro, setStatusFiltro] = useState("all")
+
   const [selectedFormularios, setSelectedFormularios] = useState([])
   const [formData, setFormData] = useState({
     plano_id: "",
     descricao: "",
     data_inicio: "",
     data_previsao_termino: "",
-    status: "EmAndamento"
+    status: "EmAndamento",
   })
+
   const { toast } = useToast()
 
   useEffect(() => {
@@ -37,7 +46,7 @@ export default function MetasTerapeuticasKanban() {
       const [metasData, planosData, formulariosData] = await Promise.all([
         ApiService.getMetasTerapeuticas(),
         ApiService.getPlanosTerapeuticos(),
-        ApiService.getFormularios()
+        ApiService.getFormularios(),
       ])
       setMetas(metasData)
       setPlanos(planosData)
@@ -48,7 +57,13 @@ export default function MetasTerapeuticasKanban() {
   }
 
   const resetForm = () => {
-    setFormData({ plano_id: "", descricao: "", data_inicio: "", data_previsao_termino: "", status: "EmAndamento" })
+    setFormData({
+      plano_id: "",
+      descricao: "",
+      data_inicio: "",
+      data_previsao_termino: "",
+      status: "EmAndamento",
+    })
     setSelectedFormularios([])
     setEditingMeta(null)
   }
@@ -60,16 +75,20 @@ export default function MetasTerapeuticasKanban() {
       descricao: meta.descricao,
       data_inicio: meta.data_inicio,
       data_previsao_termino: meta.data_previsao_termino,
-      status: meta.status
+      status: meta.status,
     })
-    setSelectedFormularios(meta.formularios.map(f => f.id))
+    setSelectedFormularios(meta.formularios.map((f) => f.id))
     setDialogOpen(true)
   }
 
   const handleSubmit = async (e) => {
     e.preventDefault()
     try {
-      const payload = { ...formData, plano_id: parseInt(formData.plano_id), formularios: selectedFormularios }
+      const payload = {
+        ...formData,
+        plano_id: parseInt(formData.plano_id),
+        formularios: selectedFormularios,
+      }
       if (editingMeta) {
         await ApiService.updateMetaTerapeutica(editingMeta.id, payload)
         toast({ title: "Sucesso", description: "Meta atualizada com sucesso!" })
@@ -108,7 +127,9 @@ export default function MetasTerapeuticasKanban() {
 
   const calcularProgresso = (inicio, termino) => {
     if (!inicio || !termino) return 0
-    const hoje = new Date(), i = new Date(inicio), t = new Date(termino)
+    const hoje = new Date(),
+      i = new Date(inicio),
+      t = new Date(termino)
     const totalDias = (t - i) / (1000 * 60 * 60 * 24)
     const diasDecorridos = (hoje - i) / (1000 * 60 * 60 * 24)
     if (totalDias <= 0) return 100
@@ -116,9 +137,19 @@ export default function MetasTerapeuticasKanban() {
   }
 
   const getPlanoInfo = (id) => {
-    const plano = planos.find(p => p.id === id)
+    const plano = planos.find((p) => p.id === id)
     return plano ? `${plano.paciente_nome} - ${plano.profissional_nome}` : "Plano não encontrado"
   }
+
+  // Filtragem
+  const metasFiltradas = metas.filter((m) => {
+    const planoInfo = getPlanoInfo(m.plano_id).toLowerCase()
+    const descricao = m.descricao.toLowerCase()
+    const filtroTexto = search.toLowerCase()
+    const filtroPlano = planoFiltro === "all" ? true : m.plano_id.toString() === planoFiltro
+    const filtroStatus = statusFiltro === "all" ? true : m.status === statusFiltro
+    return (planoInfo.includes(filtroTexto) || descricao.includes(filtroTexto)) && filtroPlano && filtroStatus
+  })
 
   return (
     <div className="space-y-6">
@@ -126,7 +157,10 @@ export default function MetasTerapeuticasKanban() {
         <h2 className="text-3xl font-bold">Metas Terapêuticas</h2>
         <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
           <DialogTrigger asChild>
-            <Button onClick={resetForm}><Plus className="mr-2 h-4 w-4"/>Nova Meta</Button>
+            <Button onClick={resetForm}>
+              <Plus className="mr-2 h-4 w-4" />
+              Nova Meta
+            </Button>
           </DialogTrigger>
           <DialogContent className="sm:max-w-[600px]">
             <DialogHeader>
@@ -135,31 +169,54 @@ export default function MetasTerapeuticasKanban() {
             <form onSubmit={handleSubmit} className="grid gap-4 py-4">
               <div className="grid gap-2">
                 <Label>Plano Terapêutico</Label>
-                <Select value={formData.plano_id} onValueChange={v => setFormData({...formData, plano_id: v})} required>
-                  <SelectTrigger><SelectValue placeholder="Selecione o plano"/></SelectTrigger>
+                <Select value={formData.plano_id} onValueChange={(v) => setFormData({ ...formData, plano_id: v })} required>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Selecione o plano" />
+                  </SelectTrigger>
                   <SelectContent>
-                    {planos.map(p => <SelectItem key={p.id} value={p.id.toString()}>{p.paciente_nome} - {p.profissional_nome}</SelectItem>)}
+                    {planos.map((p) => (
+                      <SelectItem key={p.id} value={p.id.toString()}>
+                        {p.paciente_nome} - {p.profissional_nome}
+                      </SelectItem>
+                    ))}
                   </SelectContent>
                 </Select>
               </div>
               <div className="grid gap-2">
                 <Label>Descrição</Label>
-                <Textarea value={formData.descricao} onChange={e => setFormData({...formData, descricao: e.target.value})} rows={3} required />
+                <Textarea
+                  value={formData.descricao}
+                  onChange={(e) => setFormData({ ...formData, descricao: e.target.value })}
+                  rows={3}
+                  required
+                />
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div className="grid gap-2">
                   <Label>Data Início</Label>
-                  <Input type="date" value={formData.data_inicio} onChange={e => setFormData({...formData,data_inicio:e.target.value})} required/>
+                  <Input
+                    type="date"
+                    value={formData.data_inicio}
+                    onChange={(e) => setFormData({ ...formData, data_inicio: e.target.value })}
+                    required
+                  />
                 </div>
                 <div className="grid gap-2">
                   <Label>Previsão Término</Label>
-                  <Input type="date" value={formData.data_previsao_termino} onChange={e => setFormData({...formData,data_previsao_termino:e.target.value})} required/>
+                  <Input
+                    type="date"
+                    value={formData.data_previsao_termino}
+                    onChange={(e) => setFormData({ ...formData, data_previsao_termino: e.target.value })}
+                    required
+                  />
                 </div>
               </div>
               <div className="grid gap-2">
                 <Label>Status</Label>
-                <Select value={formData.status} onValueChange={v => setFormData({...formData,status:v})}>
-                  <SelectTrigger><SelectValue/></SelectTrigger>
+                <Select value={formData.status} onValueChange={(v) => setFormData({ ...formData, status: v })}>
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="EmAndamento">Em Andamento</SelectItem>
                     <SelectItem value="Concluida">Concluída</SelectItem>
@@ -169,14 +226,19 @@ export default function MetasTerapeuticasKanban() {
               <div className="grid gap-2">
                 <Label>Formulários</Label>
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2 max-h-64 overflow-y-auto">
-                  {formularios.map(f => {
+                  {formularios.map((f) => {
                     const selected = selectedFormularios.includes(f.id)
                     return (
-                      <div key={f.id} onClick={() => {
-                        if(selected) setSelectedFormularios(selectedFormularios.filter(id => id !== f.id))
-                        else setSelectedFormularios([...selectedFormularios, f.id])
-                      }}
-                      className={`p-2 border rounded cursor-pointer ${selected ? 'bg-yellow-200 border-yellow-400':'hover:bg-gray-100'}`}>
+                      <div
+                        key={f.id}
+                        onClick={() => {
+                          if (selected) setSelectedFormularios(selectedFormularios.filter((id) => id !== f.id))
+                          else setSelectedFormularios([...selectedFormularios, f.id])
+                        }}
+                        className={`p-2 border rounded cursor-pointer ${
+                          selected ? "bg-yellow-200 border-yellow-400" : "hover:bg-gray-100"
+                        }`}
+                      >
                         {f.nome}
                       </div>
                     )
@@ -184,7 +246,9 @@ export default function MetasTerapeuticasKanban() {
                 </div>
               </div>
               <DialogFooter className="flex justify-end gap-2">
-                <Button type="button" variant="outline" onClick={() => setDialogOpen(false)}>Cancelar</Button>
+                <Button type="button" variant="outline" onClick={() => setDialogOpen(false)}>
+                  Cancelar
+                </Button>
                 <Button type="submit">{editingMeta ? "Atualizar" : "Criar"}</Button>
               </DialogFooter>
             </form>
@@ -192,31 +256,80 @@ export default function MetasTerapeuticasKanban() {
         </Dialog>
       </div>
 
+      {/* Filtros */}
+      <Card>
+        <CardContent className="p-4">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <Input placeholder="Buscar por plano ou descrição" value={search} onChange={(e) => setSearch(e.target.value)} />
+
+            <Select value={planoFiltro} onValueChange={setPlanoFiltro}>
+              <SelectTrigger>
+                <SelectValue placeholder="Filtrar por plano" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">Todos os planos</SelectItem>
+                {planos.map((p) => (
+                  <SelectItem key={p.id} value={p.id.toString()}>
+                    {p.paciente_nome} - {p.profissional_nome}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+
+            <Select value={statusFiltro} onValueChange={setStatusFiltro}>
+              <SelectTrigger>
+                <SelectValue placeholder="Filtrar por status" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">Todos os status</SelectItem>
+                <SelectItem value="EmAndamento">Em Andamento</SelectItem>
+                <SelectItem value="Concluida">Concluída</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Kanban */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {['EmAndamento','Concluida'].map(status => (
+        {["EmAndamento", "Concluida"].map((status) => (
           <div key={status}>
-            <h3 className="text-xl font-bold mb-2">{status === 'EmAndamento' ? 'Em Andamento' : 'Concluídas'}</h3>
+            <h3 className="text-xl font-bold mb-2">{status === "EmAndamento" ? "Em Andamento" : "Concluídas"}</h3>
             <div className="space-y-2">
-              {metas.filter(m => m.status === status).map(meta => (
-                <Card key={meta.id} className="border">
-                  <CardHeader>
-                    <CardTitle>{getPlanoInfo(meta.plano_id)}</CardTitle>
-                    <CardDescription>{meta.descricao}</CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="flex items-center gap-2 text-sm"><Calendar className="w-4 h-4"/> {meta.data_inicio} - {meta.data_previsao_termino}</div>
-                    <Progress value={calcularProgresso(meta.data_inicio, meta.data_previsao_termino)} className="mt-2"/>
-                    <div className="flex gap-1 mt-2 flex-wrap">
-                      {meta.formularios.map(f => <Badge key={f.id}>{f.nome}</Badge>)}
-                    </div>
-                    <div className="flex justify-end gap-2 mt-2">
-                      {meta.status==='EmAndamento' && <Button size="sm" variant="outline" onClick={() => handleConcluir(meta.id)}><CheckCircle className="w-4 h-4"/></Button>}
-                      <Button size="sm" variant="outline" onClick={() => handleEdit(meta)}><Edit className="w-4 h-4"/></Button>
-                      <Button size="sm" variant="outline" onClick={() => handleDelete(meta.id)}><Trash2 className="w-4 h-4"/></Button>
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
+              {metasFiltradas
+                .filter((m) => m.status === status)
+                .map((meta) => (
+                  <Card key={meta.id} className="border">
+                    <CardHeader>
+                      <CardTitle>{getPlanoInfo(meta.plano_id)}</CardTitle>
+                      <CardDescription>{meta.descricao}</CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="flex items-center gap-2 text-sm">
+                        <Calendar className="w-4 h-4" /> {meta.data_inicio} - {meta.data_previsao_termino}
+                      </div>
+                      <Progress value={calcularProgresso(meta.data_inicio, meta.data_previsao_termino)} className="mt-2" />
+                      <div className="flex gap-1 mt-2 flex-wrap">
+                        {meta.formularios.map((f) => (
+                          <Badge key={f.id}>{f.nome}</Badge>
+                        ))}
+                      </div>
+                      <div className="flex justify-end gap-2 mt-2">
+                        {meta.status === "EmAndamento" && (
+                          <Button size="sm" variant="outline" onClick={() => handleConcluir(meta.id)}>
+                            <CheckCircle className="w-4 h-4" />
+                          </Button>
+                        )}
+                        <Button size="sm" variant="outline" onClick={() => handleEdit(meta)}>
+                          <Edit className="w-4 h-4" />
+                        </Button>
+                        <Button size="sm" variant="outline" onClick={() => handleDelete(meta.id)}>
+                          <Trash2 className="w-4 h-4" />
+                        </Button>
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
             </div>
           </div>
         ))}

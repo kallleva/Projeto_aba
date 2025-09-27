@@ -27,7 +27,7 @@ const navigation = [
   { name: 'Metas Terapêuticas', href: '/metas-terapeuticas', icon: Target, allowedFor: ['Profissional'] },
   { name: 'Registro Diário', href: '/registro-diario', icon: Calendar, allowedFor: ['Profissional'] },
   { name: 'Relatórios', href: '/relatorios', icon: BarChart3, allowedFor: ['Profissional', 'Responsavel'] },
-  { name: 'Formulário', href: '/formulario', icon: FileText, allowedFor: ['Profissional'] }, // novo
+  { name: 'Protocolo', href: '/protocolo', icon: FileText, allowedFor: ['Profissional'] }, // novo
   { name: 'Pergunta', href: '/pergunta', icon: Target, allowedFor: ['Profissional'] },      // novo
   { name: 'Resposta', href: '/resposta', icon: Calendar, allowedFor: ['Profissional'] },    // novo
 ]

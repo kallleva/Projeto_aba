@@ -7,7 +7,7 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { Badge } from '@/components/ui/badge'
 import { useToast } from '@/hooks/use-toast'
-import { Plus, Edit, Trash2, Mail, Phone } from 'lucide-react'
+import { Plus, Edit, Trash2, Mail, Phone, Search } from 'lucide-react'
 import ApiService from '@/lib/api'
 
 export default function Profissionais() {
@@ -15,6 +15,7 @@ export default function Profissionais() {
   const [loading, setLoading] = useState(true)
   const [dialogOpen, setDialogOpen] = useState(false)
   const [editingProfissional, setEditingProfissional] = useState(null)
+  const [search, setSearch] = useState('')
   const [formData, setFormData] = useState({
     nome: '',
     especialidade: '',
@@ -119,9 +120,20 @@ export default function Profissionais() {
     return 'default'
   }
 
+  // 🔎 Filtro aplicado à lista
+  const profissionaisFiltrados = profissionais.filter((p) => {
+    const termo = search.toLowerCase()
+    return (
+      p.nome.toLowerCase().includes(termo) ||
+      p.especialidade.toLowerCase().includes(termo) ||
+      p.email.toLowerCase().includes(termo) ||
+      p.telefone.toLowerCase().includes(termo)
+    )
+  })
+
   return (
     <div className="space-y-6">
-      <div className="flex justify-between items-center">
+      <div className="flex justify-between items-center flex-wrap gap-4">
         <div>
           <h2 className="text-3xl font-bold tracking-tight">Profissionais</h2>
           <p className="text-muted-foreground">
@@ -202,19 +214,34 @@ export default function Profissionais() {
         </Dialog>
       </div>
 
+
+
       <Card>
+        
         <CardHeader>
           <CardTitle>Lista de Profissionais</CardTitle>
           <CardDescription>
             Visualize e gerencie todos os profissionais cadastrados
           </CardDescription>
         </CardHeader>
+            {/* 🔎 Campo de busca */}
+          <div className="flex items-center gap-4 max-w-sm pl-8">
+            <Search className="h-4 w-4 text-muted-foreground" />
+            <Input
+              className="p-2" // 👈 padding interno do input
+              placeholder="Buscar profissional..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+            />
+          </div>
+
+
         <CardContent>
           {loading ? (
             <div className="text-center py-4">Carregando...</div>
-          ) : profissionais.length === 0 ? (
+          ) : profissionaisFiltrados.length === 0 ? (
             <div className="text-center py-8 text-muted-foreground">
-              Nenhum profissional cadastrado ainda.
+              Nenhum profissional encontrado.
             </div>
           ) : (
             <Table>
@@ -228,7 +255,7 @@ export default function Profissionais() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {profissionais.map((profissional) => (
+                {profissionaisFiltrados.map((profissional) => (
                   <TableRow key={profissional.id}>
                     <TableCell className="font-medium">{profissional.nome}</TableCell>
                     <TableCell>
@@ -276,4 +303,3 @@ export default function Profissionais() {
     </div>
   )
 }
-

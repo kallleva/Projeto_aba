@@ -7,9 +7,8 @@ import { Textarea } from '@/components/ui/textarea'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
-import { Badge } from '@/components/ui/badge'
 import { useToast } from '@/hooks/use-toast'
-import { Plus, Edit, Trash2, FileText, User, UserCheck } from 'lucide-react'
+import { Plus, Edit, Trash2, User, UserCheck, Search } from 'lucide-react'
 import ApiService from '@/lib/api'
 
 export default function PlanosTerapeuticos() {
@@ -19,6 +18,7 @@ export default function PlanosTerapeuticos() {
   const [loading, setLoading] = useState(true)
   const [dialogOpen, setDialogOpen] = useState(false)
   const [editingPlano, setEditingPlano] = useState(null)
+  const [searchTerm, setSearchTerm] = useState("") // 🔎 filtro de busca
   const [formData, setFormData] = useState({
     paciente_id: '',
     profissional_id: '',
@@ -132,15 +132,12 @@ export default function PlanosTerapeuticos() {
     return new Date(dateString).toLocaleDateString('pt-BR')
   }
 
-  const getPacienteNome = (pacienteId) => {
-    const paciente = pacientes.find(p => p.id === pacienteId)
-    return paciente ? paciente.nome : 'Paciente não encontrado'
-  }
-
-  const getProfissionalNome = (profissionalId) => {
-    const profissional = profissionais.find(p => p.id === profissionalId)
-    return profissional ? profissional.nome : 'Profissional não encontrado'
-  }
+  // 🔎 filtra os planos com base no termo digitado
+  const filteredPlanos = planos.filter((plano) =>
+    plano.paciente_nome?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    plano.profissional_nome?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    plano.objetivo_geral?.toLowerCase().includes(searchTerm.toLowerCase())
+  )
 
   return (
     <div className="space-y-6">
@@ -252,11 +249,21 @@ export default function PlanosTerapeuticos() {
           </CardDescription>
         </CardHeader>
         <CardContent>
+          {/* 🔎 Campo de busca */}
+          <div className="flex items-center mb-4  max-w-sm">
+            <Search className="h-4 w-4 mr-2 text-muted-foreground" />
+            <Input
+              placeholder="Buscar por paciente, profissional ou objetivo..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
+          </div>
+
           {loading ? (
             <div className="text-center py-4">Carregando...</div>
-          ) : planos.length === 0 ? (
+          ) : filteredPlanos.length === 0 ? (
             <div className="text-center py-8 text-muted-foreground">
-              Nenhum plano terapêutico criado ainda.
+              Nenhum plano encontrado.
             </div>
           ) : (
             <Table>
@@ -270,7 +277,7 @@ export default function PlanosTerapeuticos() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {planos.map((plano) => (
+                {filteredPlanos.map((plano) => (
                   <TableRow key={plano.id}>
                     <TableCell>
                       <div className="flex items-center gap-2">
@@ -318,4 +325,3 @@ export default function PlanosTerapeuticos() {
     </div>
   )
 }
-
