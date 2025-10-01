@@ -49,6 +49,8 @@ export default function FormularioEditor() {
           texto: "Nova pergunta",
           tipo: "TEXTO",
           obrigatoria: false,
+          formula: "",
+          opcoes: []
         },
       ],
     }))
@@ -76,6 +78,26 @@ export default function FormularioEditor() {
   const handleSave = async () => {
     setSaving(true)
     try {
+      // Validar perguntas do tipo FORMULA
+      const perguntasFormula = formData.perguntas.filter(p => p.tipo === 'FORMULA')
+      const formulasInvalidas = perguntasFormula.filter(p => !p.formula || p.formula.trim() === '')
+      
+      if (formulasInvalidas.length > 0) {
+        alert(`Perguntas do tipo Fórmula devem ter uma fórmula definida:\n${formulasInvalidas.map(p => `- ${p.texto}`).join('\n')}`)
+        setSaving(false)
+        return
+      }
+
+      // Validar perguntas do tipo MULTIPLA
+      const perguntasMultipla = formData.perguntas.filter(p => p.tipo === 'MULTIPLA')
+      const opcoesInvalidas = perguntasMultipla.filter(p => !p.opcoes || p.opcoes.length === 0)
+      
+      if (opcoesInvalidas.length > 0) {
+        alert(`Perguntas do tipo Múltipla Escolha devem ter opções definidas:\n${opcoesInvalidas.map(p => `- ${p.texto}`).join('\n')}`)
+        setSaving(false)
+        return
+      }
+
       const payload = { ...formData, perguntas: formData.perguntas.map(p => ({ ...p, tipo: p.tipo.toUpperCase() })) }
       if (id) {
         await ApiService.updateFormulario(id, payload)
@@ -86,6 +108,7 @@ export default function FormularioEditor() {
       navigate(-1) // volta para a lista
     } catch (err) {
       console.error("Erro ao salvar Protocolo:", err)
+      alert("Erro ao salvar Protocolo: " + err.message)
     } finally {
       setSaving(false)
     }
@@ -162,6 +185,7 @@ export default function FormularioEditor() {
                 <TableHead>Ordem</TableHead>
                 <TableHead>Pergunta</TableHead>
                 <TableHead>Tipo</TableHead>
+                <TableHead>Fórmula/Opções</TableHead>
                 <TableHead>Obrigatória</TableHead>
                 <TableHead className="text-right">Ações</TableHead>
               </TableRow>
@@ -186,6 +210,13 @@ export default function FormularioEditor() {
                       onValueChange={(value) => {
                         const novas = [...formData.perguntas]
                         novas[index].tipo = value.toUpperCase()
+                        // Limpar campos desnecessários ao mudar tipo
+                        if (value.toUpperCase() !== 'FORMULA') {
+                          novas[index].formula = ''
+                        }
+                        if (value.toUpperCase() !== 'MULTIPLA') {
+                          novas[index].opcoes = []
+                        }
                         setFormData({ ...formData, perguntas: novas })
                       }}
                     >
@@ -197,18 +228,55 @@ export default function FormularioEditor() {
                         <SelectItem value="NUMERO">Número</SelectItem>
                         <SelectItem value="BOOLEANO">Sim/Não</SelectItem>
                         <SelectItem value="MULTIPLA">Múltipla Escolha</SelectItem>
+                        <SelectItem value="FORMULA">Fórmula</SelectItem>
                       </SelectContent>
                     </Select>
                   </TableCell>
                   <TableCell>
+                    {p.tipo === 'FORMULA' ? (
+                      <Input
+                        placeholder="Ex: (1 + 2) / 2"
+                        value={p.formula || ''}
+                        onChange={(e) => {
+                          const novas = [...formData.perguntas]
+                          novas[index].formula = e.target.value
+                          setFormData({ ...formData, perguntas: novas })
+                        }}
+                      />
+                    ) : p.tipo === 'MULTIPLA' ? (
+                      <div className="space-y-2">
+                        <Input
+                          placeholder="Opção 1, Opção 2, Opção 3"
+                          value={p.opcoes ? p.opcoes.join(', ') : ''}
+                          onChange={(e) => {
+                            const novas = [...formData.perguntas]
+                            novas[index].opcoes = e.target.value.split(',').map(o => o.trim()).filter(o => o)
+                            setFormData({ ...formData, perguntas: novas })
+                          }}
+                        />
+                        <div className="text-xs text-gray-500">
+                          Separe as opções por vírgula
+                        </div>
+                      </div>
+                    ) : (
+                      <span className="text-gray-400 text-sm">-</span>
+                    )}
+                  </TableCell>
+                  <TableCell>
                     <Checkbox
                       checked={p.obrigatoria}
+                      disabled={p.tipo === 'FORMULA'}
                       onCheckedChange={(checked) => {
                         const novas = [...formData.perguntas]
                         novas[index].obrigatoria = !!checked
                         setFormData({ ...formData, perguntas: novas })
                       }}
                     />
+                    {p.tipo === 'FORMULA' && (
+                      <div className="text-xs text-gray-500 mt-1">
+                        Fórmulas são sempre calculadas
+                      </div>
+                    )}
                   </TableCell>
                   <TableCell className="text-right">
                     <div className="flex justify-end gap-2">

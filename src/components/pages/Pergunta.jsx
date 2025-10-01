@@ -98,10 +98,11 @@ export default function Pergunta({ onSubmit }) {
                       <SelectValue placeholder="Selecione o tipo" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="texto">Texto</SelectItem>
-                      <SelectItem value="numero">Número</SelectItem>
-                      <SelectItem value="booleano">Sim/Não</SelectItem>
-                      <SelectItem value="multipla">Múltipla escolha</SelectItem>
+                      <SelectItem value="TEXTO">Texto</SelectItem>
+                      <SelectItem value="NUMERO">Número</SelectItem>
+                      <SelectItem value="BOOLEANO">Sim/Não</SelectItem>
+                      <SelectItem value="MULTIPLA">Múltipla escolha</SelectItem>
+                      <SelectItem value="FORMULA">Fórmula</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>

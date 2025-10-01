@@ -19,6 +19,7 @@ export default function RegistroDiario() {
   const [loading, setLoading] = useState(true)
   const [dialogOpen, setDialogOpen] = useState(false)
   const [editingRegistro, setEditingRegistro] = useState(null)
+  const [showFullScreen, setShowFullScreen] = useState(false)
   const { toast } = useToast()
 
   // Estados para filtros
@@ -33,13 +34,14 @@ export default function RegistroDiario() {
   const [registrosFiltrados, setRegistrosFiltrados] = useState([])
 
   const [formData, setFormData] = useState({
-    formulario_id: '',
     meta_id: '',
     data: new Date().toISOString().split('T')[0],
     nota: '',
     observacao: '',
     respostas: {}
   })
+  const [perguntas, setPerguntas] = useState([])
+  const [formularioSelecionado, setFormularioSelecionado] = useState(null)
 
   useEffect(() => {
     loadData()
@@ -58,6 +60,11 @@ export default function RegistroDiario() {
         ApiService.getFormularios(),
         ApiService.getMetasTerapeuticas()
       ])
+      
+      console.log('Registros carregados:', registrosData)
+      console.log('Formulários carregados:', formulariosData)
+      console.log('Metas carregadas:', metasData)
+      
       setRegistros(registrosData)
       setFormularios(formulariosData)
       setMetas(metasData)
@@ -120,27 +127,114 @@ export default function RegistroDiario() {
     })
   }
 
+  const carregarPerguntas = async (formularioId) => {
+    try {
+      const formulario = await ApiService.getFormulario(formularioId)
+      setFormularioSelecionado(formulario)
+      setPerguntas(formulario.perguntas || [])
+    } catch (error) {
+      toast({ title: 'Erro', description: 'Erro ao carregar perguntas: ' + error.message, variant: 'destructive' })
+    }
+  }
+
   const handleRespostaChange = (perguntaId, valor) => {
+    console.log('Mudança de resposta:', { perguntaId, valor })
+    
+    const novasRespostas = { ...formData.respostas, [perguntaId]: valor }
+    
+    // Calcular fórmulas que dependem desta resposta
+    const respostasCalculadas = calcularFormulas(novasRespostas)
+    
+    console.log('Respostas calculadas:', respostasCalculadas)
+    
     setFormData(prev => ({
       ...prev,
-      respostas: { ...prev.respostas, [perguntaId]: valor }
+      respostas: respostasCalculadas
     }))
+  }
+
+  const calcularFormulas = (respostas) => {
+    const respostasComCalculadas = { ...respostas }
+    
+    perguntas.forEach(pergunta => {
+      if (pergunta.tipo === 'FORMULA' && pergunta.formula) {
+        try {
+          // Substituir variáveis na fórmula pelos valores das respostas
+          let formula = pergunta.formula
+          
+          // Substituir IDs de perguntas pelos valores das respostas
+          Object.keys(respostas).forEach(perguntaId => {
+            const valor = respostas[perguntaId]
+            if (valor && !isNaN(valor)) {
+              // Substituir tanto por ID quanto por ordem (caso a fórmula use ordem)
+              formula = formula.replace(new RegExp(`\\b${perguntaId}\\b`, 'g'), valor)
+              const perguntaRef = perguntas.find(p => p.id.toString() === perguntaId)
+              if (perguntaRef) {
+                formula = formula.replace(new RegExp(`\\b${perguntaRef.ordem}\\b`, 'g'), valor)
+              }
+            }
+          })
+          
+          // Calcular o resultado da fórmula
+          const resultado = eval(formula)
+          respostasComCalculadas[pergunta.id.toString()] = resultado.toString()
+        } catch (error) {
+          console.error('Erro ao calcular fórmula:', error)
+          respostasComCalculadas[pergunta.id.toString()] = 'Erro no cálculo'
+        }
+      }
+    })
+    
+    return respostasComCalculadas
   }
 
   const handleSubmit = async (e) => {
     e.preventDefault()
     try {
-      const dataToSend = {
-        formulario_id: parseInt(formData.formulario_id),
-        meta_id: parseInt(formData.meta_id),
-        data: formData.data,
-        nota: formData.nota ? parseInt(formData.nota) : null,
-        observacao: formData.observacao || null,
-        respostas: formData.respostas
+      // Validar perguntas obrigatórias
+      const perguntasObrigatorias = perguntas.filter(p => p.obrigatoria && p.tipo !== 'FORMULA')
+      const respostasFaltando = perguntasObrigatorias.filter(p => {
+        const resposta = formData.respostas[p.id.toString()]
+        return !resposta || resposta.trim() === ''
+      })
+      
+      if (respostasFaltando.length > 0) {
+        toast({ 
+          title: 'Erro', 
+          description: `Responda as perguntas obrigatórias: ${respostasFaltando.map(p => p.texto).join(', ')}`, 
+          variant: 'destructive' 
+        })
+        return
+      }
+
+      // Validar se perguntas MULTIPLA têm opções definidas
+      const perguntasMultipla = perguntas.filter(p => p.tipo === 'MULTIPLA')
+      const perguntasSemOpcoes = perguntasMultipla.filter(p => !p.opcoes || p.opcoes.length === 0)
+      
+      if (perguntasSemOpcoes.length > 0) {
+        toast({ 
+          title: 'Erro', 
+          description: `Perguntas de múltipla escolha sem opções definidas: ${perguntasSemOpcoes.map(p => p.texto).join(', ')}`, 
+          variant: 'destructive' 
+        })
+        return
+      }
+
+      // Validar se perguntas FORMULA têm fórmula definida
+      const perguntasFormula = perguntas.filter(p => p.tipo === 'FORMULA')
+      const perguntasSemFormula = perguntasFormula.filter(p => !p.formula || p.formula.trim() === '')
+      
+      if (perguntasSemFormula.length > 0) {
+        toast({ 
+          title: 'Erro', 
+          description: `Perguntas de fórmula sem fórmula definida: ${perguntasSemFormula.map(p => p.texto).join(', ')}`, 
+          variant: 'destructive' 
+        })
+        return
       }
 
       // Validar se formulário foi selecionado
-      if (!formData.formulario_id) {
+      if (!formularioSelecionado) {
         toast({ title: 'Erro', description: 'Selecione um formulário', variant: 'destructive' })
         return
       }
@@ -151,6 +245,29 @@ export default function RegistroDiario() {
         return
       }
 
+      // Filtrar respostas para enviar apenas as não-calculadas
+      const respostasParaEnviar = {}
+      Object.keys(formData.respostas).forEach(perguntaId => {
+        const pergunta = perguntas.find(p => p.id.toString() === perguntaId)
+        if (pergunta && pergunta.tipo !== 'FORMULA') {
+          respostasParaEnviar[perguntaId] = formData.respostas[perguntaId]
+        }
+      })
+
+      console.log('Respostas para enviar:', respostasParaEnviar)
+      console.log('FormData completo:', formData)
+
+      const dataToSend = {
+        formulario_id: formularioSelecionado.id,
+        meta_id: parseInt(formData.meta_id),
+        data: formData.data,
+        nota: formData.nota ? parseInt(formData.nota) : null,
+        observacao: formData.observacao || null,
+        respostas: respostasParaEnviar
+      }
+
+      console.log('Payload final:', dataToSend)
+
       if (editingRegistro) {
         await ApiService.updateChecklistDiario(editingRegistro.id, dataToSend)
         toast({ title: 'Sucesso', description: 'Registro atualizado com sucesso!' })
@@ -159,7 +276,7 @@ export default function RegistroDiario() {
         toast({ title: 'Sucesso', description: 'Registro criado com sucesso!' })
       }
 
-      setDialogOpen(false)
+      setShowFullScreen(false)
       resetForm()
       loadData()
     } catch (error) {
@@ -167,17 +284,26 @@ export default function RegistroDiario() {
     }
   }
 
-  const handleEdit = (registro) => {
+  const handleEdit = async (registro) => {
     setEditingRegistro(registro)
     setFormData({
-      formulario_id: registro.formulario_id ? registro.formulario_id.toString() : '',
       meta_id: registro.meta_id ? registro.meta_id.toString() : '',
       data: registro.data || new Date().toISOString().split('T')[0],
       nota: registro.nota || '',
       observacao: registro.observacao || '',
       respostas: registro.respostas || {}
     })
-    setDialogOpen(true)
+    
+    // Limpar perguntas e formulário selecionado primeiro
+    setPerguntas([])
+    setFormularioSelecionado(null)
+    
+    // Carregar perguntas do formulário se existir
+    if (registro.formulario_id) {
+      await carregarPerguntas(registro.formulario_id)
+    }
+    
+    setShowFullScreen(true)
   }
 
   const handleDelete = async (id) => {
@@ -193,79 +319,114 @@ export default function RegistroDiario() {
 
   const resetForm = () => {
     setFormData({
-      formulario_id: '',
       meta_id: '',
       data: new Date().toISOString().split('T')[0],
       nota: '',
       observacao: '',
       respostas: {}
     })
+    setPerguntas([])
+    setFormularioSelecionado(null)
     setEditingRegistro(null)
+    setShowFullScreen(false)
+  }
+
+  const handleNovoRegistro = () => {
+    resetForm()
+    setShowFullScreen(true)
   }
 
   const renderPerguntas = () => {
-    const formularioAtual = formularios.find(f => f.id.toString() === formData.formulario_id)?.perguntas || []
-    return formularioAtual
+    return perguntas
       .sort((a, b) => a.ordem - b.ordem)
       .map((p) => (
-        <div key={p.id} className="grid gap-2">
-          <Label>{p.texto} {p.obrigatoria && <span className="text-red-500">*</span>}</Label>
+        <div key={p.id} className="grid gap-2 p-4 border rounded-lg">
+          <Label className="text-sm font-medium">
+            {p.texto} 
+            {p.obrigatoria && p.tipo !== 'FORMULA' && <span className="text-red-500 ml-1">*</span>}
+            {p.tipo === 'FORMULA' && <span className="text-blue-500 ml-1">(Calculado)</span>}
+          </Label>
 
           {p.tipo === 'TEXTO' && (
             <Input
-              value={formData.respostas[p.id] || ''}
-              onChange={(e) => handleRespostaChange(p.id, e.target.value)}
+              value={formData.respostas[p.id.toString()] || ''}
+              onChange={(e) => handleRespostaChange(p.id.toString(), e.target.value)}
               required={p.obrigatoria}
+              placeholder="Digite sua resposta"
             />
           )}
+          
           {p.tipo === 'NUMERO' && (
             <Input
               type="number"
-              value={formData.respostas[p.id] || ''}
-              onChange={(e) => handleRespostaChange(p.id, e.target.value)}
+              value={formData.respostas[p.id.toString()] || ''}
+              onChange={(e) => handleRespostaChange(p.id.toString(), e.target.value)}
               required={p.obrigatoria}
+              placeholder="Digite um número"
             />
           )}
+          
           {p.tipo === 'BOOLEANO' && (
             <div className="flex gap-4">
-              <label className="flex items-center gap-1">
+              <label className="flex items-center gap-2">
                 <input
                   type="radio"
                   name={`booleano-${p.id}`}
-                  value="true"
-                  checked={formData.respostas[p.id] === true}
-                  onChange={() => handleRespostaChange(p.id, true)}
+                  value="Sim"
+                  checked={formData.respostas[p.id.toString()] === 'Sim'}
+                  onChange={() => handleRespostaChange(p.id.toString(), 'Sim')}
                   required={p.obrigatoria}
                 />
                 Sim
               </label>
-              <label className="flex items-center gap-1">
+              <label className="flex items-center gap-2">
                 <input
                   type="radio"
                   name={`booleano-${p.id}`}
-                  value="false"
-                  checked={formData.respostas[p.id] === false}
-                  onChange={() => handleRespostaChange(p.id, false)}
+                  value="Não"
+                  checked={formData.respostas[p.id.toString()] === 'Não'}
+                  onChange={() => handleRespostaChange(p.id.toString(), 'Não')}
                 />
                 Não
               </label>
             </div>
           )}
-          {p.tipo === 'MULTIPLA' && p.opcoes?.length > 0 && (
+          
+          {p.tipo === 'MULTIPLA' && (
             <Select
-              value={formData.respostas[p.id] || ''}
-              onValueChange={(v) => handleRespostaChange(p.id, v)}
+              value={formData.respostas[p.id.toString()] || ''}
+              onValueChange={(v) => handleRespostaChange(p.id.toString(), v)}
               required={p.obrigatoria}
+              disabled={!p.opcoes || p.opcoes.length === 0}
             >
               <SelectTrigger>
-                <SelectValue placeholder="Selecione uma opção" />
+                <SelectValue placeholder={
+                  !p.opcoes || p.opcoes.length === 0 
+                    ? "Nenhuma opção disponível" 
+                    : "Selecione uma opção"
+                } />
               </SelectTrigger>
               <SelectContent>
-                {p.opcoes.map((opcao, idx) => (
-                  <SelectItem key={idx} value={opcao}>{opcao}</SelectItem>
-                ))}
+                {p.opcoes && p.opcoes.length > 0 ? (
+                  p.opcoes.map((opcao, idx) => (
+                    <SelectItem key={idx} value={opcao}>{opcao}</SelectItem>
+                  ))
+                ) : (
+                  <SelectItem value="" disabled>Nenhuma opção definida</SelectItem>
+                )}
               </SelectContent>
             </Select>
+          )}
+          
+          {p.tipo === 'FORMULA' && (
+            <div className="bg-blue-50 p-3 rounded-md">
+              <div className="text-sm text-blue-700 mb-2">
+                <strong>Fórmula:</strong> {p.formula}
+              </div>
+              <div className="text-lg font-semibold text-blue-900">
+                Resultado: {formData.respostas[p.id.toString()] || 'Aguardando cálculo...'}
+              </div>
+            </div>
           )}
         </div>
       ))
@@ -275,101 +436,10 @@ export default function RegistroDiario() {
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <h2 className="text-3xl font-bold">Registro Diário</h2>
-        <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-          <DialogTrigger asChild>
-            <Button onClick={resetForm}>
-              <Plus className="mr-2 h-4 w-4" />
-              Novo Registro
-            </Button>
-          </DialogTrigger>
-          <DialogContent className="sm:max-w-[600px]">
-            <DialogHeader>
-              <DialogTitle>{editingRegistro ? 'Editar Registro' : 'Novo Registro'}</DialogTitle>
-              <DialogDescription>Preencha as respostas do formulário</DialogDescription>
-            </DialogHeader>
-            <form onSubmit={handleSubmit} className="grid gap-4 py-4">
-
-              {/* Formulário */}
-              <div className="grid gap-2">
-                <Label>Formulário</Label>
-                <Select
-                  value={formData.formulario_id}
-                  onValueChange={(v) => setFormData({ ...formData, formulario_id: v })}
-                  required
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Selecione o formulário" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {formularios.map(f => (
-                      <SelectItem key={f.id} value={f.id.toString()}>{f.titulo}</SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-
-              {/* Meta Terapêutica */}
-              <div className="grid gap-2">
-                <Label>Meta Terapêutica</Label>
-                <Select
-                  value={formData.meta_id}
-                  onValueChange={(v) => setFormData({ ...formData, meta_id: v })}
-                  required
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Selecione a meta" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {metas.map(m => (
-                      <SelectItem key={m.id} value={m.id.toString()}>{m.descricao}</SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-
-              {/* Data */}
-              <div className="grid gap-2">
-                <Label>Data</Label>
-                <Input
-                  type="date"
-                  value={formData.data}
-                  onChange={(e) => setFormData({ ...formData, data: e.target.value })}
-                  required
-                />
-              </div>
-
-              {/* Nota */}
-              <div className="grid gap-2">
-                <Label>Nota (1 a 5)</Label>
-                <Input
-                  type="number"
-                  min="1"
-                  max="5"
-                  value={formData.nota || ""}
-                  onChange={(e) => setFormData({ ...formData, nota: e.target.value })}
-                />
-              </div>
-
-              {/* Observação */}
-              <div className="grid gap-2">
-                <Label>Observação</Label>
-                <Input
-                  type="text"
-                  value={formData.observacao || ""}
-                  onChange={(e) => setFormData({ ...formData, observacao: e.target.value })}
-                />
-              </div>
-
-              {/* Perguntas do formulário */}
-              {renderPerguntas()}
-
-              <DialogFooter>
-                <Button type="button" variant="outline" onClick={() => setDialogOpen(false)}>Cancelar</Button>
-                <Button type="submit">{editingRegistro ? 'Atualizar' : 'Registrar'}</Button>
-              </DialogFooter>
-            </form>
-          </DialogContent>
-        </Dialog>
+        <Button onClick={handleNovoRegistro}>
+          <Plus className="mr-2 h-4 w-4" />
+          Novo Registro
+        </Button>
       </div>
 
       {/* Filtros */}
@@ -397,7 +467,7 @@ export default function RegistroDiario() {
                   <SelectContent>
                     <SelectItem value="todos">Todos os formulários</SelectItem>
                     {formularios.map(f => (
-                      <SelectItem key={f.id} value={f.id.toString()}>{f.titulo}</SelectItem>
+                      <SelectItem key={f.id} value={f.id.toString()}>{f.nome || f.titulo}</SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
@@ -583,7 +653,7 @@ export default function RegistroDiario() {
                   <TableRow key={r.id}>
                     <TableCell>{new Date(r.data).toLocaleDateString('pt-BR')}</TableCell>
                     <TableCell>{r.meta_descricao}</TableCell>
-                    <TableCell>{r.formulario_titulo}</TableCell>
+                    <TableCell>{r.formulario_nome || r.formulario_titulo}</TableCell>
                     <TableCell>
                       {r.nota ? (
                         <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
@@ -609,6 +679,129 @@ export default function RegistroDiario() {
           )}
         </CardContent>
       </Card>
+
+      {/* Tela Cheia para Formulário */}
+      {showFullScreen && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+          <div className="bg-white rounded-lg w-full max-w-4xl max-h-[90vh] overflow-y-auto">
+            <div className="sticky top-0 bg-white border-b p-6 flex justify-between items-center">
+              <h2 className="text-2xl font-bold">
+                {editingRegistro ? 'Editar Registro' : 'Novo Registro'}
+              </h2>
+              <Button 
+                variant="outline" 
+                onClick={() => setShowFullScreen(false)}
+              >
+                <X className="h-4 w-4" />
+              </Button>
+            </div>
+            
+            <form onSubmit={handleSubmit} className="p-6 space-y-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {/* Formulário */}
+                <div className="grid gap-2">
+                  <Label>Formulário *</Label>
+                  <Select
+                    value={formularioSelecionado?.id?.toString() || ''}
+                    onValueChange={(v) => carregarPerguntas(parseInt(v))}
+                    required
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Selecione o formulário" />
+                    </SelectTrigger>
+                    <SelectContent>
+                    {formularios.map(f => (
+                      <SelectItem key={f.id} value={f.id.toString()}>
+                        {f.nome || f.titulo || `Formulário ${f.id}`}
+                      </SelectItem>
+                    ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                {/* Meta Terapêutica */}
+                <div className="grid gap-2">
+                  <Label>Meta Terapêutica *</Label>
+                  <Select
+                    value={formData.meta_id}
+                    onValueChange={(v) => setFormData({ ...formData, meta_id: v })}
+                    required
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Selecione a meta" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {metas.map(m => (
+                        <SelectItem key={m.id} value={m.id.toString()}>
+                          {m.descricao || `Meta ${m.id}`}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                {/* Data */}
+                <div className="grid gap-2">
+                  <Label>Data *</Label>
+                  <Input
+                    type="date"
+                    value={formData.data}
+                    onChange={(e) => setFormData({ ...formData, data: e.target.value })}
+                    required
+                  />
+                </div>
+
+                {/* Nota */}
+                <div className="grid gap-2">
+                  <Label>Nota (1 a 5)</Label>
+                  <Input
+                    type="number"
+                    min="1"
+                    max="5"
+                    value={formData.nota || ""}
+                    onChange={(e) => setFormData({ ...formData, nota: e.target.value })}
+                    placeholder="Digite uma nota de 1 a 5"
+                  />
+                </div>
+              </div>
+
+              {/* Observação */}
+              <div className="grid gap-2">
+                <Label>Observação</Label>
+                <Input
+                  type="text"
+                  value={formData.observacao || ""}
+                  onChange={(e) => setFormData({ ...formData, observacao: e.target.value })}
+                  placeholder="Digite uma observação (opcional)"
+                />
+              </div>
+
+              {/* Perguntas do formulário */}
+              {perguntas.length > 0 && (
+                <div className="space-y-4">
+                  <h3 className="text-lg font-semibold border-b pb-2">
+                    Perguntas do Formulário: {formularioSelecionado?.nome || formularioSelecionado?.titulo}
+                  </h3>
+                  {renderPerguntas()}
+                </div>
+              )}
+
+              <div className="flex justify-end gap-4 pt-6 border-t">
+                <Button 
+                  type="button" 
+                  variant="outline" 
+                  onClick={() => setShowFullScreen(false)}
+                >
+                  Cancelar
+                </Button>
+                <Button type="submit">
+                  {editingRegistro ? 'Atualizar' : 'Registrar'}
+                </Button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
