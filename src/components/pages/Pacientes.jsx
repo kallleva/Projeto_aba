@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -8,10 +9,11 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { Badge } from '@/components/ui/badge'
 import { useToast } from '@/hooks/use-toast'
-import { Plus, Edit, Trash2, Calendar, Search } from 'lucide-react' // 🔹 adiciona Search
+import { Plus, Edit, Trash2, Search, BarChart3 } from 'lucide-react'
 import ApiService from '@/lib/api'
 
 export default function Pacientes() {
+  const navigate = useNavigate()
   const [pacientes, setPacientes] = useState([])
   const [loading, setLoading] = useState(true)
   const [dialogOpen, setDialogOpen] = useState(false)
@@ -23,7 +25,7 @@ export default function Pacientes() {
     contato: '',
     diagnostico: ''
   })
-  const [search, setSearch] = useState('') // 🔹 estado para o filtro
+  const [search, setSearch] = useState('')
   const { toast } = useToast()
 
   useEffect(() => {
@@ -45,6 +47,7 @@ export default function Pacientes() {
       setLoading(false)
     }
   }
+
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -75,15 +78,15 @@ export default function Pacientes() {
   }
 
   const handleEdit = (paciente) => {
-    setEditingPaciente(paciente)
-    setFormData({
-      nome: paciente.nome,
-      data_nascimento: paciente.data_nascimento,
-      responsavel: paciente.responsavel,
-      contato: paciente.contato,
-      diagnostico: paciente.diagnostico
-    })
-    setDialogOpen(true)
+    navigate(`/pacientes/${paciente.id}`)
+  }
+
+  const handleViewRelatorio = (paciente) => {
+    navigate(`/pacientes/${paciente.id}?tab=relatorio`)
+  }
+
+  const formatDate = (dateString) => {
+    return new Date(dateString).toLocaleDateString('pt-BR')
   }
 
   const handleDelete = async (id) => {
@@ -296,7 +299,16 @@ export default function Pacientes() {
                         <Button
                           variant="outline"
                           size="sm"
+                          onClick={() => handleViewRelatorio(paciente)}
+                          title="Ver Relatório"
+                        >
+                          <BarChart3 className="h-4 w-4" />
+                        </Button>
+                        <Button
+                          variant="outline"
+                          size="sm"
                           onClick={() => handleEdit(paciente)}
+                          title="Editar"
                         >
                           <Edit className="h-4 w-4" />
                         </Button>
@@ -304,6 +316,7 @@ export default function Pacientes() {
                           variant="outline"
                           size="sm"
                           onClick={() => handleDelete(paciente.id)}
+                          title="Excluir"
                         >
                           <Trash2 className="h-4 w-4" />
                         </Button>

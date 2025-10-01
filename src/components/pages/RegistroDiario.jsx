@@ -131,21 +131,26 @@ export default function RegistroDiario() {
     try {
       const formulario = await ApiService.getFormulario(formularioId)
       setFormularioSelecionado(formulario)
-      setPerguntas(formulario.perguntas || [])
+      
+      // Filtrar apenas as perguntas deste formulário específico
+      const perguntasDoFormulario = formulario.perguntas || []
+      setPerguntas(perguntasDoFormulario)
+      
+      // Limpar respostas anteriores quando carregar novo formulário
+      setFormData(prev => ({
+        ...prev,
+        respostas: {}
+      }))
     } catch (error) {
       toast({ title: 'Erro', description: 'Erro ao carregar perguntas: ' + error.message, variant: 'destructive' })
     }
   }
 
   const handleRespostaChange = (perguntaId, valor) => {
-    console.log('Mudança de resposta:', { perguntaId, valor })
-    
     const novasRespostas = { ...formData.respostas, [perguntaId]: valor }
     
     // Calcular fórmulas que dependem desta resposta
     const respostasCalculadas = calcularFormulas(novasRespostas)
-    
-    console.log('Respostas calculadas:', respostasCalculadas)
     
     setFormData(prev => ({
       ...prev,
@@ -191,8 +196,16 @@ export default function RegistroDiario() {
   const handleSubmit = async (e) => {
     e.preventDefault()
     try {
-      // Validar perguntas obrigatórias
-      const perguntasObrigatorias = perguntas.filter(p => p.obrigatoria && p.tipo !== 'FORMULA')
+      // Validar perguntas obrigatórias apenas do formulário atual
+      // Garantir que estamos validando apenas perguntas do formulário selecionado
+      const perguntasDoFormularioAtual = perguntas.filter(p => {
+        // Verificar se a pergunta pertence ao formulário selecionado
+        return formularioSelecionado && formularioSelecionado.perguntas && 
+               formularioSelecionado.perguntas.some(fp => fp.id === p.id)
+      })
+      
+      const perguntasObrigatorias = perguntasDoFormularioAtual.filter(p => p.obrigatoria && p.tipo !== 'FORMULA')
+      
       const respostasFaltando = perguntasObrigatorias.filter(p => {
         const resposta = formData.respostas[p.id.toString()]
         return !resposta || resposta.trim() === ''
@@ -207,8 +220,8 @@ export default function RegistroDiario() {
         return
       }
 
-      // Validar se perguntas MULTIPLA têm opções definidas
-      const perguntasMultipla = perguntas.filter(p => p.tipo === 'MULTIPLA')
+      // Validar se perguntas MULTIPLA têm opções definidas (apenas do formulário atual)
+      const perguntasMultipla = perguntasDoFormularioAtual.filter(p => p.tipo === 'MULTIPLA')
       const perguntasSemOpcoes = perguntasMultipla.filter(p => !p.opcoes || p.opcoes.length === 0)
       
       if (perguntasSemOpcoes.length > 0) {
@@ -220,8 +233,8 @@ export default function RegistroDiario() {
         return
       }
 
-      // Validar se perguntas FORMULA têm fórmula definida
-      const perguntasFormula = perguntas.filter(p => p.tipo === 'FORMULA')
+      // Validar se perguntas FORMULA têm fórmula definida (apenas do formulário atual)
+      const perguntasFormula = perguntasDoFormularioAtual.filter(p => p.tipo === 'FORMULA')
       const perguntasSemFormula = perguntasFormula.filter(p => !p.formula || p.formula.trim() === '')
       
       if (perguntasSemFormula.length > 0) {
@@ -239,34 +252,40 @@ export default function RegistroDiario() {
         return
       }
 
+      // Verificar se as perguntas carregadas pertencem ao formulário selecionado
+      if (perguntas.length === 0) {
+        toast({ title: 'Erro', description: 'Nenhuma pergunta encontrada para este formulário', variant: 'destructive' })
+        return
+      }
+
       // Validar se meta foi selecionada
       if (!formData.meta_id) {
         toast({ title: 'Erro', description: 'Selecione uma meta terapêutica', variant: 'destructive' })
         return
       }
 
-      // Filtrar respostas para enviar apenas as não-calculadas
+      // Preparar respostas conforme documentação da API
       const respostasParaEnviar = {}
-      Object.keys(formData.respostas).forEach(perguntaId => {
-        const pergunta = perguntas.find(p => p.id.toString() === perguntaId)
-        if (pergunta && pergunta.tipo !== 'FORMULA') {
-          respostasParaEnviar[perguntaId] = formData.respostas[perguntaId]
+      
+      // Incluir todas as respostas do formulário atual (incluindo fórmulas vazias)
+      perguntasDoFormularioAtual.forEach(pergunta => {
+        const perguntaId = pergunta.id.toString()
+        if (pergunta.tipo === 'FORMULA') {
+          // Para fórmulas, enviar string vazia (será calculada pelo backend)
+          respostasParaEnviar[perguntaId] = ""
+        } else {
+          // Para outras perguntas, enviar a resposta do usuário
+          respostasParaEnviar[perguntaId] = formData.respostas[perguntaId] || ""
         }
       })
 
-      console.log('Respostas para enviar:', respostasParaEnviar)
-      console.log('FormData completo:', formData)
-
       const dataToSend = {
-        formulario_id: formularioSelecionado.id,
         meta_id: parseInt(formData.meta_id),
         data: formData.data,
         nota: formData.nota ? parseInt(formData.nota) : null,
         observacao: formData.observacao || null,
         respostas: respostasParaEnviar
       }
-
-      console.log('Payload final:', dataToSend)
 
       if (editingRegistro) {
         await ApiService.updateChecklistDiario(editingRegistro.id, dataToSend)
@@ -286,12 +305,23 @@ export default function RegistroDiario() {
 
   const handleEdit = async (registro) => {
     setEditingRegistro(registro)
+    
+    // Preparar respostas do registro existente
+    const respostasExistentes = {}
+    if (registro.respostas && Array.isArray(registro.respostas)) {
+      registro.respostas.forEach(resposta => {
+        if (resposta.pergunta && resposta.pergunta.tipo !== 'FORMULA') {
+          respostasExistentes[resposta.pergunta_id.toString()] = resposta.resposta
+        }
+      })
+    }
+    
     setFormData({
       meta_id: registro.meta_id ? registro.meta_id.toString() : '',
       data: registro.data || new Date().toISOString().split('T')[0],
       nota: registro.nota || '',
       observacao: registro.observacao || '',
-      respostas: registro.respostas || {}
+      respostas: respostasExistentes
     })
     
     // Limpar perguntas e formulário selecionado primeiro
@@ -426,6 +456,11 @@ export default function RegistroDiario() {
               <div className="text-lg font-semibold text-blue-900">
                 Resultado: {formData.respostas[p.id.toString()] || 'Aguardando cálculo...'}
               </div>
+              {editingRegistro && (
+                <div className="text-xs text-blue-600 mt-1">
+                  (Esta fórmula será recalculada automaticamente pelo sistema)
+                </div>
+              )}
             </div>
           )}
         </div>

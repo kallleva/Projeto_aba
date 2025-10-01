@@ -232,6 +232,55 @@ class ApiService {
   }
 
   // ========================
+  // Relatórios de Fórmulas
+  // ========================
+  async getFormulasMeta(metaId, dataInicio = null, dataFim = null) {
+    let url = `/relatorios/formulas/${metaId}`
+    const params = new URLSearchParams()
+    
+    if (dataInicio) params.append('data_inicio', dataInicio)
+    if (dataFim) params.append('data_fim', dataFim)
+    
+    if (params.toString()) {
+      url += `?${params.toString()}`
+    }
+    
+    return this.request(url)
+  }
+
+  async getEvolucaoFormula(perguntaId, dataInicio = null, dataFim = null) {
+    let url = `/relatorios/formulas/evolucao/${perguntaId}`
+    const params = new URLSearchParams()
+    
+    if (dataInicio) params.append('data_inicio', dataInicio)
+    if (dataFim) params.append('data_fim', dataFim)
+    
+    if (params.toString()) {
+      url += `?${params.toString()}`
+    }
+    
+    return this.request(url)
+  }
+
+  async getFormulasChecklist(checklistId) {
+    return this.request(`/checklists-diarios/${checklistId}/formulas`)
+  }
+
+  async getFormulasMetaChecklist(metaId, dataInicio = null, dataFim = null) {
+    let url = `/checklists-diarios/meta/${metaId}/formulas`
+    const params = new URLSearchParams()
+    
+    if (dataInicio) params.append('data_inicio', dataInicio)
+    if (dataFim) params.append('data_fim', dataFim)
+    
+    if (params.toString()) {
+      url += `?${params.toString()}`
+    }
+    
+    return this.request(url)
+  }
+
+  // ========================
   // Formulários
   // ========================
   async getFormularios() {

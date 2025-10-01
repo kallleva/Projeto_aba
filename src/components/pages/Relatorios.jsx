@@ -42,6 +42,8 @@ export default function Relatorios() {
   const [relatorioPaciente, setRelatorioPaciente] = useState(null)
   const [relatorioProfissional, setRelatorioProfissional] = useState(null)
   const [relatorioPeriodo, setRelatorioPeriodo] = useState(null)
+  const [formulasMeta, setFormulasMeta] = useState(null)
+  const [evolucaoFormula, setEvolucaoFormula] = useState(null)
   
   // Estados para filtros
   const [metasDisponiveis, setMetasDisponiveis] = useState([])
@@ -55,7 +57,13 @@ export default function Relatorios() {
     dataInicio: '',
     dataFim: '',
     periodoInicio: '',
-    periodoFim: ''
+    periodoFim: '',
+    formulaMetaId: '',
+    formulaDataInicio: '',
+    formulaDataFim: '',
+    perguntaId: '',
+    evolucaoDataInicio: '',
+    evolucaoDataFim: ''
   })
   
   const { toast } = useToast()
@@ -184,6 +192,58 @@ export default function Relatorios() {
     }
   }
 
+  const handleBuscarFormulasMeta = async () => {
+    if (!filtros.formulaMetaId) {
+      toast({
+        title: 'Atenção',
+        description: 'Selecione uma meta para visualizar as fórmulas',
+        variant: 'destructive'
+      })
+      return
+    }
+
+    try {
+      const data = await ApiService.getFormulasMeta(
+        filtros.formulaMetaId,
+        filtros.formulaDataInicio,
+        filtros.formulaDataFim
+      )
+      setFormulasMeta(data)
+    } catch (error) {
+      toast({
+        title: 'Erro',
+        description: 'Erro ao buscar fórmulas da meta: ' + error.message,
+        variant: 'destructive'
+      })
+    }
+  }
+
+  const handleBuscarEvolucaoFormula = async () => {
+    if (!filtros.perguntaId) {
+      toast({
+        title: 'Atenção',
+        description: 'Selecione uma pergunta para visualizar a evolução da fórmula',
+        variant: 'destructive'
+      })
+      return
+    }
+
+    try {
+      const data = await ApiService.getEvolucaoFormula(
+        filtros.perguntaId,
+        filtros.evolucaoDataInicio,
+        filtros.evolucaoDataFim
+      )
+      setEvolucaoFormula(data)
+    } catch (error) {
+      toast({
+        title: 'Erro',
+        description: 'Erro ao buscar evolução da fórmula: ' + error.message,
+        variant: 'destructive'
+      })
+    }
+  }
+
   const formatDate = (dateString) => {
     return new Date(dateString).toLocaleDateString('pt-BR')
   }
@@ -215,6 +275,8 @@ export default function Relatorios() {
           <TabsTrigger value="paciente">Relatório de Paciente</TabsTrigger>
           <TabsTrigger value="profissional">Relatório de Profissional</TabsTrigger>
           <TabsTrigger value="periodo">Relatório por Período</TabsTrigger>
+          <TabsTrigger value="formulas">Fórmulas por Meta</TabsTrigger>
+          <TabsTrigger value="evolucao-formula">Evolução de Fórmula</TabsTrigger>
         </TabsList>
 
         {/* Dashboard Geral */}
@@ -404,7 +466,10 @@ export default function Relatorios() {
                     <YAxis domain={[1, 5]} />
                     <Tooltip 
                       labelFormatter={formatDate}
-                      formatter={(value) => [value, 'Nota']}
+                      formatter={(value, name) => {
+                        if (name === 'nota') return [value, 'Nota']
+                        return [value, name]
+                      }}
                     />
                     <Legend />
                     <Line 
@@ -416,6 +481,42 @@ export default function Relatorios() {
                     />
                   </LineChart>
                 </ResponsiveContainer>
+
+                {/* Exibir fórmulas calculadas se disponíveis */}
+                {evolucaoMeta.evolucao.some(item => item.formulas_calculadas && item.formulas_calculadas.length > 0) && (
+                  <div className="mt-6">
+                    <h4 className="text-lg font-semibold mb-4">Fórmulas Calculadas</h4>
+                    {evolucaoMeta.evolucao.map((item, index) => (
+                      item.formulas_calculadas && item.formulas_calculadas.length > 0 && (
+                        <div key={index} className="mb-4 p-4 border rounded-lg">
+                          <div className="text-sm text-muted-foreground mb-2">
+                            {formatDate(item.data)}
+                          </div>
+                          <div className="grid gap-2">
+                            {item.formulas_calculadas.map((formula, formulaIndex) => (
+                              <div key={formulaIndex} className="flex items-center justify-between p-2 bg-muted rounded">
+                                <div>
+                                  <div className="font-medium">{formula.pergunta_texto}</div>
+                                  <div className="text-sm text-muted-foreground">
+                                    Fórmula: {formula.formula}
+                                  </div>
+                                </div>
+                                <div className="text-right">
+                                  <div className="font-bold text-lg">{formula.valor_calculado}</div>
+                                  {formula.valor_numerico && (
+                                    <div className="text-sm text-muted-foreground">
+                                      Valor: {formula.valor_numerico}
+                                    </div>
+                                  )}
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      )
+                    ))}
+                  </div>
+                )}
               </CardContent>
             </Card>
           )}
@@ -696,6 +797,251 @@ export default function Relatorios() {
                       />
                     </LineChart>
                   </ResponsiveContainer>
+                </CardContent>
+              </Card>
+            </div>
+          )}
+        </TabsContent>
+
+        {/* Fórmulas por Meta */}
+        <TabsContent value="formulas" className="space-y-4">
+          <Card>
+            <CardHeader>
+              <CardTitle>Filtros para Fórmulas por Meta</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="grid gap-4 md:grid-cols-4">
+                <div className="space-y-2">
+                  <Label>Meta</Label>
+                  <Select 
+                    value={filtros.formulaMetaId} 
+                    onValueChange={(value) => setFiltros({...filtros, formulaMetaId: value})}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Selecione a meta" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {metasDisponiveis.map((meta) => (
+                        <SelectItem key={meta.id} value={meta.id.toString()}>
+                          {meta.descricao}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="space-y-2">
+                  <Label>Data Início</Label>
+                  <Input
+                    type="date"
+                    value={filtros.formulaDataInicio}
+                    onChange={(e) => setFiltros({...filtros, formulaDataInicio: e.target.value})}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label>Data Fim</Label>
+                  <Input
+                    type="date"
+                    value={filtros.formulaDataFim}
+                    onChange={(e) => setFiltros({...filtros, formulaDataFim: e.target.value})}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label>&nbsp;</Label>
+                  <Button onClick={handleBuscarFormulasMeta} className="w-full">
+                    <Filter className="mr-2 h-4 w-4" />
+                    Buscar Fórmulas
+                  </Button>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          {formulasMeta && (
+            <div className="space-y-4">
+              <Card>
+                <CardHeader>
+                  <CardTitle>Fórmulas da Meta: {formulasMeta.meta_descricao}</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="grid gap-4 md:grid-cols-3 mb-6">
+                    <div className="text-center">
+                      <div className="text-2xl font-bold">{formulasMeta.estatisticas_formulas.total_formulas}</div>
+                      <div className="text-sm text-muted-foreground">Total de Fórmulas</div>
+                    </div>
+                    <div className="text-center">
+                      <div className="text-2xl font-bold">{formulasMeta.estatisticas_formulas.formulas_com_dados}</div>
+                      <div className="text-sm text-muted-foreground">Fórmulas com Dados</div>
+                    </div>
+                    <div className="text-center">
+                      <div className="text-2xl font-bold">{formulasMeta.total_checklists}</div>
+                      <div className="text-sm text-muted-foreground">Total de Checklists</div>
+                    </div>
+                  </div>
+
+                  {formulasMeta.formulas_calculadas.map((formula, index) => (
+                    <div key={index} className="mb-6 p-4 border rounded-lg">
+                      <div className="flex items-center justify-between mb-4">
+                        <div>
+                          <h4 className="text-lg font-semibold">{formula.pergunta_texto}</h4>
+                          <p className="text-sm text-muted-foreground">Fórmula: {formula.formula}</p>
+                        </div>
+                        <Badge variant="secondary">
+                          {formula.valores_calculados.length} registros
+                        </Badge>
+                      </div>
+
+                      {formula.valores_calculados.length > 0 && (
+                        <div className="space-y-2">
+                          <h5 className="font-medium">Valores Calculados:</h5>
+                          <div className="grid gap-2">
+                            {formula.valores_calculados.map((valor, valorIndex) => (
+                              <div key={valorIndex} className="flex items-center justify-between p-2 bg-muted rounded">
+                                <div className="text-sm">
+                                  <div className="font-medium">{formatDate(valor.data)}</div>
+                                  <div className="text-muted-foreground">Checklist #{valor.checklist_id}</div>
+                                </div>
+                                <div className="text-right">
+                                  <div className="font-bold text-lg">{valor.valor_calculado}</div>
+                                  {valor.valor_numerico && (
+                                    <div className="text-sm text-muted-foreground">
+                                      Valor: {valor.valor_numerico}
+                                    </div>
+                                  )}
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </CardContent>
+              </Card>
+            </div>
+          )}
+        </TabsContent>
+
+        {/* Evolução de Fórmula Específica */}
+        <TabsContent value="evolucao-formula" className="space-y-4">
+          <Card>
+            <CardHeader>
+              <CardTitle>Filtros para Evolução de Fórmula</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="grid gap-4 md:grid-cols-4">
+                <div className="space-y-2">
+                  <Label>ID da Pergunta</Label>
+                  <Input
+                    type="number"
+                    placeholder="Ex: 5"
+                    value={filtros.perguntaId}
+                    onChange={(e) => setFiltros({...filtros, perguntaId: e.target.value})}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label>Data Início</Label>
+                  <Input
+                    type="date"
+                    value={filtros.evolucaoDataInicio}
+                    onChange={(e) => setFiltros({...filtros, evolucaoDataInicio: e.target.value})}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label>Data Fim</Label>
+                  <Input
+                    type="date"
+                    value={filtros.evolucaoDataFim}
+                    onChange={(e) => setFiltros({...filtros, evolucaoDataFim: e.target.value})}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label>&nbsp;</Label>
+                  <Button onClick={handleBuscarEvolucaoFormula} className="w-full">
+                    <Filter className="mr-2 h-4 w-4" />
+                    Buscar Evolução
+                  </Button>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          {evolucaoFormula && (
+            <div className="space-y-4">
+              <Card>
+                <CardHeader>
+                  <CardTitle>Evolução da Fórmula: {evolucaoFormula.pergunta.texto}</CardTitle>
+                  <CardDescription>
+                    Fórmula: {evolucaoFormula.pergunta.formula}
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="grid gap-4 md:grid-cols-4 mb-6">
+                    <div className="text-center">
+                      <div className="text-2xl font-bold">{evolucaoFormula.estatisticas.total_registros}</div>
+                      <div className="text-sm text-muted-foreground">Total de Registros</div>
+                    </div>
+                    <div className="text-center">
+                      <div className="text-2xl font-bold">{evolucaoFormula.estatisticas.media}</div>
+                      <div className="text-sm text-muted-foreground">Média</div>
+                    </div>
+                    <div className="text-center">
+                      <div className="text-2xl font-bold">{evolucaoFormula.estatisticas.maximo}</div>
+                      <div className="text-sm text-muted-foreground">Máximo</div>
+                    </div>
+                    <div className="text-center">
+                      <div className="text-2xl font-bold">{evolucaoFormula.estatisticas.minimo}</div>
+                      <div className="text-sm text-muted-foreground">Mínimo</div>
+                    </div>
+                  </div>
+
+                  {evolucaoFormula.evolucao.length > 0 && (
+                    <ResponsiveContainer width="100%" height={400}>
+                      <LineChart data={evolucaoFormula.evolucao}>
+                        <CartesianGrid strokeDasharray="3 3" />
+                        <XAxis 
+                          dataKey="data" 
+                          tickFormatter={formatDate}
+                        />
+                        <YAxis />
+                        <Tooltip 
+                          labelFormatter={formatDate}
+                          formatter={(value) => [value, 'Valor Calculado']}
+                        />
+                        <Legend />
+                        <Line 
+                          type="monotone" 
+                          dataKey="valor_numerico" 
+                          stroke="#8884d8" 
+                          strokeWidth={2}
+                          dot={{ fill: '#8884d8' }}
+                        />
+                      </LineChart>
+                    </ResponsiveContainer>
+                  )}
+
+                  <div className="mt-6">
+                    <h4 className="text-lg font-semibold mb-4">Histórico de Valores</h4>
+                    <div className="space-y-2">
+                      {evolucaoFormula.evolucao.map((item, index) => (
+                        <div key={index} className="flex items-center justify-between p-3 border rounded-lg">
+                          <div>
+                            <div className="font-medium">{formatDate(item.data)}</div>
+                            <div className="text-sm text-muted-foreground">
+                              Meta: {item.meta_descricao} | Checklist #{item.checklist_id}
+                            </div>
+                          </div>
+                          <div className="text-right">
+                            <div className="font-bold text-lg">{item.valor_calculado}</div>
+                            {item.valor_numerico && (
+                              <div className="text-sm text-muted-foreground">
+                                Valor: {item.valor_numerico}
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
                 </CardContent>
               </Card>
             </div>

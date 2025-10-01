@@ -6,6 +6,7 @@ import Login from '@/components/Login'
 import Layout from '@/components/Layout'
 import Dashboard from '@/components/pages/Dashboard'
 import Pacientes from '@/components/pages/Pacientes'
+import PacienteDetalhes from '@/components/pages/PacienteDetalhes'
 import Profissionais from '@/components/pages/Profissionais'
 import PlanosTerapeuticos from '@/components/pages/PlanosTerapeuticos'
 import MetasTerapeuticas from '@/components/pages/MetasTerapeuticas'
@@ -32,6 +33,11 @@ function App() {
                     <Route path="/pacientes" element={
                       <ProtectedRoute requireProfissional={true}>
                         <Pacientes />
+                      </ProtectedRoute>
+                    } />
+                    <Route path="/pacientes/:id" element={
+                      <ProtectedRoute requireProfissional={true}>
+                        <PacienteDetalhes />
                       </ProtectedRoute>
                     } />
                     <Route path="/profissionais" element={
