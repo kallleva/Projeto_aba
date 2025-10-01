@@ -11,14 +11,33 @@ class ApiService {
       ...options,
     }
 
-    const response = await fetch(url, config)
-    
-    if (!response.ok) {
-      const errorData = await response.json().catch(() => ({}))
-      throw new Error(errorData.erro || `HTTP error! status: ${response.status}`)
-    }
+    try {
+      console.log('API Request:', { url, config })
+      const response = await fetch(url, config)
+      console.log('API Response:', { status: response.status, ok: response.ok })
+      
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}))
+        console.error('API Error:', errorData)
+        throw new Error(errorData.erro || `HTTP error! status: ${response.status}`)
+      }
 
-    return response.json()
+      return response.json()
+    } catch (error) {
+      console.error('API Request Failed:', error)
+      
+      // Verificar se é erro de conectividade
+      if (error.name === 'TypeError' && error.message.includes('fetch')) {
+        throw new Error('Erro de conectividade. Verifique se o servidor está rodando em http://127.0.0.1:5000')
+      }
+      
+      // Verificar se é erro de rede
+      if (error.message.includes('ERR_FAILED') || error.message.includes('Failed to fetch')) {
+        throw new Error('Erro de rede. Verifique sua conexão e se o servidor está rodando.')
+      }
+      
+      throw error
+    }
   }
 
   // ========================
@@ -309,6 +328,113 @@ class ApiService {
     return this.request(`/formularios/${id}`, {
       method: 'DELETE',
     })
+  }
+
+  // ========================
+  // Agenda
+  // ========================
+  async getAgendamentos(filters = {}) {
+    const params = new URLSearchParams()
+    Object.entries(filters).forEach(([key, value]) => {
+      if (value) params.append(key, value)
+    })
+    
+    const url = params.toString() ? `/agenda?${params.toString()}` : '/agenda'
+    return this.request(url)
+  }
+
+  async getAgendamento(id) {
+    return this.request(`/agenda/${id}`)
+  }
+
+  async createAgendamento(data) {
+    return this.request('/agenda', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    })
+  }
+
+  async updateAgendamento(id, data) {
+    return this.request(`/agenda/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(data),
+    })
+  }
+
+  async deleteAgendamento(id) {
+    return this.request(`/agenda/${id}`, {
+      method: 'DELETE',
+    })
+  }
+
+  async updateStatusAgendamento(id, status) {
+    try {
+      // Tenta primeiro o endpoint específico de status
+      return await this.request(`/agenda/${id}/status`, {
+        method: 'PATCH',
+        body: JSON.stringify({ status }),
+      })
+    } catch (error) {
+      console.warn('Endpoint específico de status não encontrado, usando PUT completo:', error.message)
+      // Fallback: busca o agendamento atual e atualiza apenas o status
+      try {
+        const agendamento = await this.getAgendamento(id)
+        if (!agendamento) {
+          throw new Error('Agendamento não encontrado')
+        }
+        return await this.updateAgendamento(id, { ...agendamento, status })
+      } catch (fallbackError) {
+        console.error('Erro no fallback de atualização de status:', fallbackError)
+        throw new Error(`Erro ao atualizar status: ${fallbackError.message}`)
+      }
+    }
+  }
+
+  async updatePresencaAgendamento(id, presente) {
+    try {
+      // Tenta primeiro o endpoint específico de presença
+      return await this.request(`/agenda/${id}/presenca`, {
+        method: 'PATCH',
+        body: JSON.stringify({ presente }),
+      })
+    } catch (error) {
+      console.warn('Endpoint específico de presença não encontrado, usando PUT completo:', error.message)
+      // Fallback: busca o agendamento atual e atualiza apenas a presença
+      try {
+        const agendamento = await this.getAgendamento(id)
+        if (!agendamento) {
+          throw new Error('Agendamento não encontrado')
+        }
+        return await this.updateAgendamento(id, { ...agendamento, presente })
+      } catch (fallbackError) {
+        console.error('Erro no fallback de atualização de presença:', fallbackError)
+        throw new Error(`Erro ao atualizar presença: ${fallbackError.message}`)
+      }
+    }
+  }
+
+  async getAgendamentosPorMes(ano, mes, filters = {}) {
+    const params = new URLSearchParams()
+    Object.entries(filters).forEach(([key, value]) => {
+      if (value) params.append(key, value)
+    })
+    
+    const url = params.toString() 
+      ? `/agenda/mes/${ano}/${mes}?${params.toString()}`
+      : `/agenda/mes/${ano}/${mes}`
+    return this.request(url)
+  }
+
+  async getAgendamentosPorDia(data, filters = {}) {
+    const params = new URLSearchParams()
+    Object.entries(filters).forEach(([key, value]) => {
+      if (value) params.append(key, value)
+    })
+    
+    const url = params.toString() 
+      ? `/agenda/dia/${data}?${params.toString()}`
+      : `/agenda/dia/${data}`
+    return this.request(url)
   }
 }
 

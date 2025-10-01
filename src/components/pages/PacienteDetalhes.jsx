@@ -18,7 +18,11 @@ import {
   Calendar,
   User,
   Phone,
-  Mail
+  Mail,
+  Plus,
+  Edit,
+  Trash2,
+  Clock
 } from 'lucide-react'
 import { 
   LineChart, 
@@ -42,10 +46,18 @@ export default function PacienteDetalhes() {
   
   const [paciente, setPaciente] = useState(null)
   const [relatorioPaciente, setRelatorioPaciente] = useState(null)
+  const [agendamentos, setAgendamentos] = useState([])
+  const [profissionais, setProfissionais] = useState([])
   const [loading, setLoading] = useState(true)
   const [loadingRelatorio, setLoadingRelatorio] = useState(false)
+  const [loadingAgendamentos, setLoadingAgendamentos] = useState(false)
   const [saving, setSaving] = useState(false)
   const [activeTab, setActiveTab] = useState(searchParams.get('tab') || 'editar')
+  const [showAgendamentoForm, setShowAgendamentoForm] = useState(false)
+  const [editingAgendamento, setEditingAgendamento] = useState(null)
+  const [currentDate, setCurrentDate] = useState(new Date())
+  const [agendamentosPorDia, setAgendamentosPorDia] = useState({})
+  const [updatingAgendamento, setUpdatingAgendamento] = useState(null)
   
   const [formData, setFormData] = useState({
     nome: '',
@@ -55,10 +67,21 @@ export default function PacienteDetalhes() {
     diagnostico: ''
   })
 
+  const [agendamentoForm, setAgendamentoForm] = useState({
+    data_hora: '',
+    duracao_minutos: 60,
+    observacoes: '',
+    status: 'AGENDADO',
+    presente: null,
+    profissional_id: ''
+  })
+
   useEffect(() => {
     if (id) {
       loadPaciente()
       loadRelatorioPaciente()
+      loadAgendamentos()
+      loadProfissionais()
     }
   }, [id])
 
@@ -112,6 +135,47 @@ export default function PacienteDetalhes() {
     }
   }
 
+  const loadAgendamentos = async () => {
+    try {
+      setLoadingAgendamentos(true)
+      const data = await ApiService.getAgendamentos({ paciente_id: id })
+      setAgendamentos(data)
+      
+      // Organizar agendamentos por dia para o calendário
+      const agendamentosPorDiaObj = {}
+      data.forEach(agendamento => {
+        const dataAgendamento = new Date(agendamento.data_hora)
+        const chaveData = dataAgendamento.toISOString().split('T')[0]
+        if (!agendamentosPorDiaObj[chaveData]) {
+          agendamentosPorDiaObj[chaveData] = []
+        }
+        agendamentosPorDiaObj[chaveData].push(agendamento)
+      })
+      setAgendamentosPorDia(agendamentosPorDiaObj)
+    } catch (error) {
+      toast({
+        title: 'Erro',
+        description: 'Erro ao carregar agendamentos: ' + error.message,
+        variant: 'destructive'
+      })
+    } finally {
+      setLoadingAgendamentos(false)
+    }
+  }
+
+  const loadProfissionais = async () => {
+    try {
+      const data = await ApiService.getProfissionais()
+      setProfissionais(data)
+    } catch (error) {
+      toast({
+        title: 'Erro',
+        description: 'Erro ao carregar profissionais: ' + error.message,
+        variant: 'destructive'
+      })
+    }
+  }
+
   const handleSubmit = async (e) => {
     e.preventDefault()
     try {
@@ -131,6 +195,132 @@ export default function PacienteDetalhes() {
       })
     } finally {
       setSaving(false)
+    }
+  }
+
+  const handleAgendamentoSubmit = async (e) => {
+    e.preventDefault()
+    try {
+      setSaving(true)
+      const agendamentoData = {
+        ...agendamentoForm,
+        paciente_id: parseInt(id)
+      }
+
+      if (editingAgendamento) {
+        await ApiService.updateAgendamento(editingAgendamento.id, agendamentoData)
+        toast({
+          title: 'Sucesso',
+          description: 'Agendamento atualizado com sucesso!'
+        })
+      } else {
+        await ApiService.createAgendamento(agendamentoData)
+        toast({
+          title: 'Sucesso',
+          description: 'Agendamento criado com sucesso!'
+        })
+      }
+
+      // Recarregar agendamentos e resetar formulário
+      await loadAgendamentos()
+      resetAgendamentoForm()
+    } catch (error) {
+      toast({
+        title: 'Erro',
+        description: error.message,
+        variant: 'destructive'
+      })
+    } finally {
+      setSaving(false)
+    }
+  }
+
+  const resetAgendamentoForm = () => {
+    setAgendamentoForm({
+      data_hora: '',
+      duracao_minutos: 60,
+      observacoes: '',
+      status: 'AGENDADO',
+      presente: null,
+      profissional_id: ''
+    })
+    setShowAgendamentoForm(false)
+    setEditingAgendamento(null)
+  }
+
+  const handleEditAgendamento = (agendamento) => {
+    setEditingAgendamento(agendamento)
+    setAgendamentoForm({
+      data_hora: agendamento.data_hora.slice(0, 16), // Remove seconds for datetime-local
+      duracao_minutos: agendamento.duracao_minutos,
+      observacoes: agendamento.observacoes || '',
+      status: agendamento.status,
+      presente: agendamento.presente,
+      profissional_id: agendamento.profissional_id.toString()
+    })
+    setShowAgendamentoForm(true)
+  }
+
+  const handleDeleteAgendamento = async (agendamentoId) => {
+    if (window.confirm('Tem certeza que deseja excluir este agendamento?')) {
+      try {
+        await ApiService.deleteAgendamento(agendamentoId)
+        toast({
+          title: 'Sucesso',
+          description: 'Agendamento excluído com sucesso!'
+        })
+        await loadAgendamentos()
+      } catch (error) {
+        toast({
+          title: 'Erro',
+          description: error.message,
+          variant: 'destructive'
+        })
+      }
+    }
+  }
+
+  const handleUpdateStatus = async (agendamentoId, newStatus) => {
+    try {
+      setUpdatingAgendamento(agendamentoId)
+      console.log('Atualizando status:', { agendamentoId, newStatus })
+      await ApiService.updateStatusAgendamento(agendamentoId, newStatus)
+      toast({
+        title: 'Sucesso',
+        description: 'Status do agendamento atualizado!'
+      })
+      await loadAgendamentos()
+    } catch (error) {
+      console.error('Erro ao atualizar status:', error)
+      toast({
+        title: 'Erro',
+        description: `Erro ao atualizar status: ${error.message}`,
+        variant: 'destructive'
+      })
+    } finally {
+      setUpdatingAgendamento(null)
+    }
+  }
+
+  const handleUpdatePresenca = async (agendamentoId, presente) => {
+    try {
+      setUpdatingAgendamento(agendamentoId)
+      console.log('Atualizando presença:', { agendamentoId, presente })
+      await ApiService.updatePresencaAgendamento(agendamentoId, presente)
+      toast({
+        title: 'Sucesso',
+        description: 'Presença atualizada!'
+      })
+      await loadAgendamentos()
+    } catch (error) {
+      console.error('Erro ao atualizar presença:', error)
+      toast({
+        title: 'Erro',
+        description: `Erro ao atualizar presença: ${error.message}`,
+        variant: 'destructive'
+      })
+    } finally {
+      setUpdatingAgendamento(null)
     }
   }
 
@@ -154,8 +344,108 @@ export default function PacienteDetalhes() {
     }
   }
 
+  const getStatusBadgeVariant = (status) => {
+    switch (status) {
+      case 'AGENDADO': return 'outline'
+      case 'CONFIRMADO': return 'default'
+      case 'REALIZADO': return 'secondary'
+      case 'CANCELADO': return 'destructive'
+      case 'FALTOU': return 'destructive'
+      default: return 'outline'
+    }
+  }
+
+  const getStatusLabel = (status) => {
+    switch (status) {
+      case 'AGENDADO': return 'Agendado'
+      case 'CONFIRMADO': return 'Confirmado'
+      case 'REALIZADO': return 'Realizado'
+      case 'CANCELADO': return 'Cancelado'
+      case 'FALTOU': return 'Faltou'
+      default: return status
+    }
+  }
+
+  const getPresencaLabel = (presente) => {
+    if (presente === true) return 'Presente'
+    if (presente === false) return 'Ausente'
+    return 'Não informado'
+  }
+
+  const getPresencaBadgeVariant = (presente) => {
+    if (presente === true) return 'default'
+    if (presente === false) return 'destructive'
+    return 'outline'
+  }
+
   const formatDate = (dateString) => {
     return new Date(dateString).toLocaleDateString('pt-BR')
+  }
+
+  const formatDateTime = (dateString) => {
+    return new Date(dateString).toLocaleString('pt-BR')
+  }
+
+  const formatTime = (dateString) => {
+    return new Date(dateString).toLocaleTimeString('pt-BR', { 
+      hour: '2-digit', 
+      minute: '2-digit' 
+    })
+  }
+
+  const getDaysInMonth = (date) => {
+    const year = date.getFullYear()
+    const month = date.getMonth()
+    const firstDay = new Date(year, month, 1)
+    const lastDay = new Date(year, month + 1, 0)
+    const daysInMonth = lastDay.getDate()
+    const startingDayOfWeek = firstDay.getDay()
+    
+    const days = []
+    
+    // Adicionar dias vazios do mês anterior
+    for (let i = 0; i < startingDayOfWeek; i++) {
+      days.push(null)
+    }
+    
+    // Adicionar dias do mês atual
+    for (let day = 1; day <= daysInMonth; day++) {
+      days.push(new Date(year, month, day))
+    }
+    
+    return days
+  }
+
+  const getAgendamentosDoDia = (date) => {
+    if (!date) return []
+    const chaveData = date.toISOString().split('T')[0]
+    return agendamentosPorDia[chaveData] || []
+  }
+
+  const navigateMonth = (direction) => {
+    setCurrentDate(prev => {
+      const newDate = new Date(prev)
+      newDate.setMonth(prev.getMonth() + direction)
+      return newDate
+    })
+  }
+
+  const getDayClassName = (date, agendamentosDoDia) => {
+    if (!date) return 'p-2 h-24 border border-gray-200 bg-gray-50'
+    
+    const baseClass = 'p-2 h-24 border border-gray-200 cursor-pointer hover:bg-gray-50'
+    const today = new Date()
+    const isToday = date.toDateString() === today.toDateString()
+    
+    if (isToday) {
+      return `${baseClass} bg-blue-50 border-blue-300`
+    }
+    
+    if (agendamentosDoDia.length > 0) {
+      return `${baseClass} bg-green-50 border-green-300`
+    }
+    
+    return baseClass
   }
 
   if (loading) {
@@ -214,6 +504,10 @@ export default function PacienteDetalhes() {
           <TabsTrigger value="editar" className="flex items-center gap-2">
             <User className="h-4 w-4" />
             Editar Informações
+          </TabsTrigger>
+          <TabsTrigger value="agenda" className="flex items-center gap-2">
+            <Calendar className="h-4 w-4" />
+            Agenda
           </TabsTrigger>
           <TabsTrigger value="relatorio" className="flex items-center gap-2">
             <BarChart3 className="h-4 w-4" />
@@ -315,6 +609,358 @@ export default function PacienteDetalhes() {
               </form>
             </CardContent>
           </Card>
+        </TabsContent>
+
+        {/* Aba de Agenda */}
+        <TabsContent value="agenda">
+          <div className="space-y-4">
+            {/* Cabeçalho da Agenda */}
+            <div className="flex items-center justify-between">
+              <div>
+                <h3 className="text-lg font-semibold">Agenda do Paciente</h3>
+                <p className="text-sm text-muted-foreground">
+                  Gerencie os agendamentos de {paciente.nome}
+                </p>
+              </div>
+              <Button 
+                onClick={() => setShowAgendamentoForm(true)}
+                className="flex items-center gap-2"
+              >
+                <Plus className="h-4 w-4" />
+                Novo Agendamento
+              </Button>
+            </div>
+
+            {/* Formulário de Agendamento */}
+            {showAgendamentoForm && (
+              <Card>
+                <CardHeader>
+                  <CardTitle>
+                    {editingAgendamento ? 'Editar Agendamento' : 'Novo Agendamento'}
+                  </CardTitle>
+                  <CardDescription>
+                    {editingAgendamento 
+                      ? 'Atualize as informações do agendamento'
+                      : 'Crie um novo agendamento para o paciente'
+                    }
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <form onSubmit={handleAgendamentoSubmit} className="space-y-4">
+                    <div className="grid gap-4 md:grid-cols-2">
+                      <div className="space-y-2">
+                        <Label htmlFor="data_hora">Data e Hora</Label>
+                        <Input
+                          id="data_hora"
+                          type="datetime-local"
+                          value={agendamentoForm.data_hora}
+                          onChange={(e) => setAgendamentoForm({...agendamentoForm, data_hora: e.target.value})}
+                          required
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="duracao_minutos">Duração (minutos)</Label>
+                        <Input
+                          id="duracao_minutos"
+                          type="number"
+                          min="15"
+                          max="480"
+                          step="15"
+                          value={agendamentoForm.duracao_minutos}
+                          onChange={(e) => setAgendamentoForm({...agendamentoForm, duracao_minutos: parseInt(e.target.value)})}
+                          required
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="profissional_id">Profissional</Label>
+                        <Select 
+                          value={agendamentoForm.profissional_id} 
+                          onValueChange={(value) => setAgendamentoForm({...agendamentoForm, profissional_id: value})}
+                          required
+                        >
+                          <SelectTrigger>
+                            <SelectValue placeholder="Selecione o profissional" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {profissionais.map((profissional) => (
+                              <SelectItem key={profissional.id} value={profissional.id.toString()}>
+                                {profissional.nome} - {profissional.especialidade}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="status">Status</Label>
+                        <Select 
+                          value={agendamentoForm.status} 
+                          onValueChange={(value) => setAgendamentoForm({...agendamentoForm, status: value})}
+                          required
+                        >
+                          <SelectTrigger>
+                            <SelectValue placeholder="Selecione o status" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="AGENDADO">Agendado</SelectItem>
+                            <SelectItem value="CONFIRMADO">Confirmado</SelectItem>
+                            <SelectItem value="REALIZADO">Realizado</SelectItem>
+                            <SelectItem value="CANCELADO">Cancelado</SelectItem>
+                            <SelectItem value="FALTOU">Faltou</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="presente">Presença</Label>
+                        <Select 
+                          value={agendamentoForm.presente === null ? 'null' : agendamentoForm.presente.toString()} 
+                          onValueChange={(value) => {
+                            const presenteValue = value === 'null' ? null : value === 'true'
+                            setAgendamentoForm({...agendamentoForm, presente: presenteValue})
+                          }}
+                        >
+                          <SelectTrigger>
+                            <SelectValue placeholder="Selecione a presença" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="null">Não informado</SelectItem>
+                            <SelectItem value="true">Presente</SelectItem>
+                            <SelectItem value="false">Ausente</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="observacoes">Observações</Label>
+                      <Input
+                        id="observacoes"
+                        value={agendamentoForm.observacoes}
+                        onChange={(e) => setAgendamentoForm({...agendamentoForm, observacoes: e.target.value})}
+                        placeholder="Observações sobre o agendamento (opcional)"
+                      />
+                    </div>
+
+                    <div className="flex justify-end gap-4">
+                      <Button 
+                        type="button" 
+                        variant="outline" 
+                        onClick={resetAgendamentoForm}
+                      >
+                        Cancelar
+                      </Button>
+                      <Button type="submit" disabled={saving}>
+                        {saving ? (
+                          <>
+                            <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                            Salvando...
+                          </>
+                        ) : (
+                          <>
+                            <Save className="mr-2 h-4 w-4" />
+                            {editingAgendamento ? 'Atualizar' : 'Criar'} Agendamento
+                          </>
+                        )}
+                      </Button>
+                    </div>
+                  </form>
+                </CardContent>
+              </Card>
+            )}
+
+            {/* Calendário */}
+            <Card>
+              <CardHeader>
+                <div className="flex items-center justify-between">
+                  <div>
+                    <CardTitle>Calendário de Agendamentos</CardTitle>
+                    <CardDescription>
+                      Visualize os agendamentos por mês
+                    </CardDescription>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => navigateMonth(-1)}
+                    >
+                      ←
+                    </Button>
+                    <span className="font-medium min-w-[120px] text-center">
+                      {currentDate.toLocaleDateString('pt-BR', { 
+                        month: 'long', 
+                        year: 'numeric' 
+                      })}
+                    </span>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => navigateMonth(1)}
+                    >
+                      →
+                    </Button>
+                  </div>
+                </div>
+              </CardHeader>
+              <CardContent>
+                <div className="grid grid-cols-7 gap-1">
+                  {/* Cabeçalho dos dias da semana */}
+                  {['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'].map(day => (
+                    <div key={day} className="p-2 text-center font-medium text-sm bg-gray-100">
+                      {day}
+                    </div>
+                  ))}
+                  
+                  {/* Dias do calendário */}
+                  {getDaysInMonth(currentDate).map((date, index) => {
+                    const agendamentosDoDia = getAgendamentosDoDia(date)
+                    return (
+                      <div key={index} className={getDayClassName(date, agendamentosDoDia)}>
+                        {date && (
+                          <>
+                            <div className="text-sm font-medium mb-1">
+                              {date.getDate()}
+                            </div>
+                            <div className="space-y-1">
+                              {agendamentosDoDia.slice(0, 2).map(agendamento => (
+                                <div
+                                  key={agendamento.id}
+                                  className="text-xs p-1 rounded bg-blue-100 text-blue-800 truncate"
+                                  title={`${formatTime(agendamento.data_hora)} - ${agendamento.profissional?.nome}`}
+                                >
+                                  {formatTime(agendamento.data_hora)}
+                                </div>
+                              ))}
+                              {agendamentosDoDia.length > 2 && (
+                                <div className="text-xs text-gray-500">
+                                  +{agendamentosDoDia.length - 2} mais
+                                </div>
+                              )}
+                            </div>
+                          </>
+                        )}
+                      </div>
+                    )
+                  })}
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Lista de Agendamentos */}
+            <Card>
+              <CardHeader>
+                <CardTitle>Lista de Agendamentos</CardTitle>
+                <CardDescription>
+                  Lista detalhada de todos os agendamentos do paciente
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                {loadingAgendamentos ? (
+                  <div className="text-center py-4">
+                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto"></div>
+                    <p className="mt-2 text-muted-foreground">Carregando agendamentos...</p>
+                  </div>
+                ) : agendamentos.length > 0 ? (
+                  <div className="space-y-4">
+                    {agendamentos.map((agendamento) => (
+                      <div key={agendamento.id} className="border rounded-lg p-4">
+                        <div className="flex items-center justify-between">
+                          <div className="flex-1">
+                            <div className="flex items-center gap-4 mb-2">
+                              <h4 className="font-medium">
+                                {formatDateTime(agendamento.data_hora)}
+                              </h4>
+                              <Badge variant={getStatusBadgeVariant(agendamento.status)}>
+                                {getStatusLabel(agendamento.status)}
+                              </Badge>
+                              <Badge variant={getPresencaBadgeVariant(agendamento.presente)}>
+                                {getPresencaLabel(agendamento.presente)}
+                              </Badge>
+                              <div className="flex items-center gap-1 text-sm text-muted-foreground">
+                                <Clock className="h-4 w-4" />
+                                {agendamento.duracao_minutos} min
+                              </div>
+                            </div>
+                            <div className="text-sm text-muted-foreground">
+                              <p><strong>Profissional:</strong> {agendamento.profissional?.nome} - {agendamento.profissional?.especialidade}</p>
+                              {agendamento.observacoes && (
+                                <p><strong>Observações:</strong> {agendamento.observacoes}</p>
+                              )}
+                            </div>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <Select 
+                              value={agendamento.status} 
+                              onValueChange={(value) => handleUpdateStatus(agendamento.id, value)}
+                              disabled={updatingAgendamento === agendamento.id}
+                            >
+                              <SelectTrigger className="w-32">
+                                <SelectValue />
+                                {updatingAgendamento === agendamento.id && (
+                                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-primary ml-2"></div>
+                                )}
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectItem value="AGENDADO">Agendado</SelectItem>
+                                <SelectItem value="CONFIRMADO">Confirmado</SelectItem>
+                                <SelectItem value="REALIZADO">Realizado</SelectItem>
+                                <SelectItem value="CANCELADO">Cancelado</SelectItem>
+                                <SelectItem value="FALTOU">Faltou</SelectItem>
+                              </SelectContent>
+                            </Select>
+                            <Select 
+                              value={agendamento.presente === null ? 'null' : agendamento.presente.toString()} 
+                              onValueChange={(value) => {
+                                const presenteValue = value === 'null' ? null : value === 'true'
+                                handleUpdatePresenca(agendamento.id, presenteValue)
+                              }}
+                              disabled={updatingAgendamento === agendamento.id}
+                            >
+                              <SelectTrigger className="w-32">
+                                <SelectValue />
+                                {updatingAgendamento === agendamento.id && (
+                                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-primary ml-2"></div>
+                                )}
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectItem value="null">Não informado</SelectItem>
+                                <SelectItem value="true">Presente</SelectItem>
+                                <SelectItem value="false">Ausente</SelectItem>
+                              </SelectContent>
+                            </Select>
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={() => handleEditAgendamento(agendamento)}
+                            >
+                              <Edit className="h-4 w-4" />
+                            </Button>
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={() => handleDeleteAgendamento(agendamento.id)}
+                            >
+                              <Trash2 className="h-4 w-4" />
+                            </Button>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="text-center py-8 text-muted-foreground">
+                    <Calendar className="h-12 w-12 mx-auto mb-4 opacity-50" />
+                    <p>Nenhum agendamento encontrado para este paciente.</p>
+                    <Button 
+                      onClick={() => setShowAgendamentoForm(true)}
+                      className="mt-4"
+                    >
+                      <Plus className="mr-2 h-4 w-4" />
+                      Criar Primeiro Agendamento
+                    </Button>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          </div>
         </TabsContent>
 
         {/* Aba de Relatório */}
