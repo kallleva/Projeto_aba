@@ -20,7 +20,7 @@ export default function ProtectedRoute({ children, requireProfissional = false }
     return <Navigate to="/login" replace />
   }
 
-  if (requireProfissional && user.tipo_usuario !== 'Profissional') {
+  if (requireProfissional && user.tipo_usuario !== 'PROFISSIONAL') {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">

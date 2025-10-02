@@ -20,16 +20,16 @@ import {
 } from 'lucide-react'
 
 const navigation = [
-  { name: 'Dashboard', href: '/', icon: Home, allowedFor: ['Profissional', 'Responsavel'] },
-  { name: 'Pacientes', href: '/pacientes', icon: Users, allowedFor: ['Profissional'] },
-  { name: 'Profissionais', href: '/profissionais', icon: UserCheck, allowedFor: ['Profissional'] },
-  { name: 'Planos Terapêuticos', href: '/planos-terapeuticos', icon: FileText, allowedFor: ['Profissional'] },
-  { name: 'Metas Terapêuticas', href: '/metas-terapeuticas', icon: Target, allowedFor: ['Profissional'] },
-  { name: 'Registro Diário', href: '/registro-diario', icon: Calendar, allowedFor: ['Profissional'] },
-  { name: 'Relatórios', href: '/relatorios', icon: BarChart3, allowedFor: ['Profissional', 'Responsavel'] },
-  { name: 'Protocolo', href: '/protocolo', icon: FileText, allowedFor: ['Profissional'] }, // novo
-  { name: 'Pergunta', href: '/pergunta', icon: Target, allowedFor: ['Profissional'] },      // novo
-  { name: 'Resposta', href: '/resposta', icon: Calendar, allowedFor: ['Profissional'] },    // novo
+  { name: 'Dashboard', href: '/', icon: Home, allowedFor: ['PROFISSIONAL', 'RESPONSAVEL'] },
+  { name: 'Pacientes', href: '/pacientes', icon: Users, allowedFor: ['PROFISSIONAL'] },
+  { name: 'Profissionais', href: '/profissionais', icon: UserCheck, allowedFor: ['PROFISSIONAL'] },
+  { name: 'Planos Terapêuticos', href: '/planos-terapeuticos', icon: FileText, allowedFor: ['PROFISSIONAL'] },
+  { name: 'Metas Terapêuticas', href: '/metas-terapeuticas', icon: Target, allowedFor: ['PROFISSIONAL'] },
+  { name: 'Registro Diário', href: '/registro-diario', icon: Calendar, allowedFor: ['PROFISSIONAL'] },
+  { name: 'Relatórios', href: '/relatorios', icon: BarChart3, allowedFor: ['PROFISSIONAL', 'RESPONSAVEL'] },
+  { name: 'Protocolo', href: '/protocolo', icon: FileText, allowedFor: ['PROFISSIONAL'] }, // novo
+  { name: 'Pergunta', href: '/pergunta', icon: Target, allowedFor: ['PROFISSIONAL'] },      // novo
+  { name: 'Resposta', href: '/resposta', icon: Calendar, allowedFor: ['PROFISSIONAL'] },    // novo
 ]
 
 export default function Layout({ children }) {

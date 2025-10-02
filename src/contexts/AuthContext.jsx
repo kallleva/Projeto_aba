@@ -130,11 +130,11 @@ export const AuthProvider = ({ children }) => {
 
   // Funções de verificação de permissões
   const isProfissional = () => {
-    return user?.tipo_usuario === 'Profissional'
+    return user?.tipo_usuario === 'PROFISSIONAL'
   }
 
   const isResponsavel = () => {
-    return user?.tipo_usuario === 'Responsavel'
+    return user?.tipo_usuario === 'RESPONSAVEL'
   }
 
   const canEdit = () => {
