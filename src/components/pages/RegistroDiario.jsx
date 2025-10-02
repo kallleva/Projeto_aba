@@ -204,6 +204,7 @@ export default function RegistroDiario() {
                formularioSelecionado.perguntas.some(fp => fp.id === p.id)
       })
       
+      // Validar perguntas obrigatórias conforme documentação
       const perguntasObrigatorias = perguntasDoFormularioAtual.filter(p => p.obrigatoria && p.tipo !== 'FORMULA')
       
       const respostasFaltando = perguntasObrigatorias.filter(p => {
@@ -212,9 +213,10 @@ export default function RegistroDiario() {
       })
       
       if (respostasFaltando.length > 0) {
+        const perguntasFaltando = respostasFaltando.map(p => p.texto).join(', ')
         toast({ 
-          title: 'Erro', 
-          description: `Responda as perguntas obrigatórias: ${respostasFaltando.map(p => p.texto).join(', ')}`, 
+          title: 'Perguntas obrigatórias não respondidas', 
+          description: `Responda as perguntas obrigatórias: ${perguntasFaltando}`, 
           variant: 'destructive' 
         })
         return
@@ -265,27 +267,46 @@ export default function RegistroDiario() {
       }
 
       // Preparar respostas conforme documentação da API
+      // Formato: { "pergunta_id": "resposta" }
       const respostasParaEnviar = {}
       
-      // Incluir todas as respostas do formulário atual (incluindo fórmulas vazias)
+      // Incluir todas as respostas do formulário atual
       perguntasDoFormularioAtual.forEach(pergunta => {
         const perguntaId = pergunta.id.toString()
         if (pergunta.tipo === 'FORMULA') {
           // Para fórmulas, enviar string vazia (será calculada pelo backend)
           respostasParaEnviar[perguntaId] = ""
         } else {
-          // Para outras perguntas, enviar a resposta do usuário
-          respostasParaEnviar[perguntaId] = formData.respostas[perguntaId] || ""
+          // Para outras perguntas, enviar a resposta do usuário ou string vazia
+          const resposta = formData.respostas[perguntaId]
+          respostasParaEnviar[perguntaId] = resposta || ""
         }
       })
 
+      // Validar se há pelo menos uma resposta não vazia (exceto fórmulas)
+      const respostasNaoFormula = perguntasDoFormularioAtual
+        .filter(p => p.tipo !== 'FORMULA')
+        .map(p => formData.respostas[p.id.toString()])
+        .filter(r => r && r.trim() !== '')
+      
+      if (respostasNaoFormula.length === 0) {
+        toast({ 
+          title: 'Erro', 
+          description: 'Responda pelo menos uma pergunta antes de salvar', 
+          variant: 'destructive' 
+        })
+        return
+      }
+
       const dataToSend = {
         meta_id: parseInt(formData.meta_id),
-        data: formData.data,
+        data: formData.data, // Formato YYYY-MM-DD
         nota: formData.nota ? parseInt(formData.nota) : null,
-        observacao: formData.observacao || null,
+        observacao: formData.observacao || "",
         respostas: respostasParaEnviar
       }
+
+      console.log('Dados sendo enviados para API:', dataToSend)
 
       if (editingRegistro) {
         await ApiService.updateChecklistDiario(editingRegistro.id, dataToSend)
@@ -306,12 +327,16 @@ export default function RegistroDiario() {
   const handleEdit = async (registro) => {
     setEditingRegistro(registro)
     
-    // Preparar respostas do registro existente
+    // Preparar respostas do registro existente conforme estrutura da API
     const respostasExistentes = {}
     if (registro.respostas && Array.isArray(registro.respostas)) {
       registro.respostas.forEach(resposta => {
-        if (resposta.pergunta && resposta.pergunta.tipo !== 'FORMULA') {
-          respostasExistentes[resposta.pergunta_id.toString()] = resposta.resposta
+        // Para perguntas normais, usar a resposta original
+        // Para fórmulas, usar o valor calculado se disponível
+        if (resposta.eh_formula) {
+          respostasExistentes[resposta.pergunta_id.toString()] = resposta.resposta_calculada || resposta.resposta || ""
+        } else {
+          respostasExistentes[resposta.pergunta_id.toString()] = resposta.resposta || ""
         }
       })
     }
@@ -319,7 +344,7 @@ export default function RegistroDiario() {
     setFormData({
       meta_id: registro.meta_id ? registro.meta_id.toString() : '',
       data: registro.data || new Date().toISOString().split('T')[0],
-      nota: registro.nota || '',
+      nota: registro.nota ? registro.nota.toString() : '',
       observacao: registro.observacao || '',
       respostas: respostasExistentes
     })

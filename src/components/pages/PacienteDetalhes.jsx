@@ -48,13 +48,17 @@ export default function PacienteDetalhes() {
   const [relatorioPaciente, setRelatorioPaciente] = useState(null)
   const [agendamentos, setAgendamentos] = useState([])
   const [profissionais, setProfissionais] = useState([])
+  const [vinculos, setVinculos] = useState([])
   const [loading, setLoading] = useState(true)
   const [loadingRelatorio, setLoadingRelatorio] = useState(false)
   const [loadingAgendamentos, setLoadingAgendamentos] = useState(false)
+  const [loadingVinculos, setLoadingVinculos] = useState(false)
   const [saving, setSaving] = useState(false)
   const [activeTab, setActiveTab] = useState(searchParams.get('tab') || 'editar')
   const [showAgendamentoForm, setShowAgendamentoForm] = useState(false)
   const [editingAgendamento, setEditingAgendamento] = useState(null)
+  const [showVinculoForm, setShowVinculoForm] = useState(false)
+  const [editingVinculo, setEditingVinculo] = useState(null)
   const [currentDate, setCurrentDate] = useState(new Date())
   const [agendamentosPorDia, setAgendamentosPorDia] = useState({})
   const [updatingAgendamento, setUpdatingAgendamento] = useState(null)
@@ -76,12 +80,22 @@ export default function PacienteDetalhes() {
     profissional_id: ''
   })
 
+  const [vinculoForm, setVinculoForm] = useState({
+    profissional_id: '',
+    tipo_atendimento: '',
+    data_inicio: new Date().toISOString().split('T')[0],
+    frequencia_semanal: 2,
+    duracao_sessao: 45,
+    observacoes: ''
+  })
+
   useEffect(() => {
     if (id) {
       loadPaciente()
       loadRelatorioPaciente()
       loadAgendamentos()
       loadProfissionais()
+      loadVinculos()
     }
   }, [id])
 
@@ -176,6 +190,22 @@ export default function PacienteDetalhes() {
     }
   }
 
+  const loadVinculos = async () => {
+    try {
+      setLoadingVinculos(true)
+      const data = await ApiService.getProfissionaisPaciente(id)
+      setVinculos(data)
+    } catch (error) {
+      toast({
+        title: 'Erro',
+        description: 'Erro ao carregar vínculos: ' + error.message,
+        variant: 'destructive'
+      })
+    } finally {
+      setLoadingVinculos(false)
+    }
+  }
+
   const handleSubmit = async (e) => {
     e.preventDefault()
     try {
@@ -246,6 +276,126 @@ export default function PacienteDetalhes() {
     })
     setShowAgendamentoForm(false)
     setEditingAgendamento(null)
+  }
+
+  const handleVinculoSubmit = async (e) => {
+    e.preventDefault()
+    try {
+      setSaving(true)
+      const vinculoData = {
+        ...vinculoForm,
+        paciente_id: parseInt(id),
+        criado_por: 1 // TODO: pegar do contexto de autenticação
+      }
+
+      if (editingVinculo) {
+        await ApiService.updateVinculo(editingVinculo.id, vinculoData)
+        toast({
+          title: 'Sucesso',
+          description: 'Vínculo atualizado com sucesso!'
+        })
+      } else {
+        await ApiService.createVinculo(vinculoData)
+        toast({
+          title: 'Sucesso',
+          description: 'Vínculo criado com sucesso!'
+        })
+      }
+
+      // Recarregar vínculos e resetar formulário
+      await loadVinculos()
+      resetVinculoForm()
+    } catch (error) {
+      toast({
+        title: 'Erro',
+        description: error.message,
+        variant: 'destructive'
+      })
+    } finally {
+      setSaving(false)
+    }
+  }
+
+  const resetVinculoForm = () => {
+    setVinculoForm({
+      profissional_id: '',
+      tipo_atendimento: '',
+      data_inicio: new Date().toISOString().split('T')[0],
+      frequencia_semanal: 2,
+      duracao_sessao: 45,
+      observacoes: ''
+    })
+    setShowVinculoForm(false)
+    setEditingVinculo(null)
+  }
+
+  const handleEditVinculo = (vinculo) => {
+    setEditingVinculo(vinculo)
+    setVinculoForm({
+      profissional_id: vinculo.profissional.id.toString(),
+      tipo_atendimento: vinculo.tipo_atendimento,
+      data_inicio: vinculo.data_inicio,
+      frequencia_semanal: vinculo.frequencia_semanal,
+      duracao_sessao: vinculo.duracao_sessao,
+      observacoes: vinculo.observacoes || ''
+    })
+    setShowVinculoForm(true)
+  }
+
+  const handleDeleteVinculo = async (vinculoId) => {
+    if (window.confirm('Tem certeza que deseja excluir este vínculo?')) {
+      try {
+        await ApiService.deleteVinculo(vinculoId)
+        toast({
+          title: 'Sucesso',
+          description: 'Vínculo excluído com sucesso!'
+        })
+        await loadVinculos()
+      } catch (error) {
+        toast({
+          title: 'Erro',
+          description: error.message,
+          variant: 'destructive'
+        })
+      }
+    }
+  }
+
+  const handleUpdateStatusVinculo = async (vinculoId, action) => {
+    try {
+      let actionFunction
+      let successMessage
+
+      switch (action) {
+        case 'ativar':
+          actionFunction = () => ApiService.ativarVinculo(vinculoId)
+          successMessage = 'Vínculo ativado com sucesso!'
+          break
+        case 'suspender':
+          actionFunction = () => ApiService.suspenderVinculo(vinculoId)
+          successMessage = 'Vínculo suspenso com sucesso!'
+          break
+        case 'inativar':
+          actionFunction = () => ApiService.inativarVinculo(vinculoId)
+          successMessage = 'Vínculo inativado com sucesso!'
+          break
+        default:
+          throw new Error('Ação inválida')
+      }
+
+      await actionFunction()
+      toast({
+        title: 'Sucesso',
+        description: successMessage
+      })
+      await loadVinculos()
+    } catch (error) {
+      toast({
+        title: 'Erro',
+        description: error.message,
+        variant: 'destructive'
+      })
+    }
   }
 
   const handleEditAgendamento = (agendamento) => {
@@ -378,6 +528,34 @@ export default function PacienteDetalhes() {
     return 'outline'
   }
 
+  const getStatusVinculoBadgeVariant = (status) => {
+    switch (status) {
+      case 'ATIVO': return 'default'
+      case 'INATIVO': return 'secondary'
+      case 'SUSPENSO': return 'destructive'
+      default: return 'outline'
+    }
+  }
+
+  const getStatusVinculoLabel = (status) => {
+    switch (status) {
+      case 'ATIVO': return 'Ativo'
+      case 'INATIVO': return 'Inativo'
+      case 'SUSPENSO': return 'Suspenso'
+      default: return status
+    }
+  }
+
+  const tiposAtendimento = [
+    'Terapia ABA',
+    'Psicologia',
+    'Fonoaudiologia',
+    'Terapia Ocupacional',
+    'Fisioterapia',
+    'Psicopedagogia',
+    'Outro'
+  ]
+
   const formatDate = (dateString) => {
     return new Date(dateString).toLocaleDateString('pt-BR')
   }
@@ -505,6 +683,10 @@ export default function PacienteDetalhes() {
             <User className="h-4 w-4" />
             Editar Informações
           </TabsTrigger>
+          <TabsTrigger value="vinculos" className="flex items-center gap-2">
+            <Users className="h-4 w-4" />
+            Profissionais Vinculados
+          </TabsTrigger>
           <TabsTrigger value="agenda" className="flex items-center gap-2">
             <Calendar className="h-4 w-4" />
             Agenda
@@ -609,6 +791,264 @@ export default function PacienteDetalhes() {
               </form>
             </CardContent>
           </Card>
+        </TabsContent>
+
+        {/* Aba de Vínculos */}
+        <TabsContent value="vinculos">
+          <div className="space-y-4">
+            {/* Cabeçalho dos Vínculos */}
+            <div className="flex items-center justify-between">
+              <div>
+                <h3 className="text-lg font-semibold">Profissionais Vinculados</h3>
+                <p className="text-sm text-muted-foreground">
+                  Gerencie os vínculos terapêuticos de {paciente.nome}
+                </p>
+              </div>
+              <Button 
+                onClick={() => setShowVinculoForm(true)}
+                className="flex items-center gap-2"
+              >
+                <Plus className="h-4 w-4" />
+                Novo Vínculo
+              </Button>
+            </div>
+
+            {/* Formulário de Vínculo */}
+            {showVinculoForm && (
+              <Card>
+                <CardHeader>
+                  <CardTitle>
+                    {editingVinculo ? 'Editar Vínculo' : 'Novo Vínculo'}
+                  </CardTitle>
+                  <CardDescription>
+                    {editingVinculo 
+                      ? 'Atualize as informações do vínculo terapêutico'
+                      : 'Crie um novo vínculo entre o paciente e um profissional'
+                    }
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <form onSubmit={handleVinculoSubmit} className="space-y-4">
+                    <div className="grid gap-4 md:grid-cols-2">
+                      <div className="space-y-2">
+                        <Label htmlFor="profissional_id">Profissional</Label>
+                        <Select 
+                          value={vinculoForm.profissional_id} 
+                          onValueChange={(value) => setVinculoForm({...vinculoForm, profissional_id: value})}
+                          required
+                        >
+                          <SelectTrigger>
+                            <SelectValue placeholder="Selecione o profissional" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {profissionais.map((profissional) => (
+                              <SelectItem key={profissional.id} value={profissional.id.toString()}>
+                                {profissional.nome} - {profissional.especialidade}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="tipo_atendimento">Tipo de Atendimento</Label>
+                        <Select 
+                          value={vinculoForm.tipo_atendimento} 
+                          onValueChange={(value) => setVinculoForm({...vinculoForm, tipo_atendimento: value})}
+                          required
+                        >
+                          <SelectTrigger>
+                            <SelectValue placeholder="Selecione o tipo" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {tiposAtendimento.map((tipo) => (
+                              <SelectItem key={tipo} value={tipo}>
+                                {tipo}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="data_inicio">Data de Início</Label>
+                        <Input
+                          id="data_inicio"
+                          type="date"
+                          value={vinculoForm.data_inicio}
+                          onChange={(e) => setVinculoForm({...vinculoForm, data_inicio: e.target.value})}
+                          required
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="frequencia_semanal">Frequência Semanal</Label>
+                        <Input
+                          id="frequencia_semanal"
+                          type="number"
+                          min="1"
+                          max="7"
+                          value={vinculoForm.frequencia_semanal}
+                          onChange={(e) => setVinculoForm({...vinculoForm, frequencia_semanal: parseInt(e.target.value)})}
+                          required
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="duracao_sessao">Duração da Sessão (min)</Label>
+                        <Input
+                          id="duracao_sessao"
+                          type="number"
+                          min="15"
+                          max="180"
+                          step="15"
+                          value={vinculoForm.duracao_sessao}
+                          onChange={(e) => setVinculoForm({...vinculoForm, duracao_sessao: parseInt(e.target.value)})}
+                          required
+                        />
+                      </div>
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="observacoes_vinculo">Observações</Label>
+                      <Input
+                        id="observacoes_vinculo"
+                        value={vinculoForm.observacoes}
+                        onChange={(e) => setVinculoForm({...vinculoForm, observacoes: e.target.value})}
+                        placeholder="Observações sobre o atendimento (opcional)"
+                      />
+                    </div>
+
+                    <div className="flex justify-end gap-4">
+                      <Button 
+                        type="button" 
+                        variant="outline" 
+                        onClick={resetVinculoForm}
+                      >
+                        Cancelar
+                      </Button>
+                      <Button type="submit" disabled={saving}>
+                        {saving ? (
+                          <>
+                            <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                            Salvando...
+                          </>
+                        ) : (
+                          <>
+                            <Save className="mr-2 h-4 w-4" />
+                            {editingVinculo ? 'Atualizar' : 'Criar'} Vínculo
+                          </>
+                        )}
+                      </Button>
+                    </div>
+                  </form>
+                </CardContent>
+              </Card>
+            )}
+
+            {/* Lista de Vínculos */}
+            <Card>
+              <CardHeader>
+                <CardTitle>Lista de Vínculos</CardTitle>
+                <CardDescription>
+                  Vínculos terapêuticos ativos e histórico do paciente
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                {loadingVinculos ? (
+                  <div className="text-center py-4">
+                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto"></div>
+                    <p className="mt-2 text-muted-foreground">Carregando vínculos...</p>
+                  </div>
+                ) : vinculos.length > 0 ? (
+                  <div className="space-y-4">
+                    {vinculos.map((vinculo) => (
+                      <div key={vinculo.id} className="border rounded-lg p-4">
+                        <div className="flex items-center justify-between">
+                          <div className="flex-1">
+                            <div className="flex items-center gap-4 mb-2">
+                              <h4 className="font-medium text-lg">
+                                {vinculo.profissional.nome}
+                              </h4>
+                              <Badge variant={getStatusVinculoBadgeVariant(vinculo.status)}>
+                                {getStatusVinculoLabel(vinculo.status)}
+                              </Badge>
+                              <Badge variant="outline">
+                                {vinculo.tipo_atendimento}
+                              </Badge>
+                            </div>
+                            <div className="grid gap-2 md:grid-cols-2 text-sm text-muted-foreground">
+                              <p><strong>Especialidade:</strong> {vinculo.profissional.especialidade}</p>
+                              <p><strong>Contato:</strong> {vinculo.profissional.telefone}</p>
+                              <p><strong>Data de Início:</strong> {formatDate(vinculo.data_inicio)}</p>
+                              {vinculo.data_fim && (
+                                <p><strong>Data de Fim:</strong> {formatDate(vinculo.data_fim)}</p>
+                              )}
+                              <p><strong>Frequência:</strong> {vinculo.frequencia_semanal}x por semana</p>
+                              <p><strong>Duração:</strong> {vinculo.duracao_sessao} minutos</p>
+                              {vinculo.observacoes && (
+                                <p className="md:col-span-2"><strong>Observações:</strong> {vinculo.observacoes}</p>
+                              )}
+                            </div>
+                          </div>
+                          <div className="flex flex-col gap-2 ml-4">
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={() => handleEditVinculo(vinculo)}
+                            >
+                              <Edit className="h-4 w-4" />
+                            </Button>
+                            {vinculo.status === 'ATIVO' && (
+                              <>
+                                <Button
+                                  variant="outline"
+                                  size="sm"
+                                  onClick={() => handleUpdateStatusVinculo(vinculo.id, 'suspender')}
+                                >
+                                  Suspender
+                                </Button>
+                                <Button
+                                  variant="outline"
+                                  size="sm"
+                                  onClick={() => handleUpdateStatusVinculo(vinculo.id, 'inativar')}
+                                >
+                                  Inativar
+                                </Button>
+                              </>
+                            )}
+                            {vinculo.status === 'SUSPENSO' && (
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={() => handleUpdateStatusVinculo(vinculo.id, 'ativar')}
+                              >
+                                Ativar
+                              </Button>
+                            )}
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={() => handleDeleteVinculo(vinculo.id)}
+                            >
+                              <Trash2 className="h-4 w-4" />
+                            </Button>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="text-center py-8 text-muted-foreground">
+                    <Users className="h-12 w-12 mx-auto mb-4 opacity-50" />
+                    <p>Nenhum vínculo encontrado para este paciente.</p>
+                    <Button 
+                      onClick={() => setShowVinculoForm(true)}
+                      className="mt-4"
+                    >
+                      <Plus className="mr-2 h-4 w-4" />
+                      Criar Primeiro Vínculo
+                    </Button>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          </div>
         </TabsContent>
 
         {/* Aba de Agenda */}

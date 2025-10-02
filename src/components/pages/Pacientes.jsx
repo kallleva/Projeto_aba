@@ -9,12 +9,13 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { Badge } from '@/components/ui/badge'
 import { useToast } from '@/hooks/use-toast'
-import { Plus, Edit, Trash2, Search, BarChart3 } from 'lucide-react'
+import { Plus, Edit, Trash2, Search, BarChart3, Users } from 'lucide-react'
 import ApiService from '@/lib/api'
 
 export default function Pacientes() {
   const navigate = useNavigate()
   const [pacientes, setPacientes] = useState([])
+  const [vinculosPorPaciente, setVinculosPorPaciente] = useState({})
   const [loading, setLoading] = useState(true)
   const [dialogOpen, setDialogOpen] = useState(false)
   const [editingPaciente, setEditingPaciente] = useState(null)
@@ -37,6 +38,19 @@ export default function Pacientes() {
       setLoading(true)
       const data = await ApiService.getPacientes()
       setPacientes(data)
+      
+      // Carregar vínculos para cada paciente
+      const vinculosMap = {}
+      for (const paciente of data) {
+        try {
+          const vinculos = await ApiService.getProfissionaisPaciente(paciente.id, true) // apenas ativos
+          vinculosMap[paciente.id] = vinculos
+        } catch (error) {
+          console.warn(`Erro ao carregar vínculos do paciente ${paciente.id}:`, error)
+          vinculosMap[paciente.id] = []
+        }
+      }
+      setVinculosPorPaciente(vinculosMap)
     } catch (error) {
       toast({
         title: 'Erro',
@@ -83,6 +97,10 @@ export default function Pacientes() {
 
   const handleViewRelatorio = (paciente) => {
     navigate(`/pacientes/${paciente.id}?tab=relatorio`)
+  }
+
+  const handleViewVinculos = (paciente) => {
+    navigate(`/pacientes/${paciente.id}?tab=vinculos`)
   }
 
   const formatDate = (dateString) => {
@@ -279,6 +297,7 @@ export default function Pacientes() {
                   <TableHead>Responsável</TableHead>
                   <TableHead>Contato</TableHead>
                   <TableHead>Diagnóstico</TableHead>
+                  <TableHead>Profissionais Vinculados</TableHead>
                   <TableHead className="text-right">Ações</TableHead>
                 </TableRow>
               </TableHeader>
@@ -294,8 +313,34 @@ export default function Pacientes() {
                         {paciente.diagnostico}
                       </Badge>
                     </TableCell>
+                    <TableCell>
+                      <div className="flex flex-wrap gap-1">
+                        {vinculosPorPaciente[paciente.id]?.length > 0 ? (
+                          vinculosPorPaciente[paciente.id].slice(0, 2).map((vinculo) => (
+                            <Badge key={vinculo.id} variant="outline" className="text-xs">
+                              {vinculo.profissional.nome.split(' ')[0]} - {vinculo.tipo_atendimento}
+                            </Badge>
+                          ))
+                        ) : (
+                          <span className="text-sm text-muted-foreground">Nenhum vínculo</span>
+                        )}
+                        {vinculosPorPaciente[paciente.id]?.length > 2 && (
+                          <Badge variant="secondary" className="text-xs">
+                            +{vinculosPorPaciente[paciente.id].length - 2} mais
+                          </Badge>
+                        )}
+                      </div>
+                    </TableCell>
                     <TableCell className="text-right">
                       <div className="flex justify-end gap-2">
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => handleViewVinculos(paciente)}
+                          title="Ver Vínculos"
+                        >
+                          <Users className="h-4 w-4" />
+                        </Button>
                         <Button
                           variant="outline"
                           size="sm"

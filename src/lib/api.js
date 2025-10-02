@@ -193,6 +193,14 @@ class ApiService {
     return this.request('/checklists-diarios')
   }
 
+  async getChecklistDiario(id) {
+    return this.request(`/checklists-diarios/${id}`)
+  }
+
+  async getChecklistsPorMeta(metaId) {
+    return this.request(`/checklists-diarios/meta/${metaId}`)
+  }
+
   async createChecklistDiario(data) {
     return this.request('/checklists-diarios', {
       method: 'POST',
@@ -211,6 +219,25 @@ class ApiService {
     return this.request(`/checklists-diarios/${id}`, {
       method: 'DELETE',
     })
+  }
+
+  // Métodos para fórmulas de checklist
+  async getFormulasChecklist(checklistId) {
+    return this.request(`/checklists-diarios/${checklistId}/formulas`)
+  }
+
+  async getFormulasMetaChecklist(metaId, dataInicio = null, dataFim = null) {
+    let url = `/checklists-diarios/meta/${metaId}/formulas`
+    const params = new URLSearchParams()
+    
+    if (dataInicio) params.append('data_inicio', dataInicio)
+    if (dataFim) params.append('data_fim', dataFim)
+    
+    if (params.toString()) {
+      url += `?${params.toString()}`
+    }
+    
+    return this.request(url)
   }
 
   // ========================
@@ -434,6 +461,82 @@ class ApiService {
     const url = params.toString() 
       ? `/agenda/dia/${data}?${params.toString()}`
       : `/agenda/dia/${data}`
+    return this.request(url)
+  }
+
+  // ========================
+  // Vínculos Profissional-Paciente
+  // ========================
+  async getVinculos(filters = {}) {
+    const params = new URLSearchParams()
+    Object.entries(filters).forEach(([key, value]) => {
+      if (value) params.append(key, value)
+    })
+    
+    const url = params.toString() ? `/vinculos?${params.toString()}` : '/vinculos'
+    return this.request(url)
+  }
+
+  async getVinculo(id) {
+    return this.request(`/vinculos/${id}`)
+  }
+
+  async createVinculo(data) {
+    return this.request('/vinculos', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    })
+  }
+
+  async updateVinculo(id, data) {
+    return this.request(`/vinculos/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(data),
+    })
+  }
+
+  async deleteVinculo(id) {
+    return this.request(`/vinculos/${id}`, {
+      method: 'DELETE',
+    })
+  }
+
+  async ativarVinculo(id) {
+    return this.request(`/vinculos/${id}/ativar`, {
+      method: 'POST',
+    })
+  }
+
+  async inativarVinculo(id, dataFim = null) {
+    return this.request(`/vinculos/${id}/inativar`, {
+      method: 'POST',
+      body: JSON.stringify({ data_fim: dataFim }),
+    })
+  }
+
+  async suspenderVinculo(id) {
+    return this.request(`/vinculos/${id}/suspender`, {
+      method: 'POST',
+    })
+  }
+
+  async getPacientesProfissional(profissionalId, apenasAtivos = true) {
+    const params = new URLSearchParams()
+    if (apenasAtivos !== undefined) params.append('apenas_ativos', apenasAtivos)
+    
+    const url = params.toString() 
+      ? `/profissionais/${profissionalId}/pacientes?${params.toString()}`
+      : `/profissionais/${profissionalId}/pacientes`
+    return this.request(url)
+  }
+
+  async getProfissionaisPaciente(pacienteId, apenasAtivos = true) {
+    const params = new URLSearchParams()
+    if (apenasAtivos !== undefined) params.append('apenas_ativos', apenasAtivos)
+    
+    const url = params.toString() 
+      ? `/pacientes/${pacienteId}/profissionais?${params.toString()}`
+      : `/pacientes/${pacienteId}/profissionais`
     return this.request(url)
   }
 }

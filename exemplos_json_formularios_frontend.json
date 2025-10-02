@@ -1,0 +1,537 @@
+{
+  "estruturas_api": {
+    "listar_formularios": {
+      "url": "GET /api/formularios",
+      "response": [
+        {
+          "id": 1,
+          "nome": "Avaliação Inicial TEA",
+          "descricao": "Formulário para avaliação inicial de pacientes com TEA",
+          "categoria": "avaliacao",
+          "criadoEm": "2024-10-02T10:00:00.000000",
+          "atualizadoEm": "2024-10-02T10:00:00.000000",
+          "perguntas": [
+            {
+              "id": 1,
+              "texto": "Qual a idade da criança em meses?",
+              "tipo": "NUMERO",
+              "obrigatoria": true,
+              "ordem": 1,
+              "formulario_id": 1,
+              "formula": null
+            },
+            {
+              "id": 2,
+              "texto": "A criança faz contato visual?",
+              "tipo": "BOOLEANO",
+              "obrigatoria": true,
+              "ordem": 2,
+              "formulario_id": 1,
+              "formula": null
+            },
+            {
+              "id": 3,
+              "texto": "Nome da criança",
+              "tipo": "TEXTO",
+              "obrigatoria": true,
+              "ordem": 3,
+              "formulario_id": 1,
+              "formula": null
+            },
+            {
+              "id": 4,
+              "texto": "Nível de desenvolvimento",
+              "tipo": "MULTIPLA",
+              "obrigatoria": false,
+              "ordem": 4,
+              "formulario_id": 1,
+              "formula": null
+            },
+            {
+              "id": 5,
+              "texto": "Pontuação total (idade + contato visual)",
+              "tipo": "FORMULA",
+              "obrigatoria": false,
+              "ordem": 5,
+              "formulario_id": 1,
+              "formula": "pergunta_1 + (pergunta_2 ? 10 : 0)"
+            }
+          ]
+        }
+      ]
+    },
+    
+    "obter_formulario": {
+      "url": "GET /api/formularios/1",
+      "response": {
+        "id": 1,
+        "nome": "Avaliação Inicial TEA",
+        "descricao": "Formulário para avaliação inicial de pacientes com TEA",
+        "categoria": "avaliacao",
+        "criadoEm": "2024-10-02T10:00:00.000000",
+        "atualizadoEm": "2024-10-02T10:00:00.000000",
+        "perguntas": [
+          {
+            "id": 1,
+            "texto": "Qual a idade da criança em meses?",
+            "tipo": "NUMERO",
+            "obrigatoria": true,
+            "ordem": 1,
+            "formulario_id": 1,
+            "formula": null
+          },
+          {
+            "id": 2,
+            "texto": "A criança faz contato visual?",
+            "tipo": "BOOLEANO",
+            "obrigatoria": true,
+            "ordem": 2,
+            "formulario_id": 1,
+            "formula": null
+          }
+        ]
+      }
+    },
+    
+    "criar_formulario": {
+      "url": "POST /api/formularios",
+      "request": {
+        "nome": "Avaliação Comportamental",
+        "descricao": "Formulário para avaliar comportamentos específicos",
+        "categoria": "comportamento",
+        "perguntas": [
+          {
+            "texto": "Nome da criança",
+            "tipo": "TEXTO",
+            "obrigatoria": true
+          },
+          {
+            "texto": "Idade em meses",
+            "tipo": "NUMERO",
+            "obrigatoria": true
+          },
+          {
+            "texto": "Apresenta estereotipias?",
+            "tipo": "BOOLEANO",
+            "obrigatoria": false
+          },
+          {
+            "texto": "Nível de comunicação",
+            "tipo": "MULTIPLA",
+            "obrigatoria": true
+          },
+          {
+            "texto": "Índice de desenvolvimento (idade/12)",
+            "tipo": "FORMULA",
+            "obrigatoria": false,
+            "formula": "pergunta_2 / 12"
+          }
+        ]
+      },
+      "response": {
+        "id": 2,
+        "nome": "Avaliação Comportamental",
+        "descricao": "Formulário para avaliar comportamentos específicos",
+        "categoria": "comportamento",
+        "criadoEm": "2024-10-02T14:30:00.000000",
+        "atualizadoEm": "2024-10-02T14:30:00.000000",
+        "perguntas": [
+          {
+            "id": 6,
+            "texto": "Nome da criança",
+            "tipo": "TEXTO",
+            "obrigatoria": true,
+            "ordem": 1,
+            "formulario_id": 2,
+            "formula": null
+          },
+          {
+            "id": 7,
+            "texto": "Idade em meses",
+            "tipo": "NUMERO",
+            "obrigatoria": true,
+            "ordem": 2,
+            "formulario_id": 2,
+            "formula": null
+          }
+        ]
+      }
+    },
+    
+    "atualizar_formulario": {
+      "url": "PUT /api/formularios/2",
+      "request": {
+        "nome": "Avaliação Comportamental Atualizada",
+        "descricao": "Versão atualizada do formulário comportamental",
+        "categoria": "comportamento",
+        "perguntas": [
+          {
+            "id": 6,
+            "texto": "Nome completo da criança",
+            "tipo": "TEXTO",
+            "obrigatoria": true
+          },
+          {
+            "id": 7,
+            "texto": "Idade em meses",
+            "tipo": "NUMERO",
+            "obrigatoria": true
+          },
+          {
+            "texto": "Nova pergunta adicionada",
+            "tipo": "TEXTO",
+            "obrigatoria": false
+          }
+        ]
+      }
+    },
+    
+    "listar_perguntas": {
+      "url": "GET /api/perguntas",
+      "response": [
+        {
+          "id": 1,
+          "texto": "Qual a idade da criança em meses?",
+          "tipo": "NUMERO",
+          "obrigatoria": true,
+          "ordem": 1,
+          "formulario_id": 1,
+          "formula": null
+        },
+        {
+          "id": 2,
+          "texto": "A criança faz contato visual?",
+          "tipo": "BOOLEANO",
+          "obrigatoria": true,
+          "ordem": 2,
+          "formulario_id": 1,
+          "formula": null
+        }
+      ]
+    },
+    
+    "criar_pergunta": {
+      "url": "POST /api/perguntas",
+      "request": {
+        "texto": "Quantas palavras a criança fala?",
+        "tipo": "NUMERO"
+      },
+      "response": {
+        "id": 8,
+        "texto": "Quantas palavras a criança fala?",
+        "tipo": "NUMERO",
+        "obrigatoria": false,
+        "ordem": 0,
+        "formulario_id": null,
+        "formula": null
+      }
+    }
+  },
+  
+  "tipos_pergunta": {
+    "TEXTO": {
+      "descricao": "Campo de texto livre",
+      "frontend_component": "input[type=text] ou textarea",
+      "validacao": "string",
+      "exemplo": {
+        "pergunta": "Qual o nome da criança?",
+        "resposta_exemplo": "João Silva"
+      }
+    },
+    "NUMERO": {
+      "descricao": "Campo numérico",
+      "frontend_component": "input[type=number]",
+      "validacao": "number",
+      "exemplo": {
+        "pergunta": "Qual a idade em meses?",
+        "resposta_exemplo": 36
+      }
+    },
+    "BOOLEANO": {
+      "descricao": "Verdadeiro/Falso, Sim/Não",
+      "frontend_component": "radio buttons ou checkbox",
+      "validacao": "boolean",
+      "exemplo": {
+        "pergunta": "A criança faz contato visual?",
+        "resposta_exemplo": true
+      }
+    },
+    "MULTIPLA": {
+      "descricao": "Múltipla escolha",
+      "frontend_component": "select ou radio buttons",
+      "validacao": "string",
+      "exemplo": {
+        "pergunta": "Nível de comunicação",
+        "opcoes": ["Não verbal", "Palavras isoladas", "Frases simples", "Comunicação fluente"],
+        "resposta_exemplo": "Palavras isoladas"
+      }
+    },
+    "FORMULA": {
+      "descricao": "Cálculo automático baseado em outras perguntas",
+      "frontend_component": "input[readonly] ou span",
+      "validacao": "calculado automaticamente",
+      "exemplo": {
+        "pergunta": "Índice de desenvolvimento",
+        "formula": "pergunta_1 / 12",
+        "resposta_exemplo": 3.0
+      }
+    }
+  },
+  
+  "exemplos_formulas": {
+    "soma_simples": {
+      "formula": "pergunta_1 + pergunta_2",
+      "descricao": "Soma duas perguntas numéricas"
+    },
+    "media": {
+      "formula": "(pergunta_1 + pergunta_2 + pergunta_3) / 3",
+      "descricao": "Calcula a média de três perguntas"
+    },
+    "condicional_booleano": {
+      "formula": "pergunta_4 ? 10 : 0",
+      "descricao": "Se pergunta_4 for true, retorna 10, senão 0"
+    },
+    "formula_complexa": {
+      "formula": "pergunta_1 * 2 + (pergunta_2 ? pergunta_3 * 0.5 : 0)",
+      "descricao": "Fórmula com multiplicação e condicional"
+    },
+    "percentual": {
+      "formula": "(pergunta_1 / pergunta_2) * 100",
+      "descricao": "Calcula percentual"
+    },
+    "indice_desenvolvimento": {
+      "formula": "pergunta_1 / 12",
+      "descricao": "Converte idade em meses para anos"
+    }
+  },
+  
+  "estruturas_frontend": {
+    "form_criar_formulario": {
+      "campos_obrigatorios": {
+        "nome": {
+          "tipo": "text",
+          "max_length": 255,
+          "placeholder": "Ex: Avaliação Inicial TEA"
+        }
+      },
+      "campos_opcionais": {
+        "descricao": {
+          "tipo": "textarea",
+          "max_length": 400,
+          "placeholder": "Descreva o objetivo do formulário..."
+        },
+        "categoria": {
+          "tipo": "select",
+          "opcoes": ["avaliacao", "comportamento", "desenvolvimento", "progresso"],
+          "default": "avaliacao"
+        }
+      },
+      "perguntas": {
+        "estrutura": {
+          "texto": "string (obrigatório)",
+          "tipo": "enum (obrigatório)",
+          "obrigatoria": "boolean (default: false)",
+          "formula": "string (apenas se tipo = FORMULA)"
+        }
+      }
+    },
+    
+    "form_responder_formulario": {
+      "estrutura_resposta": {
+        "pergunta_1": "valor_resposta_1",
+        "pergunta_2": "valor_resposta_2",
+        "pergunta_3": "valor_resposta_3"
+      },
+      "tipos_input": {
+        "TEXTO": "<input type='text' />",
+        "NUMERO": "<input type='number' />",
+        "BOOLEANO": "<input type='radio' name='pergunta_x' value='true|false' />",
+        "MULTIPLA": "<select> ou <input type='radio' />",
+        "FORMULA": "<input type='text' disabled />"
+      }
+    }
+  },
+  
+  "validacoes_frontend": {
+    "formulario": {
+      "nome": {
+        "required": true,
+        "max_length": 255,
+        "mensagem_erro": "Nome é obrigatório e deve ter no máximo 255 caracteres"
+      },
+      "descricao": {
+        "max_length": 400,
+        "mensagem_erro": "Descrição deve ter no máximo 400 caracteres"
+      },
+      "perguntas": {
+        "min_items": 1,
+        "mensagem_erro": "Formulário deve ter pelo menos uma pergunta"
+      }
+    },
+    "pergunta": {
+      "texto": {
+        "required": true,
+        "max_length": 255,
+        "mensagem_erro": "Texto da pergunta é obrigatório"
+      },
+      "tipo": {
+        "required": true,
+        "enum": ["TEXTO", "NUMERO", "BOOLEANO", "MULTIPLA", "FORMULA"],
+        "mensagem_erro": "Tipo de pergunta inválido"
+      },
+      "formula": {
+        "required_if": "tipo === 'FORMULA'",
+        "mensagem_erro": "Fórmula é obrigatória para perguntas do tipo FORMULA"
+      }
+    }
+  },
+  
+  "estados_componentes": {
+    "loading": {
+      "formularios": [],
+      "loading": true,
+      "error": null
+    },
+    "success": {
+      "formularios": [
+        {
+          "id": 1,
+          "nome": "Avaliação TEA",
+          "categoria": "avaliacao",
+          "perguntas": []
+        }
+      ],
+      "loading": false,
+      "error": null
+    },
+    "error": {
+      "formularios": [],
+      "loading": false,
+      "error": "Erro ao carregar formulários"
+    }
+  },
+  
+  "exemplos_uso": {
+    "fetch_formularios": {
+      "javascript": `
+const fetchFormularios = async () => {
+  try {
+    const response = await fetch('/api/formularios');
+    const formularios = await response.json();
+    return formularios;
+  } catch (error) {
+    console.error('Erro:', error);
+    throw error;
+  }
+};`
+    },
+    
+    "criar_formulario": {
+      "javascript": `
+const criarFormulario = async (dadosFormulario) => {
+  try {
+    const response = await fetch('/api/formularios', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(dadosFormulario)
+    });
+    
+    if (!response.ok) {
+      const erro = await response.json();
+      throw new Error(erro.erro);
+    }
+    
+    return await response.json();
+  } catch (error) {
+    console.error('Erro ao criar formulário:', error);
+    throw error;
+  }
+};`
+    },
+    
+    "calcular_formula": {
+      "javascript": `
+const calcularFormula = (formula, respostas) => {
+  try {
+    let formulaCalculada = formula;
+    
+    // Substituir referências de perguntas pelos valores
+    Object.keys(respostas).forEach(key => {
+      const valor = respostas[key];
+      const valorFinal = typeof valor === 'boolean' ? valor : (valor || 0);
+      formulaCalculada = formulaCalculada.replace(
+        new RegExp(key, 'g'), 
+        valorFinal
+      );
+    });
+    
+    // Avaliar a fórmula (use mathjs em produção para segurança)
+    return eval(formulaCalculada);
+  } catch (error) {
+    console.error('Erro no cálculo:', error);
+    return 'Erro no cálculo';
+  }
+};`
+    }
+  },
+  
+  "categorias_sugeridas": [
+    {
+      "valor": "avaliacao",
+      "label": "Avaliação",
+      "descricao": "Formulários de avaliação inicial ou diagnóstica"
+    },
+    {
+      "valor": "comportamento",
+      "label": "Comportamento",
+      "descricao": "Avaliação de comportamentos específicos"
+    },
+    {
+      "valor": "desenvolvimento",
+      "label": "Desenvolvimento",
+      "descricao": "Acompanhamento do desenvolvimento"
+    },
+    {
+      "valor": "progresso",
+      "label": "Progresso",
+      "descricao": "Monitoramento de progresso terapêutico"
+    },
+    {
+      "valor": "comunicacao",
+      "label": "Comunicação",
+      "descricao": "Avaliação de habilidades comunicativas"
+    },
+    {
+      "valor": "social",
+      "label": "Social",
+      "descricao": "Habilidades sociais e interação"
+    }
+  ],
+  
+  "mensagens_sistema": {
+    "sucesso": {
+      "formulario_criado": "Formulário criado com sucesso!",
+      "formulario_atualizado": "Formulário atualizado com sucesso!",
+      "formulario_deletado": "Formulário deletado com sucesso!",
+      "pergunta_criada": "Pergunta criada com sucesso!",
+      "pergunta_atualizada": "Pergunta atualizada com sucesso!",
+      "pergunta_deletada": "Pergunta deletada com sucesso!"
+    },
+    "erro": {
+      "formulario_nao_encontrado": "Formulário não encontrado",
+      "pergunta_nao_encontrada": "Pergunta não encontrada",
+      "dados_invalidos": "Dados inválidos fornecidos",
+      "erro_servidor": "Erro interno do servidor",
+      "erro_conexao": "Erro de conexão com o servidor"
+    },
+    "validacao": {
+      "nome_obrigatorio": "Nome do formulário é obrigatório",
+      "texto_pergunta_obrigatorio": "Texto da pergunta é obrigatório",
+      "tipo_pergunta_invalido": "Tipo de pergunta inválido",
+      "formula_obrigatoria": "Fórmula é obrigatória para perguntas do tipo FORMULA",
+      "formula_invalida": "Fórmula contém sintaxe inválida"
+    }
+  }
+}
