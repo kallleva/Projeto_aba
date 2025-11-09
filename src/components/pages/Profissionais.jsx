@@ -1,16 +1,15 @@
 import { useState, useEffect } from 'react'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
-import { Badge } from '@/components/ui/badge'
 import { useToast } from '@/hooks/use-toast'
-import { Plus, Edit, Trash2, Mail, Phone, Search } from 'lucide-react'
+import { useAuth } from '@/contexts/AuthContext'
+import { Plus, Edit, Trash2, Mail, Phone, Search, Users, AlertCircle } from 'lucide-react'
 import ApiService from '@/lib/api'
 
 export default function Profissionais() {
+  const { user } = useAuth()
   const [profissionais, setProfissionais] = useState([])
   const [loading, setLoading] = useState(true)
   const [dialogOpen, setDialogOpen] = useState(false)
@@ -26,7 +25,7 @@ export default function Profissionais() {
 
   useEffect(() => {
     loadProfissionais()
-  }, [])
+  }, [user])
 
   const loadProfissionais = async () => {
     try {
@@ -34,11 +33,21 @@ export default function Profissionais() {
       const data = await ApiService.getProfissionais()
       setProfissionais(data)
     } catch (error) {
-      toast({
-        title: 'Erro',
-        description: 'Erro ao carregar profissionais: ' + error.message,
-        variant: 'destructive'
-      })
+      // Se for erro 403 (acesso negado), mostrar mensagem
+      if (error.status === 403) {
+        toast({
+          title: 'Acesso Negado',
+          description: 'Você não tem permissão para acessar esta página',
+          variant: 'destructive'
+        })
+        setProfissionais([])
+      } else {
+        toast({
+          title: 'Erro',
+          description: 'Erro ao carregar profissionais: ' + error.message,
+          variant: 'destructive'
+        })
+      }
     } finally {
       setLoading(false)
     }
@@ -114,10 +123,10 @@ export default function Profissionais() {
 
   const getEspecialidadeBadgeVariant = (especialidade) => {
     const especialidadeLower = especialidade.toLowerCase()
-    if (especialidadeLower.includes('psicolog')) return 'default'
-    if (especialidadeLower.includes('fonoaudi')) return 'secondary'
-    if (especialidadeLower.includes('terapeuta')) return 'outline'
-    return 'default'
+    if (especialidadeLower.includes('psicolog')) return 'badge-info'
+    if (especialidadeLower.includes('fonoaudi')) return 'badge-success'
+    if (especialidadeLower.includes('terapeuta')) return 'badge-warning'
+    return 'badge-neutral'
   }
 
   // 🔎 Filtro aplicado à lista
@@ -131,175 +140,247 @@ export default function Profissionais() {
     )
   })
 
+  // Verificar se usuário é RESPONSAVEL (sem acesso)
+  const isResponsavel = user?.tipo_usuario === 'RESPONSAVEL'
+
+  if (isResponsavel) {
+    return (
+      <div className="page-section">
+        <div className="alert alert-warning">
+          <AlertCircle size={18} />
+          <div className="alert-content">
+            <p className="font-medium">Acesso Negado</p>
+            <p className="text-sm mt-1">Responsáveis não têm permissão para acessar o cadastro de profissionais.</p>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  const isProfissional = user?.tipo_usuario === 'PROFISSIONAL'
+  const isAdmin = user?.tipo_usuario === 'ADMIN'
+
   return (
     <div className="space-y-6">
-      <div className="flex justify-between items-center flex-wrap gap-4">
-        <div>
-          <h2 className="text-3xl font-bold tracking-tight">Profissionais</h2>
-          <p className="text-muted-foreground">
-            Gerencie os profissionais cadastrados no sistema
-          </p>
-        </div>
-        <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-          <DialogTrigger asChild>
-            <Button onClick={resetForm}>
+      {/* Header */}
+      <div className="page-section">
+        <div className="flex items-center justify-between gap-4 flex-wrap">
+          <div>
+            <h1 className="page-title">Profissionais</h1>
+            <p className="page-subtitle">
+              {isProfissional 
+                ? 'Meus dados profissionais'
+                : 'Gerencie os profissionais cadastrados no sistema'
+              }
+            </p>
+          </div>
+          {isAdmin && (
+            <Button 
+              onClick={() => {
+                resetForm()
+                setDialogOpen(true)
+              }}
+              style={{ backgroundColor: '#0ea5e9', color: 'white' }}
+            >
               <Plus className="mr-2 h-4 w-4" />
               Novo Profissional
             </Button>
-          </DialogTrigger>
-          <DialogContent className="sm:max-w-[425px]">
-            <DialogHeader>
-              <DialogTitle>
-                {editingProfissional ? 'Editar Profissional' : 'Novo Profissional'}
-              </DialogTitle>
-              <DialogDescription>
-                {editingProfissional 
-                  ? 'Edite as informações do profissional abaixo.'
-                  : 'Preencha as informações do novo profissional abaixo.'
-                }
-              </DialogDescription>
-            </DialogHeader>
-            <form onSubmit={handleSubmit}>
-              <div className="grid gap-4 py-4">
-                <div className="grid gap-2">
-                  <Label htmlFor="nome">Nome</Label>
-                  <Input
-                    id="nome"
-                    value={formData.nome}
-                    onChange={(e) => setFormData({...formData, nome: e.target.value})}
-                    required
-                  />
-                </div>
-                <div className="grid gap-2">
-                  <Label htmlFor="especialidade">Especialidade</Label>
-                  <Input
-                    id="especialidade"
-                    value={formData.especialidade}
-                    onChange={(e) => setFormData({...formData, especialidade: e.target.value})}
-                    placeholder="Ex: Psicólogo, Fonoaudiólogo, Terapeuta Ocupacional"
-                    required
-                  />
-                </div>
-                <div className="grid gap-2">
-                  <Label htmlFor="email">Email</Label>
-                  <Input
-                    id="email"
-                    type="email"
-                    value={formData.email}
-                    onChange={(e) => setFormData({...formData, email: e.target.value})}
-                    required
-                  />
-                </div>
-                <div className="grid gap-2">
-                  <Label htmlFor="telefone">Telefone</Label>
-                  <Input
-                    id="telefone"
-                    value={formData.telefone}
-                    onChange={(e) => setFormData({...formData, telefone: e.target.value})}
-                    placeholder="(11) 99999-9999"
-                    required
-                  />
-                </div>
-              </div>
-              <DialogFooter>
-                <Button type="button" variant="outline" onClick={() => setDialogOpen(false)}>
-                  Cancelar
-                </Button>
-                <Button type="submit">
-                  {editingProfissional ? 'Atualizar' : 'Cadastrar'}
-                </Button>
-              </DialogFooter>
-            </form>
-          </DialogContent>
-        </Dialog>
+          )}
+          {isProfissional && user?.profissional && (
+            <Button 
+              onClick={() => {
+                handleEdit(user.profissional)
+                setDialogOpen(true)
+              }}
+              style={{ backgroundColor: '#0ea5e9', color: 'white' }}
+            >
+              <Edit className="mr-2 h-4 w-4" />
+              Editar Meus Dados
+            </Button>
+          )}
+        </div>
       </div>
 
+      {/* Dialog Único para Edição/Criação */}
+      <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+        <DialogContent className="sm:max-w-[425px]">
+          <DialogHeader>
+            <DialogTitle>
+              {editingProfissional ? 'Editar Profissional' : 'Novo Profissional'}
+            </DialogTitle>
+            <DialogDescription>
+              {editingProfissional 
+                ? 'Edite as informações do profissional abaixo.'
+                : 'Preencha as informações do novo profissional abaixo.'
+              }
+            </DialogDescription>
+          </DialogHeader>
+          <form onSubmit={handleSubmit}>
+            <div className="grid gap-4 py-4">
+              <div className="grid gap-2">
+                <Label htmlFor="nome">Nome</Label>
+                <Input
+                  id="nome"
+                  value={formData.nome}
+                  onChange={(e) => setFormData({...formData, nome: e.target.value})}
+                  required
+                />
+              </div>
+              <div className="grid gap-2">
+                <Label htmlFor="especialidade">Especialidade</Label>
+                <Input
+                  id="especialidade"
+                  value={formData.especialidade}
+                  onChange={(e) => setFormData({...formData, especialidade: e.target.value})}
+                  placeholder="Ex: Psicólogo, Fonoaudiólogo, Terapeuta Ocupacional"
+                  required
+                />
+              </div>
+              <div className="grid gap-2">
+                <Label htmlFor="email">Email</Label>
+                <Input
+                  id="email"
+                  type="email"
+                  value={formData.email}
+                  onChange={(e) => setFormData({...formData, email: e.target.value})}
+                  required
+                />
+              </div>
+              <div className="grid gap-2">
+                <Label htmlFor="telefone">Telefone</Label>
+                <Input
+                  id="telefone"
+                  value={formData.telefone}
+                  onChange={(e) => setFormData({...formData, telefone: e.target.value})}
+                  placeholder="(11) 99999-9999"
+                  required
+                />
+              </div>
+            </div>
+            <DialogFooter>
+              <Button type="button" variant="outline" onClick={() => setDialogOpen(false)}>
+                Cancelar
+              </Button>
+              <Button 
+                type="submit"
+                style={{ backgroundColor: '#0ea5e9', color: 'white' }}
+              >
+                {editingProfissional ? 'Atualizar' : 'Cadastrar'}
+              </Button>
+            </DialogFooter>
+          </form>
+        </DialogContent>
+      </Dialog>
 
+      {/* Card Principal - Lista de Profissionais */}
+      <div className="card-spacing">
+        <div className="section-header mb-6">
+          <Users size={18} className="color-info-icon" />
+          <h2 className="section-header-title">
+            {isProfissional ? 'Meu Perfil' : 'Lista de Profissionais'}
+          </h2>
+        </div>
+        <p className="card-text mb-6">
+          {isProfissional 
+            ? 'Visualize suas informações profissionais'
+            : 'Visualize e gerencie todos os profissionais cadastrados'
+          }
+        </p>
 
-      <Card>
-        
-        <CardHeader>
-          <CardTitle>Lista de Profissionais</CardTitle>
-          <CardDescription>
-            Visualize e gerencie todos os profissionais cadastrados
-          </CardDescription>
-        </CardHeader>
-            {/* 🔎 Campo de busca */}
-          <div className="flex items-center gap-4 max-w-sm pl-8">
-            <Search className="h-4 w-4 text-muted-foreground" />
+        {/* Campo de busca - apenas para ADMIN */}
+        {isAdmin && (
+          <div className="mb-6 flex items-center gap-3 max-w-md">
+            <Search size={18} className="color-neutral-icon" />
             <Input
-              className="p-2" // 👈 padding interno do input
-              placeholder="Buscar profissional..."
+              className="flex-1"
+              placeholder="Buscar por nome, especialidade, email ou telefone..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
             />
           </div>
+        )}
 
-
-        <CardContent>
-          {loading ? (
-            <div className="text-center py-4">Carregando...</div>
-          ) : profissionaisFiltrados.length === 0 ? (
-            <div className="text-center py-8 text-muted-foreground">
-              Nenhum profissional encontrado.
+        {/* Tabela ou Loading */}
+        {loading ? (
+          <div className="text-center py-12">
+            <div className="animate-spin rounded-full h-10 w-10 border-4 mx-auto" style={{borderColor: 'var(--color-info-200)', borderTopColor: 'var(--color-info-500)'}}></div>
+            <p className="mt-4 card-text font-medium">Carregando profissionais...</p>
+          </div>
+        ) : profissionaisFiltrados.length === 0 ? (
+          <div className="alert alert-info">
+            <AlertCircle size={18} />
+            <div className="alert-content">
+              <p className="font-medium">Nenhum profissional encontrado</p>
+              {search && isAdmin && <p className="text-sm mt-1">Tente ajustar seus critérios de busca</p>}
             </div>
-          ) : (
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Nome</TableHead>
-                  <TableHead>Especialidade</TableHead>
-                  <TableHead>Email</TableHead>
-                  <TableHead>Telefone</TableHead>
-                  <TableHead className="text-right">Ações</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
+          </div>
+        ) : (
+          <div className="overflow-x-auto">
+            <table className="table">
+              <thead>
+                <tr>
+                  <th>Nome</th>
+                  <th>Especialidade</th>
+                  <th>Email</th>
+                  <th>Telefone</th>
+                  <th className="text-right">Ações</th>
+                </tr>
+              </thead>
+              <tbody>
                 {profissionaisFiltrados.map((profissional) => (
-                  <TableRow key={profissional.id}>
-                    <TableCell className="font-medium">{profissional.nome}</TableCell>
-                    <TableCell>
-                      <Badge variant={getEspecialidadeBadgeVariant(profissional.especialidade)}>
+                  <tr key={profissional.id}>
+                    <td className="font-semibold">{profissional.nome}</td>
+                    <td>
+                      <span className={`badge ${getEspecialidadeBadgeVariant(profissional.especialidade)}`}>
                         {profissional.especialidade}
-                      </Badge>
-                    </TableCell>
-                    <TableCell>
+                      </span>
+                    </td>
+                    <td>
                       <div className="flex items-center gap-2">
-                        <Mail className="h-4 w-4 text-muted-foreground" />
-                        {profissional.email}
+                        <Mail size={16} className="color-neutral-icon flex-shrink-0" />
+                        <span className="text-sm">{profissional.email}</span>
                       </div>
-                    </TableCell>
-                    <TableCell>
+                    </td>
+                    <td>
                       <div className="flex items-center gap-2">
-                        <Phone className="h-4 w-4 text-muted-foreground" />
-                        {profissional.telefone}
+                        <Phone size={16} className="color-neutral-icon flex-shrink-0" />
+                        <span className="text-sm">{profissional.telefone}</span>
                       </div>
-                    </TableCell>
-                    <TableCell className="text-right">
+                    </td>
+                    <td>
                       <div className="flex justify-end gap-2">
                         <Button
                           variant="outline"
                           size="sm"
-                          onClick={() => handleEdit(profissional)}
+                          onClick={() => {
+                            handleEdit(profissional)
+                            setDialogOpen(true)
+                          }}
+                          className="h-9 w-9 p-0"
+                          title="Editar"
                         >
-                          <Edit className="h-4 w-4" />
+                          <Edit size={16} />
                         </Button>
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={() => handleDelete(profissional.id)}
-                        >
-                          <Trash2 className="h-4 w-4" />
-                        </Button>
+                        {isAdmin && (
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => handleDelete(profissional.id)}
+                            className="h-9 w-9 p-0"
+                            title="Deletar"
+                          >
+                            <Trash2 size={16} />
+                          </Button>
+                        )}
                       </div>
-                    </TableCell>
-                  </TableRow>
+                    </td>
+                  </tr>
                 ))}
-              </TableBody>
-            </Table>
-          )}
-        </CardContent>
-      </Card>
+              </tbody>
+            </table>
+          </div>
+        )}
+      </div>
     </div>
   )
 }

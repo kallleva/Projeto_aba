@@ -184,7 +184,7 @@ Atualiza apenas o status de um agendamento.
 
 ### Criar um agendamento:
 ```bash
-curl -X POST http://localhost:5000/api/agenda \
+curl -X POST http://kallebaurora-auroraapp-j0jary-ff9ab9-31-97-250-120.traefik.me/api/agenda \
   -H "Content-Type: application/json" \
   -d '{
     "data_hora": "2024-01-15T14:00:00",
@@ -197,19 +197,19 @@ curl -X POST http://localhost:5000/api/agenda \
 
 ### Listar agendamentos de um mês:
 ```bash
-curl "http://localhost:5000/api/agenda/mes/2024/1?profissional_id=1"
+curl "http://kallebaurora-auroraapp-j0jary-ff9ab9-31-97-250-120.traefik.me/api/agenda/mes/2024/1?profissional_id=1"
 ```
 
 ### Atualizar presença de um agendamento:
 ```bash
-curl -X PATCH http://localhost:5000/api/agenda/1/presenca \
+curl -X PATCH http://kallebaurora-auroraapp-j0jary-ff9ab9-31-97-250-120.traefik.me/api/agenda/1/presenca \
   -H "Content-Type: application/json" \
   -d '{"presente": true}'
 ```
 
 ### Atualizar status de um agendamento:
 ```bash
-curl -X PATCH http://localhost:5000/api/agenda/1/status \
+curl -X PATCH http://kallebaurora-auroraapp-j0jary-ff9ab9-31-97-250-120.traefik.me/api/agenda/1/status \
   -H "Content-Type: application/json" \
   -d '{"status": "CONFIRMADO"}'
 ```

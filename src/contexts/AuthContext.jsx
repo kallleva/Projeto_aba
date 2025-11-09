@@ -15,7 +15,8 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null)
   const [loading, setLoading] = useState(true)
   const [token, setToken] = useState(localStorage.getItem('token'))
-
+  //const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://kallebaurora-auroraapp-j0jary-ff9ab9-31-97-250-120.traefik.me/api'
+  const API_BASE_URL = import.meta.env.VITE_API_BASE_URL
   useEffect(() => {
     if (token) {
       verifyToken()
@@ -26,7 +27,7 @@ export const AuthProvider = ({ children }) => {
 
   const verifyToken = async () => {
     try {
-      const response = await fetch('http://localhost:5000/api/auth/verify-token', {
+      const response = await fetch(`${API_BASE_URL}/auth/verify-token`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -51,7 +52,7 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (email, senha) => {
     try {
-      const response = await fetch('http://localhost:5000/api/auth/login', {
+      const response = await fetch(`${API_BASE_URL}/auth/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -76,7 +77,7 @@ export const AuthProvider = ({ children }) => {
 
   const register = async (userData) => {
     try {
-      const response = await fetch('http://localhost:5000/api/auth/register', {
+      const response = await fetch(`${API_BASE_URL}/auth/register`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -104,7 +105,7 @@ export const AuthProvider = ({ children }) => {
 
   const changePassword = async (senhaAtual, novaSenha) => {
     try {
-      const response = await fetch('http://localhost:5000/api/auth/change-password', {
+      const response = await fetch(`${API_BASE_URL}/auth/change-password`, {
         method: 'PUT',
         headers: {
           'Authorization': `Bearer ${token}`,

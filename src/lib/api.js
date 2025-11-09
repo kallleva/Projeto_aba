@@ -1,11 +1,13 @@
-const API_BASE_URL = 'http://127.0.0.1:5000/api'
-
+//const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://kallebaurora-auroraapp-j0jary-ff9ab9-31-97-250-120.traefik.me/api'
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL
 class ApiService {
   async request(endpoint, options = {}) {
     const url = `${API_BASE_URL}${endpoint}`
+    const token = localStorage.getItem('token')
     const config = {
       headers: {
         'Content-Type': 'application/json',
+        ...(token && { 'Authorization': `Bearer ${token}` }),
         ...options.headers,
       },
       ...options,
@@ -16,19 +18,38 @@ class ApiService {
       const response = await fetch(url, config)
       console.log('API Response:', { status: response.status, ok: response.ok })
       
+      // Log do Content-Type para debug
+      const contentType = response.headers.get('content-type')
+      console.log('Content-Type:', contentType)
+      
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}))
         console.error('API Error:', errorData)
-        throw new Error(errorData.erro || `HTTP error! status: ${response.status}`)
+        
+        // Criar erro com código de status
+        const error = new Error(errorData.erro || `HTTP error! status: ${response.status}`)
+        error.status = response.status
+        error.data = errorData
+        throw error
       }
 
-      return response.json()
+      // Log do body antes de fazer parse
+      const text = await response.text()
+      console.log('API Response Body (first 500 chars):', text.substring(0, 500))
+      
+      try {
+        return JSON.parse(text)
+      } catch (parseError) {
+        console.error('JSON Parse Error:', parseError)
+        console.error('Raw response:', text)
+        throw new Error(`Invalid JSON response: ${parseError.message}`)
+      }
     } catch (error) {
       console.error('API Request Failed:', error)
       
       // Verificar se é erro de conectividade
       if (error.name === 'TypeError' && error.message.includes('fetch')) {
-        throw new Error('Erro de conectividade. Verifique se o servidor está rodando em http://127.0.0.1:5000')
+        throw new Error(`Erro de conectividade. Verifique se o servidor está acessível em ${API_BASE_URL}`)
       }
       
       // Verificar se é erro de rede
@@ -41,37 +62,89 @@ class ApiService {
   }
 
   // ========================
+  // Métodos genéricos
+  // ========================
+  async get(endpoint) {
+    return this.request(endpoint)
+  }
+
+  async post(endpoint, data) {
+    return this.request(endpoint, {
+      method: 'POST',
+      body: JSON.stringify(data),
+    })
+  }
+
+  async put(endpoint, data) {
+    return this.request(endpoint, {
+      method: 'PUT',
+      body: JSON.stringify(data),
+    })
+  }
+
+  async delete(endpoint) {
+    return this.request(endpoint, {
+      method: 'DELETE',
+    })
+  }
+
+  // ========================
   // Usuários
   // ========================
   async getUsers() {
     return this.request('/users')
   }
 
-  async createUser(data) {
-    return this.request('/users', {
+  // API para listar usuarios completos (backend 'usuarios' para model Usuario)
+  async getUsuarios(q = '') {
+    const params = q ? `?q=${encodeURIComponent(q)}` : ''
+    return this.request(`/usuarios${params}`)
+  }
+
+  async getUsuario(id) {
+    return this.request(`/usuarios/${id}`)
+  }
+
+  async createUsuario(data) {
+    return this.request('/usuarios', {
       method: 'POST',
       body: JSON.stringify(data),
     })
   }
 
-  async updateUser(id, data) {
-    return this.request(`/users/${id}`, {
+  async updateUsuario(id, data) {
+    return this.request(`/usuarios/${id}`, {
       method: 'PUT',
       body: JSON.stringify(data),
     })
   }
 
-  async deleteUser(id) {
-    return this.request(`/users/${id}`, {
+  async deleteUsuario(id) {
+    return this.request(`/usuarios/${id}`, {
       method: 'DELETE',
     })
   }
+
+  async assignUsuarioToPaciente(usuarioId, pacienteId) {
+    return this.request(`/usuarios/${usuarioId}/assign-paciente/${pacienteId}`, {
+      method: 'PUT'
+    })
+  }
+
 
   // ========================
   // Pacientes
   // ========================
   async getPacientes() {
     return this.request('/pacientes')
+  }
+
+  async getPaciente(id) {
+    return this.request(`/pacientes/${id}`)
+  }
+
+  async getMetasEFormulariosPaciente(pacienteId) {
+    return this.request(`/pacientes/${pacienteId}/metas-e-formularios`)
   }
 
   async createPaciente(data) {
@@ -520,7 +593,7 @@ class ApiService {
     })
   }
 
-  async getPacientesProfissional(profissionalId, apenasAtivos = true) {
+  async getPacientesProfissional(profissionalId, apenasAtivos = false) {
     const params = new URLSearchParams()
     if (apenasAtivos !== undefined) params.append('apenas_ativos', apenasAtivos)
     
@@ -530,7 +603,7 @@ class ApiService {
     return this.request(url)
   }
 
-  async getProfissionaisPaciente(pacienteId, apenasAtivos = true) {
+  async getProfissionaisPaciente(pacienteId, apenasAtivos = false) {
     const params = new URLSearchParams()
     if (apenasAtivos !== undefined) params.append('apenas_ativos', apenasAtivos)
     
@@ -538,6 +611,45 @@ class ApiService {
       ? `/pacientes/${pacienteId}/profissionais?${params.toString()}`
       : `/pacientes/${pacienteId}/profissionais`
     return this.request(url)
+  }
+
+  // ========================
+  // Empresas (Multi-Tenancy)
+  // ========================
+  async getEmpresas() {
+    return this.request('/empresas')
+  }
+
+  async getEmpresa(id) {
+    return this.request(`/empresas/${id}`)
+  }
+
+  async createEmpresa(data) {
+    return this.request('/empresas', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    })
+  }
+
+  async updateEmpresa(id, data) {
+    return this.request(`/empresas/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(data),
+    })
+  }
+
+  async deleteEmpresa(id) {
+    return this.request(`/empresas/${id}`, {
+      method: 'DELETE',
+    })
+  }
+
+  async getUsuariosEmpresa(empresaId) {
+    return this.request(`/empresas/${empresaId}/usuarios`)
+  }
+
+  async getEstatisticasEmpresa(empresaId) {
+    return this.request(`/empresas/${empresaId}/estatisticas`)
   }
 }
 

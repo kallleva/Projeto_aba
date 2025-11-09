@@ -2,7 +2,7 @@ import { Navigate } from 'react-router-dom'
 import { useAuth } from '@/contexts/AuthContext'
 import { Loader2 } from 'lucide-react'
 
-export default function ProtectedRoute({ children, requireProfissional = false }) {
+export default function ProtectedRoute({ children, requireRole = null, requireProfissional = false }) {
   const { user, loading } = useAuth()
 
   if (loading) {
@@ -20,7 +20,28 @@ export default function ProtectedRoute({ children, requireProfissional = false }
     return <Navigate to="/login" replace />
   }
 
-  if (requireProfissional && user.tipo_usuario !== 'PROFISSIONAL') {
+  // ADMIN tem acesso a tudo
+  if (user.tipo_usuario === 'ADMIN') {
+    return children
+  }
+
+  // Suporta tanto novo sistema (requireRole) quanto antigo (requireProfissional)
+  let hasAccess = true
+
+  if (requireRole) {
+    if (Array.isArray(requireRole)) {
+      // Se for array, verifica se o usuário está em algum dos roles
+      hasAccess = requireRole.includes(user.tipo_usuario)
+    } else {
+      // Se for string, verifica exatamente
+      hasAccess = user.tipo_usuario === requireRole
+    }
+  } else if (requireProfissional) {
+    // Compatibilidade com antigo sistema
+    hasAccess = user.tipo_usuario === 'PROFISSIONAL'
+  }
+
+  if (!hasAccess) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
@@ -29,7 +50,9 @@ export default function ProtectedRoute({ children, requireProfissional = false }
             Você não tem permissão para acessar esta página.
           </p>
           <p className="text-sm text-gray-500 mt-1">
-            Esta funcionalidade é restrita a profissionais.
+            {requireRole && (
+              `Esta funcionalidade é restrita para: ${Array.isArray(requireRole) ? requireRole.join(', ') : requireRole}`
+            )}
           </p>
         </div>
       </div>

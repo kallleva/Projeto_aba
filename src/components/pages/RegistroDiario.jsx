@@ -404,7 +404,7 @@ export default function RegistroDiario() {
 
           {p.tipo === 'TEXTO' && (
             <Input
-              value={formData.respostas[p.id.toString()] || ''}
+              value={formData.respostas[p.id.toString()] || undefined}
               onChange={(e) => handleRespostaChange(p.id.toString(), e.target.value)}
               required={p.obrigatoria}
               placeholder="Digite sua resposta"
@@ -414,7 +414,7 @@ export default function RegistroDiario() {
           {p.tipo === 'NUMERO' && (
             <Input
               type="number"
-              value={formData.respostas[p.id.toString()] || ''}
+              value={formData.respostas[p.id.toString()] || undefined}
               onChange={(e) => handleRespostaChange(p.id.toString(), e.target.value)}
               required={p.obrigatoria}
               placeholder="Digite um número"
@@ -449,7 +449,7 @@ export default function RegistroDiario() {
           
           {p.tipo === 'MULTIPLA' && (
             <Select
-              value={formData.respostas[p.id.toString()] || ''}
+              value={formData.respostas[p.id.toString()] || undefined}
               onValueChange={(v) => handleRespostaChange(p.id.toString(), v)}
               required={p.obrigatoria}
               disabled={!p.opcoes || p.opcoes.length === 0}
@@ -467,7 +467,7 @@ export default function RegistroDiario() {
                     <SelectItem key={idx} value={opcao}>{opcao}</SelectItem>
                   ))
                 ) : (
-                  <SelectItem value="" disabled>Nenhuma opção definida</SelectItem>
+                  <SelectItem value="nenhuma-opcao" disabled>Nenhuma opção definida</SelectItem>
                 )}
               </SelectContent>
             </Select>
@@ -762,7 +762,7 @@ export default function RegistroDiario() {
                 <div className="grid gap-2">
                   <Label>Formulário *</Label>
                   <Select
-                    value={formularioSelecionado?.id?.toString() || ''}
+                    value={formularioSelecionado?.id?.toString() || undefined}
                     onValueChange={(v) => carregarPerguntas(parseInt(v))}
                     required
                   >

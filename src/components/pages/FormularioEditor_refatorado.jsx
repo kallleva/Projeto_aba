@@ -1,0 +1,642 @@
+import { useEffect, useState } from "react"
+import { useParams, useNavigate } from "react-router-dom"
+import ApiService from "@/lib/api"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import { Textarea } from "@/components/ui/textarea"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { Checkbox } from "@/components/ui/checkbox"
+import { useToast } from "@/hooks/use-toast"
+import { Plus, ArrowUp, ArrowDown, Trash2, X, AlertCircle, Save, FileUp } from "lucide-react"
+
+export default function FormularioEditor() {
+  const { id } = useParams()
+  const navigate = useNavigate()
+  const { toast } = useToast()
+  const [formData, setFormData] = useState({
+    nome: "",
+    categoria: "",
+    descricao: "",
+    perguntas: [],
+  })
+
+  // Importação de Excel
+  const handleImportExcel = async (event) => {
+    const file = event.target.files[0];
+    if (!file) return;
+    try {
+      const XLSX = await import('xlsx');
+      const fileName = file.name.toLowerCase();
+      if (fileName.endsWith('.csv')) {
+        // CSV: ler como texto UTF-8
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          // Forçar UTF-8
+          const csvText = e.target.result;
+          // Converter CSV para worksheet
+          const worksheet = XLSX.read(csvText, { type: 'string', codepage: 65001 }).Sheets.Sheet1 || XLSX.read(csvText, { type: 'string', codepage: 65001 }).Sheets[XLSX.read(csvText, { type: 'string', codepage: 65001 }).SheetNames[0]];
+          const json = XLSX.utils.sheet_to_json(worksheet, { defval: '' });
+          const perguntas = json.map((row, idx) => ({
+            id: Date.now() + idx,
+            ordem: row['Ordem'] || idx + 1,
+            texto: row['Texto'] || '',
+            sigla: (row['Sigla'] || '').toUpperCase().replace(/[^A-Z0-9_]/g, '').slice(0, 16),
+            tipo: (row['Tipo'] || 'TEXTO').toUpperCase(),
+            obrigatoria: row['Obrigatoria'] === 'TRUE' || row['Obrigatoria'] === true,
+            formula: row['Formula'] || '',
+            opcoes: row['Opcoes'] ? row['Opcoes'].split(',').map(o => o.trim()).filter(Boolean) : [],
+          }));
+          setFormData((prev) => ({ ...prev, perguntas }));
+          toast({ title: 'Importação concluída', description: 'Perguntas importadas do CSV.' });
+        };
+        reader.readAsText(file, 'utf-8');
+      } else {
+        // XLSX: ler como arraybuffer
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          const data = new Uint8Array(e.target.result);
+          const workbook = XLSX.read(data, { type: 'array' });
+          const sheetName = workbook.SheetNames[0];
+          const worksheet = workbook.Sheets[sheetName];
+          const json = XLSX.utils.sheet_to_json(worksheet, { defval: '' });
+          const perguntas = json.map((row, idx) => ({
+            id: Date.now() + idx,
+            ordem: row['Ordem'] || idx + 1,
+            texto: row['Texto'] || '',
+            sigla: row['Sigla'] || '',
+            tipo: (row['Tipo'] || 'TEXTO').toUpperCase(),
+            obrigatoria: row['Obrigatoria'] === 'TRUE' || row['Obrigatoria'] === true,
+            formula: row['Formula'] || '',
+            opcoes: row['Opcoes'] ? row['Opcoes'].split(',').map(o => o.trim()).filter(Boolean) : [],
+          }));
+          setFormData((prev) => ({ ...prev, perguntas }));
+          toast({ title: 'Importação concluída', description: 'Perguntas importadas do Excel.' });
+        };
+        reader.readAsArrayBuffer(file);
+      }
+    } catch (err) {
+      toast({ title: 'Erro ao importar Excel', description: err.message, variant: 'destructive' });
+    }
+  };
+
+  const [loading, setLoading] = useState(false)
+  const [saving, setSaving] = useState(false)
+
+  useEffect(() => {
+    const fetchFormulario = async () => {
+      if (!id) return
+      setLoading(true)
+      try {
+        const data = await ApiService.getFormulario(id)
+        console.log('Formulário carregado:', data)
+        setFormData(data)
+      } catch (err) {
+        console.error("Erro ao carregar formulário:", err)
+        toast({
+          title: 'Erro',
+          description: 'Erro ao carregar formulário: ' + err.message,
+          variant: 'destructive'
+        })
+      } finally {
+        setLoading(false)
+      }
+    }
+    fetchFormulario()
+  }, [id, toast])
+
+  const addPergunta = () => {
+    setFormData((prev) => {
+      const novoId = Date.now() + Math.floor(Math.random() * 1000)
+      const novaPergunta = {
+        ordem: prev.perguntas.length + 1,
+        texto: "Nova pergunta",
+        tipo: "TEXTO",
+        obrigatoria: false,
+        formula: null,
+        opcoes: []
+      }
+      
+      console.log('Adicionando nova pergunta:', novaPergunta)
+      
+      return {
+        ...prev,
+        perguntas: [...prev.perguntas, novaPergunta]
+      }
+    })
+  }
+
+  const deletePergunta = (idPergunta) => {
+    const novas = formData.perguntas.filter((p) => p.id !== idPergunta)
+    setFormData((prev) => ({
+      ...prev,
+      perguntas: novas.map((p, i) => ({ ...p, ordem: i + 1 })),
+    }))
+  }
+
+  const movePergunta = (index, direction) => {
+    const novas = [...formData.perguntas]
+    const targetIndex = direction === "up" ? index - 1 : index + 1
+    if (targetIndex < 0 || targetIndex >= novas.length) return
+    ;[novas[index], novas[targetIndex]] = [novas[targetIndex], novas[index]]
+    setFormData((prev) => ({
+      ...prev,
+      perguntas: novas.map((p, i) => ({ ...p, ordem: i + 1 })),
+    }))
+  }
+
+  const handleSave = async () => {
+    setSaving(true)
+    try {
+      // Validações básicas
+      if (!formData.nome || formData.nome.trim() === '') {
+        toast({
+          title: 'Erro de validação',
+          description: 'O nome do formulário é obrigatório',
+          variant: 'destructive'
+        })
+        setSaving(false)
+        return
+      }
+
+      if (!formData.perguntas || formData.perguntas.length === 0) {
+        toast({
+          title: 'Erro de validação',
+          description: 'Adicione pelo menos uma pergunta ao formulário',
+          variant: 'destructive'
+        })
+        setSaving(false)
+        return
+      }
+
+      // Validar perguntas do tipo FORMULA
+      const perguntasFormula = formData.perguntas.filter(p => p.tipo === 'FORMULA')
+      const formulasInvalidas = perguntasFormula.filter(p => !p.formula || p.formula.trim() === '')
+      
+      if (formulasInvalidas.length > 0) {
+        toast({
+          title: 'Fórmulas inválidas',
+          description: `Perguntas do tipo Fórmula devem ter uma fórmula definida: ${formulasInvalidas.map(p => p.texto).join(', ')}`,
+          variant: 'destructive'
+        })
+        setSaving(false)
+        return
+      }
+
+      // Validar perguntas do tipo PERCENTUAL
+      const perguntasPercentual = formData.perguntas.filter(p => p.tipo === 'PERCENTUAL')
+      const percentuaisInvalidos = perguntasPercentual.filter(p => !p.formula || p.formula.trim() === '' || !p.formula.match(/^PERCENTUAL\(P\d+:P\d+\)$/))
+      
+      if (percentuaisInvalidos.length > 0) {
+        toast({
+          title: 'Fórmulas de percentual inválidas',
+          description: `Perguntas do tipo Percentual devem ter uma fórmula no formato PERCENTUAL(P1:P15): ${percentuaisInvalidos.map(p => p.texto).join(', ')}`,
+          variant: 'destructive'
+        })
+        setSaving(false)
+        return
+      }
+
+      // Validar perguntas do tipo MULTIPLA
+      const perguntasMultipla = formData.perguntas.filter(p => p.tipo === 'MULTIPLA')
+      const opcoesInvalidas = perguntasMultipla.filter(p => !p.opcoes || p.opcoes.length < 2)
+      
+      if (opcoesInvalidas.length > 0) {
+        toast({
+          title: 'Opções inválidas',
+          description: `Perguntas de Múltipla Escolha devem ter pelo menos 2 opções: ${opcoesInvalidas.map(p => p.texto).join(', ')}`,
+          variant: 'destructive'
+        })
+        setSaving(false)
+        return
+      }
+
+      // Validar textos das perguntas
+      const perguntasVazias = formData.perguntas.filter(p => !p.texto || p.texto.trim() === '')
+      if (perguntasVazias.length > 0) {
+        toast({
+          title: 'Perguntas inválidas',
+          description: 'Todas as perguntas devem ter um texto definido',
+          variant: 'destructive'
+        })
+        setSaving(false)
+        return
+      }
+
+      // Preparar payload para envio conforme documentação
+      const payload = {
+        nome: formData.nome.trim(),
+        descricao: formData.descricao?.trim() || "",
+        categoria: formData.categoria || "avaliacao",
+        perguntas: formData.perguntas.map((p, index) => {
+          const sigla = (typeof p.sigla === 'string' && p.sigla.length > 0)
+            ? p.sigla.toUpperCase().replace(/[^A-Z0-9_]/g, '').slice(0, 16)
+            : '';
+          const pergunta = {
+            texto: p.texto.trim(),
+            tipo: p.tipo.toUpperCase(),
+            obrigatoria: p.obrigatoria || false,
+            sigla: sigla
+          }
+          if (p.tipo === 'FORMULA' || p.tipo === 'PERCENTUAL') {
+            pergunta.formula = p.formula?.trim() || null
+          }
+          if (p.tipo === 'MULTIPLA') {
+            pergunta.opcoes = p.opcoes || []
+            if (p.opcoes_padronizadas) {
+              pergunta.opcoes = ['Não Adquirido', 'Parcial', 'Adquirido']
+            }
+          }
+          if (p.id && !p.id.toString().startsWith('temp_')) {
+            pergunta.id = p.id
+          }
+          return pergunta
+        })
+      }
+
+      console.log('Payload sendo enviado:', payload)
+
+      let resultado
+      if (id) {
+        resultado = await ApiService.updateFormulario(id, payload)
+        toast({
+          title: 'Sucesso',
+          description: 'Formulário atualizado com sucesso!'
+        })
+      } else {
+        resultado = await ApiService.createFormulario(payload)
+        toast({
+          title: 'Sucesso',
+          description: 'Formulário criado com sucesso!'
+        })
+      }
+
+      console.log('Resultado da API:', resultado)
+      navigate(-1)
+    } catch (err) {
+      console.error("Erro ao salvar formulário:", err)
+      toast({
+        title: 'Erro ao salvar',
+        description: 'Erro ao salvar formulário: ' + err.message,
+        variant: 'destructive'
+      })
+    } finally {
+      setSaving(false)
+    }
+  }
+
+  if (loading) return (
+    <div className="flex items-center justify-center min-h-screen">
+      <div className="text-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-4 mx-auto" style={{borderColor: 'var(--color-info-200)', borderTopColor: '#0ea5e9'}}></div>
+        <p className="mt-4 card-text font-medium">Carregando formulário...</p>
+      </div>
+    </div>
+  )
+
+  return (
+    <div className="w-full max-w-6xl mx-auto px-4 py-8 space-y-6">
+      {/* Header */}
+      <div className="page-section">
+        <div className="flex items-center justify-between gap-4 flex-wrap">
+          <div>
+            <h1 className="page-title">{id ? "Editar Formulário" : "Novo Formulário"}</h1>
+            <p className="page-subtitle">
+              {id ? "Atualize as informações do formulário" : "Crie um novo formulário para checklists diários"}
+            </p>
+          </div>
+          <Button 
+            variant="outline" 
+            size="sm" 
+            onClick={() => navigate(-1)}
+            className="flex items-center gap-2 h-9"
+          >
+            <X className="h-4 w-4" />
+            Fechar
+          </Button>
+        </div>
+      </div>
+
+      {/* Card Principal */}
+      <div className="card-spacing space-y-8">
+        <form onSubmit={(e) => { e.preventDefault(); handleSave(); }} className="space-y-8">
+          
+          {/* Seção 1: Importação de Excel */}
+          <div style={{borderBottomColor: 'var(--color-neutral-200)'}} className="border-b pb-6">
+            <div className="section-header mb-4">
+              <FileUp size={18} className="color-info-icon" />
+              <h2 className="section-header-title">Importar do Excel</h2>
+            </div>
+            <p className="card-text mb-4">Carregue um arquivo Excel com perguntas pré-definidas</p>
+            <div className="flex items-center gap-4 flex-wrap">
+              <Input 
+                type="file" 
+                accept=".xlsx,.xls,.csv" 
+                onChange={handleImportExcel}
+                className="flex-1 min-w-[200px]"
+              />
+              <span className="text-xs" style={{color: 'var(--color-neutral-500)'}}>
+                Formatos: .xlsx, .xls, .csv
+              </span>
+            </div>
+          </div>
+
+          {/* Seção 2: Informações Básicas */}
+          <div style={{borderBottomColor: 'var(--color-neutral-200)'}} className="border-b pb-6">
+            <div className="section-header mb-6">
+              <AlertCircle size={18} className="color-info-icon" />
+              <h2 className="section-header-title">Informações Básicas</h2>
+            </div>
+
+            <div className="grid gap-6 grid-cols-1 sm:grid-cols-2">
+              {/* Nome */}
+              <div className="form-group sm:col-span-1">
+                <Label htmlFor="nome" className="font-semibold mb-2 block">Nome do Formulário *</Label>
+                <Input
+                  id="nome"
+                  value={formData.nome}
+                  onChange={(e) => setFormData({ ...formData, nome: e.target.value })}
+                  placeholder="Ex: Avaliação de Coordenação Motora"
+                  required
+                />
+              </div>
+
+              {/* Categoria */}
+              <div className="form-group sm:col-span-1">
+                <Label htmlFor="categoria" className="font-semibold mb-2 block">Categoria</Label>
+                <Select
+                  value={formData.categoria}
+                  onValueChange={(value) => setFormData({ ...formData, categoria: value })}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Selecione a categoria" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="avaliacao">Avaliação Inicial</SelectItem>
+                    <SelectItem value="evolucao">Evolução de Sessão</SelectItem>
+                    <SelectItem value="pei">PEI</SelectItem>
+                    <SelectItem value="relatorio">Relatório Final</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              {/* Descrição */}
+              <div className="form-group sm:col-span-2">
+                <Label htmlFor="descricao" className="font-semibold mb-2 block">Descrição</Label>
+                <Textarea
+                  id="descricao"
+                  value={formData.descricao}
+                  onChange={(e) => setFormData({ ...formData, descricao: e.target.value })}
+                  rows={3}
+                  placeholder="Descreva o objetivo e contexto deste formulário..."
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* Seção 3: Perguntas */}
+          <div>
+            <div className="flex justify-between items-start gap-4 mb-6 flex-wrap">
+              <div>
+                <h2 className="section-header-title flex items-center gap-2">
+                  <AlertCircle size={18} className="color-warning-icon" />
+                  Perguntas do Formulário
+                </h2>
+                <p className="card-text mt-2">
+                  {formData.perguntas.length === 0 
+                    ? "Adicione perguntas para criar o formulário"
+                    : `${formData.perguntas.length} pergunta${formData.perguntas.length > 1 ? 's' : ''} adicionada${formData.perguntas.length > 1 ? 's' : ''}`
+                  }
+                </p>
+              </div>
+              <Button 
+                type="button" 
+                onClick={addPergunta} 
+                style={{ backgroundColor: '#0ea5e9', color: 'white' }}
+                className="flex items-center gap-2 h-9"
+              >
+                <Plus className="h-4 w-4" />
+                Adicionar Pergunta
+              </Button>
+            </div>
+
+            {formData.perguntas.length === 0 ? (
+              <div className="alert alert-info">
+                <AlertCircle size={18} />
+                <div className="alert-content">
+                  <p className="font-medium">Nenhuma pergunta adicionada</p>
+                  <p className="text-sm mt-1 mb-3">Adicione perguntas para criar seu formulário de checklist diário.</p>
+                  <Button 
+                    onClick={addPergunta}
+                    variant="outline"
+                    className="flex items-center gap-2 h-8"
+                  >
+                    <Plus className="h-4 w-4" />
+                    Adicionar Primeira Pergunta
+                  </Button>
+                </div>
+              </div>
+            ) : (
+              <div className="overflow-x-auto border" style={{borderColor: 'var(--color-neutral-200)', borderRadius: '8px'}}>
+                <table className="table">
+                  <thead>
+                    <tr style={{backgroundColor: 'var(--color-info-50)'}}>
+                      <th style={{color: '#0c3d66'}}>Ordem</th>
+                      <th style={{color: '#0c3d66'}}>Pergunta</th>
+                      <th style={{color: '#0c3d66'}}>Sigla</th>
+                      <th style={{color: '#0c3d66'}}>Tipo</th>
+                      <th style={{color: '#0c3d66'}}>Fórmula/Opções</th>
+                      <th style={{color: '#0c3d66'}}>Obrigatória</th>
+                      <th style={{color: '#0c3d66', textAlign: 'right'}}>Ações</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {formData.perguntas
+                      .slice()
+                      .sort((a, b) => (a.ordem || 0) - (b.ordem || 0))
+                      .map((p, index) => (
+                        <tr key={p.id}>
+                          <td style={{fontWeight: 600, textAlign: 'center'}}>{p.ordem}</td>
+                          <td>
+                            <Input
+                              value={p.texto}
+                              onChange={(e) => {
+                                const novas = [...formData.perguntas]
+                                novas[index].texto = e.target.value
+                                setFormData({ ...formData, perguntas: novas })
+                              }}
+                              placeholder="Digite a pergunta"
+                              className="text-sm"
+                            />
+                          </td>
+                          <td>
+                            <Input
+                              value={p.sigla || ''}
+                              onChange={e => {
+                                const novas = [...formData.perguntas]
+                                novas[index].sigla = e.target.value.toUpperCase().replace(/[^A-Z0-9_]/g, '').slice(0, 16)
+                                setFormData({ ...formData, perguntas: novas })
+                              }}
+                              placeholder="Ex: P1"
+                              maxLength={16}
+                              className="text-sm"
+                            />
+                          </td>
+                          <td>
+                            <Select
+                              value={p.tipo}
+                              onValueChange={(value) => {
+                                const novas = [...formData.perguntas]
+                                novas[index].tipo = value.toUpperCase()
+                                if (value.toUpperCase() !== 'FORMULA' && value.toUpperCase() !== 'PERCENTUAL') {
+                                  novas[index].formula = ''
+                                }
+                                if (value.toUpperCase() !== 'MULTIPLA') {
+                                  novas[index].opcoes = []
+                                }
+                                setFormData({ ...formData, perguntas: novas })
+                              }}
+                            >
+                              <SelectTrigger className="text-sm">
+                                <SelectValue />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectItem value="TEXTO">Texto</SelectItem>
+                                <SelectItem value="NUMERO">Número</SelectItem>
+                                <SelectItem value="BOOLEANO">Sim/Não</SelectItem>
+                                <SelectItem value="MULTIPLA">Múltipla</SelectItem>
+                                <SelectItem value="FORMULA">Fórmula</SelectItem>
+                                <SelectItem value="PERCENTUAL">Percentual</SelectItem>
+                              </SelectContent>
+                            </Select>
+                          </td>
+                          <td>
+                            {p.tipo === 'FORMULA' && (
+                              <Input
+                                placeholder="Ex: pergunta_1 + pergunta_2"
+                                value={p.formula || ''}
+                                onChange={(e) => {
+                                  const novas = [...formData.perguntas]
+                                  novas[index].formula = e.target.value
+                                  setFormData({ ...formData, perguntas: novas })
+                                }}
+                                className="text-sm"
+                              />
+                            )}
+                            {p.tipo === 'PERCENTUAL' && (
+                              <Input
+                                placeholder="Ex: PERCENTUAL(P1:P15)"
+                                value={p.formula || ''}
+                                onChange={(e) => {
+                                  const novas = [...formData.perguntas]
+                                  novas[index].formula = e.target.value
+                                  setFormData({ ...formData, perguntas: novas })
+                                }}
+                                className="text-sm"
+                              />
+                            )}
+                            {p.tipo === 'MULTIPLA' && (
+                              <div className="space-y-2">
+                                <div className="flex items-center gap-2">
+                                  <Checkbox
+                                    id={`padronizado-${index}`}
+                                    checked={p.opcoes_padronizadas || false}
+                                    onCheckedChange={(e) => {
+                                      const novas = [...formData.perguntas]
+                                      novas[index].opcoes_padronizadas = !!e
+                                      if (e) {
+                                        novas[index].opcoes = ['Não Adquirido', 'Parcial', 'Adquirido']
+                                      } else {
+                                        novas[index].opcoes = []
+                                      }
+                                      setFormData({ ...formData, perguntas: novas })
+                                    }}
+                                  />
+                                  <label htmlFor={`padronizado-${index}`} className="text-xs">Padrão</label>
+                                </div>
+                                {!p.opcoes_padronizadas && (
+                                  <Input
+                                    placeholder="Op1, Op2, Op3"
+                                    value={p.opcoes ? p.opcoes.join(', ') : ''}
+                                    onChange={(e) => {
+                                      const novas = [...formData.perguntas]
+                                      novas[index].opcoes = e.target.value.split(',').map(o => o.trim()).filter(o => o)
+                                      setFormData({ ...formData, perguntas: novas })
+                                    }}
+                                    className="text-sm"
+                                  />
+                                )}
+                              </div>
+                            )}
+                            {(p.tipo !== 'FORMULA' && p.tipo !== 'PERCENTUAL' && p.tipo !== 'MULTIPLA') && (
+                              <span style={{color: 'var(--color-neutral-400)'}} className="text-sm">-</span>
+                            )}
+                          </td>
+                          <td style={{textAlign: 'center'}}>
+                            <Checkbox
+                              checked={p.obrigatoria}
+                              disabled={p.tipo === 'FORMULA'}
+                              onCheckedChange={(checked) => {
+                                const novas = [...formData.perguntas]
+                                novas[index].obrigatoria = !!checked
+                                setFormData({ ...formData, perguntas: novas })
+                              }}
+                            />
+                          </td>
+                          <td style={{textAlign: 'right'}}>
+                            <div className="flex justify-end gap-2">
+                              <Button type="button" variant="outline" size="sm" onClick={() => movePergunta(index, "up")} disabled={index === 0} className="h-8 w-8 p-0">
+                                <ArrowUp className="h-4 w-4" />
+                              </Button>
+                              <Button type="button" variant="outline" size="sm" onClick={() => movePergunta(index, "down")} disabled={index === formData.perguntas.length - 1} className="h-8 w-8 p-0">
+                                <ArrowDown className="h-4 w-4" />
+                              </Button>
+                              <Button type="button" variant="outline" size="sm" onClick={() => deletePergunta(p.id)} className="h-8 w-8 p-0">
+                                <Trash2 className="h-4 w-4" />
+                              </Button>
+                            </div>
+                          </td>
+                        </tr>
+                      ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
+          </div>
+
+          {/* Botões de Ação */}
+          <div style={{borderTopColor: 'var(--color-neutral-200)'}} className="flex justify-end gap-4 pt-6 border-t">
+            <Button 
+              type="button" 
+              variant="outline" 
+              onClick={() => navigate(-1)}
+              disabled={saving}
+              className="flex items-center gap-2 h-9"
+            >
+              <X className="h-4 w-4" />
+              Cancelar
+            </Button>
+            <Button 
+              type="submit" 
+              disabled={saving || !formData.nome || formData.perguntas.length === 0}
+              style={{ backgroundColor: '#0ea5e9', color: 'white' }}
+              className="flex items-center gap-2 h-9"
+            >
+              {saving ? (
+                <>
+                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+                  Salvando...
+                </>
+              ) : (
+                <>
+                  <Save className="h-4 w-4" />
+                  {id ? "Atualizar Formulário" : "Criar Formulário"}
+                </>
+              )}
+            </Button>
+          </div>
+        </form>
+      </div>
+    </div>
+  )
+}

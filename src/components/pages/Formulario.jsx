@@ -1,12 +1,9 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import ApiService from '@/lib/api'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
-import { Badge } from '@/components/ui/badge'
 import { useToast } from '@/hooks/use-toast'
-import { Plus, Edit, Trash2, FileText, Clock } from 'lucide-react'
+import { Plus, Edit, Trash2, FileText, Clock, AlertCircle } from 'lucide-react'
 
 export default function Formularios() {
   const [formularios, setFormularios] = useState([])
@@ -57,107 +54,119 @@ export default function Formularios() {
 
   return (
     <div className="space-y-6">
-      {/* Cabeçalho */}
-      <div className="flex justify-between items-center">
-        <div>
-          <h2 className="text-3xl font-bold tracking-tight">Formulários</h2>
-          <p className="text-muted-foreground">
-            Cadastre modelos de formulários com perguntas estruturadas para checklists diários.
-          </p>
+      {/* Header */}
+      <div className="page-section">
+        <div className="flex justify-between items-center gap-4 flex-wrap">
+          <div>
+            <h1 className="page-title">Formulários</h1>
+            <p className="page-subtitle">
+              Cadastre modelos de formulários com perguntas estruturadas para checklists diários
+            </p>
+          </div>
+          <Button 
+            onClick={() => navigate("/protocolo/novo")}
+            style={{ backgroundColor: '#0ea5e9', color: 'white' }}
+          >
+            <Plus className="mr-2 h-4 w-4" />
+            Novo Formulário
+          </Button>
         </div>
-        <Button onClick={() => navigate("/protocolo/novo")}>
-          <Plus className="mr-2 h-4 w-4" />
-          Novo Formulário
-        </Button>
       </div>
 
       {/* Lista de Formulários */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Lista de Formulários</CardTitle>
-          <CardDescription>Visualize e gerencie os formulários criados para checklists diários</CardDescription>
-        </CardHeader>
-        <CardContent>
-          {loading ? (
-            <div className="text-center py-8">
-              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto"></div>
-              <p className="mt-2 text-muted-foreground">Carregando formulários...</p>
-            </div>
-          ) : formularios.length === 0 ? (
-            <div className="text-center py-8 text-muted-foreground">
-              <FileText className="h-12 w-12 mx-auto mb-4 opacity-50" />
-              <p>Nenhum formulário criado ainda.</p>
+      <div className="card-spacing">
+        <div className="section-header mb-6">
+          <FileText size={18} className="color-info-icon" />
+          <h2 className="section-header-title">Lista de Formulários</h2>
+        </div>
+        <p className="card-text mb-6">Visualize e gerencie os formulários criados para checklists diários</p>
+
+        {loading ? (
+          <div className="text-center py-12">
+            <div className="animate-spin rounded-full h-10 w-10 border-4 mx-auto" style={{borderColor: 'var(--color-info-200)', borderTopColor: 'var(--color-info-500)'}}></div>
+            <p className="mt-4 card-text font-medium">Carregando formulários...</p>
+          </div>
+        ) : formularios.length === 0 ? (
+          <div className="alert alert-info">
+            <FileText size={18} />
+            <div className="alert-content">
+              <p className="font-medium">Nenhum formulário criado ainda</p>
+              <p className="text-sm mt-1">Crie o primeiro formulário para começar a gerenciar checklists</p>
               <Button 
                 onClick={() => navigate("/protocolo/novo")}
-                className="mt-4"
+                className="mt-3"
+                style={{ backgroundColor: '#0ea5e9', color: 'white' }}
               >
                 <Plus className="mr-2 h-4 w-4" />
                 Criar Primeiro Formulário
               </Button>
             </div>
-          ) : (
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Nome</TableHead>
-                  <TableHead>Categoria</TableHead>
-                  <TableHead>Descrição</TableHead>
-                  <TableHead>Perguntas</TableHead>
-                  <TableHead>Tipos de Pergunta</TableHead>
-                  <TableHead>Última atualização</TableHead>
-                  <TableHead className="text-right">Ações</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
+          </div>
+        ) : (
+          <div className="overflow-x-auto">
+            <table className="table">
+              <thead>
+                <tr>
+                  <th>Nome</th>
+                  <th>Categoria</th>
+                  <th>Descrição</th>
+                  <th>Perguntas</th>
+                  <th>Tipos</th>
+                  <th>Última Atualização</th>
+                  <th className="text-right">Ações</th>
+                </tr>
+              </thead>
+              <tbody>
                 {formularios.map((form) => {
                   const tiposPerguntas = form.perguntas ? [...new Set(form.perguntas.map(p => p.tipo))] : []
                   const temFormula = tiposPerguntas.includes('FORMULA')
+                  const temPercentual = tiposPerguntas.includes('PERCENTUAL')
                   
                   return (
-                    <TableRow key={form.id}>
-                      <TableCell>
+                    <tr key={form.id}>
+                      <td>
                         <div className="flex items-center gap-2">
-                          <FileText className="h-4 w-4 text-muted-foreground" />
-                          <span className="font-medium">{form.nome}</span>
+                          <FileText size={16} className="color-info-icon flex-shrink-0" />
+                          <span className="font-semibold">{form.nome}</span>
                         </div>
-                      </TableCell>
-                      <TableCell>
-                        <Badge variant="outline">
+                      </td>
+                      <td>
+                        <span className="badge badge-info text-xs">
                           {form.categoria || 'Sem categoria'}
-                        </Badge>
-                      </TableCell>
-                      <TableCell>
-                        <div className="max-w-xs truncate" title={form.descricao}>
+                        </span>
+                      </td>
+                      <td>
+                        <div 
+                          className="max-w-xs truncate text-sm"
+                          title={form.descricao}
+                          style={{color: 'var(--color-neutral-700)'}}
+                        >
                           {form.descricao || '-'}
                         </div>
-                      </TableCell>
-                      <TableCell>
-                        <div className="flex items-center gap-2">
-                          <span className="font-medium">{form.perguntas?.length || 0}</span>
-                          {temFormula && (
-                            <Badge variant="secondary" className="text-xs">
-                              Com Fórmulas
-                            </Badge>
-                          )}
-                        </div>
-                      </TableCell>
-                      <TableCell>
+                      </td>
+                      <td>
+                        <span className="font-semibold text-sm">{form.perguntas?.length || 0}</span>
+                      </td>
+                      <td>
                         <div className="flex flex-wrap gap-1">
-                          {tiposPerguntas.slice(0, 3).map(tipo => (
-                            <Badge key={tipo} variant="outline" className="text-xs">
-                              {tipo}
-                            </Badge>
-                          ))}
-                          {tiposPerguntas.length > 3 && (
-                            <Badge variant="secondary" className="text-xs">
-                              +{tiposPerguntas.length - 3}
-                            </Badge>
+                          {temFormula && (
+                            <span className="badge badge-warning text-xs" title="Com Fórmulas">
+                              📐 Fórmula
+                            </span>
+                          )}
+                          {temPercentual && (
+                            <span className="badge badge-success text-xs" title="Com Percentuais">
+                              📊 Percentual
+                            </span>
+                          )}
+                          {!temFormula && !temPercentual && (
+                            <span style={{color: 'var(--color-neutral-400)', fontSize: '0.875rem'}}>-</span>
                           )}
                         </div>
-                      </TableCell>
-                      <TableCell>
-                        <div className="flex items-center gap-1 text-sm text-muted-foreground">
-                          <Clock className="h-3 w-3" />
+                      </td>
+                      <td>
+                        <div className="flex items-center gap-1 text-sm" style={{color: 'var(--color-neutral-600)'}}>
+                          <Clock size={14} />
                           {form.atualizadoEm || form.atualizado_em ? 
                             new Date(form.atualizadoEm || form.atualizado_em).toLocaleDateString('pt-BR') : 
                             (form.criadoEm || form.criado_em ? 
@@ -166,35 +175,37 @@ export default function Formularios() {
                             )
                           }
                         </div>
-                      </TableCell>
-                      <TableCell className="text-right">
+                      </td>
+                      <td>
                         <div className="flex justify-end gap-2">
                           <Button 
                             variant="outline" 
                             size="sm" 
                             onClick={() => navigate(`/protocolo/${form.id}`)}
+                            className="h-9 w-9 p-0"
                             title="Editar formulário"
                           >
-                            <Edit className="h-4 w-4" />
+                            <Edit size={16} />
                           </Button>
                           <Button 
                             variant="outline" 
                             size="sm" 
                             onClick={() => handleDeleteFormulario(form.id)}
+                            className="h-9 w-9 p-0"
                             title="Excluir formulário"
                           >
-                            <Trash2 className="h-4 w-4" />
+                            <Trash2 size={16} />
                           </Button>
                         </div>
-                      </TableCell>
-                    </TableRow>
+                      </td>
+                    </tr>
                   )
                 })}
-              </TableBody>
-            </Table>
-          )}
-        </CardContent>
-      </Card>
+              </tbody>
+            </table>
+          </div>
+        )}
+      </div>
     </div>
   )
 }

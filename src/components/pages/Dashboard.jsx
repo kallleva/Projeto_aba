@@ -1,186 +1,307 @@
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
-import { Users, UserCheck, Target, ClipboardList, TrendingUp, Calendar } from 'lucide-react'
+import { useState, useEffect } from 'react'
+import { Users, UserCheck, Target, ClipboardList, AlertCircle, CheckCircle2, Clock, TrendingUp } from 'lucide-react'
+import { useToast } from '@/hooks/use-toast'
+import { useAuth } from '@/contexts/AuthContext'
+import ApiService from '@/lib/api'
 
 export default function Dashboard() {
-  // Dados mockados para demonstração
+  const { user } = useAuth()
+  const [dashboardData, setDashboardData] = useState(null)
+  const [metasData, setMetasData] = useState([])
+  const [loading, setLoading] = useState(true)
+  const { toast } = useToast()
+
+  useEffect(() => {
+    carregarDados()
+  }, [user])
+
+  const carregarDados = async () => {
+    try {
+      setLoading(true)
+      
+      // Admin e Profissional veem dashboard completo
+      // Responsável vê apenas seus pacientes
+      if (user?.tipo_usuario === 'PROFISSIONAL' || user?.tipo_usuario === 'ADMIN') {
+        const [dashboard, metas] = await Promise.all([
+          ApiService.request('/relatorios/dashboard'),
+          ApiService.getMetasTerapeuticas()
+        ])
+        setDashboardData(dashboard)
+        setMetasData(metas)
+      } else if (user?.tipo_usuario === 'RESPONSAVEL') {
+        // Para responsáveis, mostrar apenas seus pacientes
+        const pacientes = await ApiService.getPacientes()
+        // Filtrar apenas pacientes vinculados a este responsável
+        const meusPacientes = pacientes.filter(p => 
+          p.responsavel_usuario?.id === user.id
+        )
+        setDashboardData({
+          resumo: {
+            total_pacientes: meusPacientes.length,
+            total_profissionais: 0,
+            total_metas_ativas: 0,
+            metas_em_atraso: 0
+          }
+        })
+      }
+    } catch (error) {
+      toast({
+        title: 'Erro',
+        description: 'Erro ao carregar dados do dashboard: ' + error.message,
+        variant: 'destructive',
+      })
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  if (loading) {
+    return (
+      <div className="center-flex h-screen">
+        <div className="text-lg animate-pulse text-color-neutral-600">Carregando dados...</div>
+      </div>
+    )
+  }
+
+  if (!dashboardData) {
+    return (
+      <div className="center-flex h-screen">
+        <div className="alert alert-warning">
+          <AlertCircle className="alert-icon" />
+          <div className="alert-content">
+            <strong>Sem dados disponíveis</strong>
+            <p>Nenhuma informação para exibir no dashboard</p>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  const { resumo, distribuicao_diagnosticos, distribuicao_metas } = dashboardData
+
   const stats = [
     {
       title: 'Total de Pacientes',
-      value: '24',
-      description: 'Pacientes ativos no sistema',
+      value: resumo.total_pacientes,
+      description: 'Pacientes cadastrados no sistema',
       icon: Users,
-      trend: '+2 este mês'
+      colorClass: 'color-info'
     },
     {
       title: 'Profissionais',
-      value: '8',
+      value: resumo.total_profissionais,
       description: 'Profissionais cadastrados',
       icon: UserCheck,
-      trend: '+1 este mês'
+      colorClass: 'color-success'
     },
     {
       title: 'Metas Ativas',
-      value: '47',
+      value: resumo.total_metas_ativas,
       description: 'Metas em andamento',
       icon: Target,
-      trend: '+5 esta semana'
+      colorClass: 'color-warning'
     },
     {
       title: 'Registros Hoje',
-      value: '12',
+      value: resumo.registros_hoje,
       description: 'Registros diários feitos hoje',
       icon: ClipboardList,
-      trend: '75% das metas'
-    }
-  ]
-
-  const recentActivities = [
-    {
-      patient: 'Ana Silva',
-      activity: 'Registro diário completado',
-      meta: 'Comunicação verbal',
-      score: 4,
-      time: '2 horas atrás'
-    },
-    {
-      patient: 'João Santos',
-      activity: 'Nova meta criada',
-      meta: 'Concentração em atividades',
-      score: null,
-      time: '4 horas atrás'
-    },
-    {
-      patient: 'Maria Oliveira',
-      activity: 'Registro diário completado',
-      meta: 'Interação social',
-      score: 5,
-      time: '6 horas atrás'
-    }
-  ]
-
-  const upcomingTasks = [
-    {
-      task: 'Revisão do plano terapêutico - Ana Silva',
-      date: 'Amanhã',
-      priority: 'alta'
-    },
-    {
-      task: 'Relatório mensal - João Santos',
-      date: 'Em 2 dias',
-      priority: 'média'
-    },
-    {
-      task: 'Avaliação de progresso - Maria Oliveira',
-      date: 'Em 3 dias',
-      priority: 'baixa'
+      colorClass: 'color-success'
     }
   ]
 
   return (
-    <div className="space-y-6">
-      <div>
-        <h2 className="text-3xl font-bold tracking-tight">Dashboard</h2>
-        <p className="text-muted-foreground">
-          Visão geral do sistema de acompanhamento terapêutico
+    <div className="page-section">
+      {/* Header */}
+      <div className="mb-8">
+        <h1 className="page-title">Dashboard</h1>
+        <p className="page-subtitle">
+          Visão geral e evolução do sistema de acompanhamento terapêutico
         </p>
       </div>
 
-      {/* Cards de estatísticas */}
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-        {stats.map((stat, index) => (
-          <Card key={index}>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">
-                {stat.title}
-              </CardTitle>
-              <stat.icon className="h-4 w-4 text-muted-foreground" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">{stat.value}</div>
-              <p className="text-xs text-muted-foreground">
-                {stat.description}
-              </p>
-              <div className="flex items-center pt-1">
-                <TrendingUp className="h-3 w-3 text-green-500 mr-1" />
-                <span className="text-xs text-green-500">{stat.trend}</span>
+      {/* Cards de estatísticas principais */}
+      <div className="card-grid mb-8">
+        {stats.map((stat, index) => {
+          const Icon = stat.icon
+          return (
+            <div key={index} className={`stat-card ${stat.colorClass}`}>
+              <div className="stat-card-icon" style={{
+                backgroundColor: stat.colorClass === 'color-info' ? '#bae6fd' :
+                                stat.colorClass === 'color-success' ? '#d1fae5' :
+                                stat.colorClass === 'color-warning' ? '#fef3c7' :
+                                '#fee2e2'
+              }}>
+                <Icon size={24} style={{
+                  color: stat.colorClass === 'color-info' ? '#0ea5e9' :
+                         stat.colorClass === 'color-success' ? '#22c55e' :
+                         stat.colorClass === 'color-warning' ? '#f59e0b' :
+                         '#ef4444'
+                }} />
               </div>
-            </CardContent>
-          </Card>
-        ))}
+              <div className="stat-card-content">
+                <div className="stat-card-label">{stat.title}</div>
+                <div className="stat-card-value">{stat.value}</div>
+                <p className="stat-card-desc">{stat.description}</p>
+              </div>
+            </div>
+          )
+        })}
       </div>
 
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
-        {/* Atividades recentes */}
-        <Card className="col-span-4">
-          <CardHeader>
-            <CardTitle>Atividades Recentes</CardTitle>
-            <CardDescription>
-              Últimas atividades registradas no sistema
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              {recentActivities.map((activity, index) => (
-                <div key={index} className="flex items-center space-x-4">
-                  <div className="flex-1 space-y-1">
-                    <p className="text-sm font-medium leading-none">
-                      {activity.patient}
-                    </p>
-                    <p className="text-sm text-muted-foreground">
-                      {activity.activity} - {activity.meta}
-                    </p>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    {activity.score && (
-                      <Badge variant="secondary">
-                        Nota: {activity.score}/5
-                      </Badge>
-                    )}
-                    <div className="text-xs text-muted-foreground">
-                      {activity.time}
+      {/* Grid de Distribuição e Status */}
+      <div className="grid gap-6 mb-8" style={{ gridTemplateColumns: '2fr 1fr' }}>
+        {/* Distribuição de Diagnósticos */}
+        <div className="card-spacing animate-fade-in">
+          <div className="section-header">
+            <TrendingUp size={18} className="color-info-icon" />
+            <h2 className="section-header-title">Distribuição de Diagnósticos</h2>
+          </div>
+          
+          <div className="space-y-4">
+            {distribuicao_diagnosticos && distribuicao_diagnosticos.length > 0 ? (
+              distribuicao_diagnosticos.map((item, index) => {
+                const maxCount = Math.max(...distribuicao_diagnosticos.map(d => d.count)) || 1
+                const percentage = (item.count / maxCount) * 100
+                
+                return (
+                  <div key={index} className="flex flex-col gap-2">
+                    <div className="flex justify-between items-center">
+                      <span className="label">{item.diagnostico}</span>
+                      <span className="badge badge-info">{item.count}</span>
+                    </div>
+                    <div className="progress-bar">
+                      <div 
+                        className="progress-fill" 
+                        style={{ width: `${percentage}%` }}
+                      />
                     </div>
                   </div>
-                </div>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
+                )
+              })
+            ) : (
+              <div className="alert alert-warning">
+                <AlertCircle className="alert-icon" />
+                <p className="alert-content">Nenhum diagnóstico registrado</p>
+              </div>
+            )}
+          </div>
+        </div>
 
-        {/* Tarefas pendentes */}
-        <Card className="col-span-3">
-          <CardHeader>
-            <CardTitle>Próximas Tarefas</CardTitle>
-            <CardDescription>
-              Tarefas e compromissos agendados
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              {upcomingTasks.map((task, index) => (
-                <div key={index} className="flex items-center space-x-4">
-                  <Calendar className="h-4 w-4 text-muted-foreground" />
-                  <div className="flex-1 space-y-1">
-                    <p className="text-sm font-medium leading-none">
-                      {task.task}
-                    </p>
-                    <p className="text-sm text-muted-foreground">
-                      {task.date}
-                    </p>
+        {/* Status das Metas */}
+        <div className="card-spacing animate-fade-in" style={{ animationDelay: '0.1s' }}>
+          <div className="section-header">
+            <CheckCircle2 size={18} className="color-success-icon" />
+            <h2 className="section-header-title">Status das Metas</h2>
+          </div>
+
+          <div className="space-y-3">
+            {distribuicao_metas && distribuicao_metas.length > 0 ? (
+              distribuicao_metas.map((item, index) => {
+                let badgeClass = 'badge-info'
+                let statusColor = 'color-info'
+                let icon = <Clock size={16} />
+
+                if (item.status === 'EM_ANDAMENTO') {
+                  badgeClass = 'badge-warning'
+                  statusColor = 'color-warning'
+                  icon = <Clock size={16} />
+                } else if (item.status === 'CONCLUIDA') {
+                  badgeClass = 'badge-success'
+                  statusColor = 'color-success'
+                  icon = <CheckCircle2 size={16} />
+                } else if (item.status === 'PAUSADA') {
+                  badgeClass = 'badge-error'
+                  statusColor = 'color-error'
+                  icon = <AlertCircle size={16} />
+                }
+
+                return (
+                  <div key={index} className="flex items-center justify-between p-2 rounded-lg hover:bg-gray-50 transition-colors">
+                    <div className="flex items-center gap-2">
+                      <span className={statusColor}>{icon}</span>
+                      <span className="card-text" style={{ fontSize: '0.875rem' }}>
+                        {item.status.replace(/_/g, ' ')}
+                      </span>
+                    </div>
+                    <span className={`badge ${badgeClass}`}>{item.count}</span>
                   </div>
-                  <Badge 
-                    variant={
-                      task.priority === 'alta' ? 'destructive' :
-                      task.priority === 'média' ? 'default' : 'secondary'
-                    }
-                  >
-                    {task.priority}
-                  </Badge>
-                </div>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
+                )
+              })
+            ) : (
+              <div className="alert alert-info">
+                <AlertCircle className="alert-icon" />
+                <p className="alert-content">Nenhuma meta registrada</p>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+
+      {/* Metas com Melhor Desempenho */}
+      <div className="card-spacing animate-fade-in" style={{ animationDelay: '0.2s' }}>
+        <div className="section-header">
+          <TrendingUp size={18} className="color-success-icon" />
+          <h2 className="section-header-title">Metas com Melhor Desempenho</h2>
+        </div>
+
+        {metasData && metasData.length > 0 ? (
+          <div className="overflow-x-auto">
+            <table className="table">
+              <thead>
+                <tr>
+                  <th>Paciente</th>
+                  <th>Profissional</th>
+                  <th>Meta</th>
+                  <th>Progresso</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                {metasData.slice(0, 5).map((meta, index) => {
+                  // Dados do backend já trazem progresso, paciente e profissional
+                  const progresso = meta.progresso || 0;
+                  const nomePaciente = meta.paciente?.nome || '-';
+                  const nomeProfissional = meta.profissional?.nome || '-';
+                  
+                  // Determinar cor do progresso
+                  let corProgresso = '#22c55e'; // Verde
+                  if (progresso < 50) corProgresso = '#ef4444'; // Vermelho
+                  else if (progresso < 75) corProgresso = '#f59e0b'; // Amarelo
+                  
+                  return (
+                    <tr key={index}>
+                      <td className="font-medium text-gray-900">{nomePaciente}</td>
+                      <td className="text-gray-700">{nomeProfissional}</td>
+                      <td className="text-gray-700" style={{maxWidth: '200px'}}>{meta.descricao || '-'}</td>
+                      <td>
+                        <div className="flex items-center gap-2">
+                          <div className="progress-bar" style={{ width: '80px' }}>
+                            <div 
+                              className="progress-fill" 
+                              style={{ width: `${progresso}%`, backgroundColor: corProgresso }}
+                            />
+                          </div>
+                          <span className="text-sm font-semibold text-gray-700">{Math.round(progresso)}%</span>
+                        </div>
+                      </td>
+                      <td>
+                        <span className={`badge ${meta.status === 'Concluida' ? 'badge-success' : meta.status === 'EmAndamento' ? 'badge-warning' : 'badge-error'}`}>
+                          {meta.status?.replace(/([A-Z])/g, ' $1').trim() || 'N/A'}
+                        </span>
+                      </td>
+                    </tr>
+                  )
+                })}
+              </tbody>
+            </table>
+          </div>
+        ) : (
+          <div className="alert alert-info">
+            <AlertCircle className="alert-icon" />
+            <p className="alert-content">Nenhuma meta disponível</p>
+          </div>
+        )}
       </div>
     </div>
   )

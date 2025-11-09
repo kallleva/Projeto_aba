@@ -157,8 +157,8 @@ docker-compose up --build
 ```
 
 ### **2. Acessar API:**
-- **Swagger UI:** `http://localhost:5000/api/`
-- **Endpoints:** `http://localhost:5000/api/vinculos`
+- **Swagger UI:** `http://kallebaurora-auroraapp-j0jary-ff9ab9-31-97-250-120.traefik.me/api/`
+- **Endpoints:** `http://kallebaurora-auroraapp-j0jary-ff9ab9-31-97-250-120.traefik.me/api/vinculos`
 
 ### **3. Testar com Dados de Exemplo:**
 Os vínculos são criados automaticamente no seed data. Você pode:
@@ -213,7 +213,7 @@ Use os exemplos fornecidos em:
 ### **Implementação Imediata:**
 1. ✅ Sistema está pronto para uso
 2. 🔧 Execute `docker-compose up --build`
-3. 🌐 Acesse `http://localhost:5000/api/`
+3. 🌐 Acesse `http://kallebaurora-auroraapp-j0jary-ff9ab9-31-97-250-120.traefik.me/api/`
 4. 🧪 Teste os endpoints no Swagger
 
 ### **Desenvolvimento Frontend:**

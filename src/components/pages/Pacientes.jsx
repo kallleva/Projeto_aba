@@ -1,19 +1,18 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
-import { Badge } from '@/components/ui/badge'
 import { useToast } from '@/hooks/use-toast'
-import { Plus, Edit, Trash2, Search, BarChart3, Users } from 'lucide-react'
+import { useAuth } from '@/contexts/AuthContext'
+import { Plus, Edit, Trash2, Search, BarChart3, Users, AlertCircle } from 'lucide-react'
 import ApiService from '@/lib/api'
 
 export default function Pacientes() {
   const navigate = useNavigate()
+  const { user } = useAuth()
   const [pacientes, setPacientes] = useState([])
   const [vinculosPorPaciente, setVinculosPorPaciente] = useState({})
   const [loading, setLoading] = useState(true)
@@ -31,19 +30,25 @@ export default function Pacientes() {
 
   useEffect(() => {
     loadPacientes()
-  }, [])
+  }, [user])
 
   const loadPacientes = async () => {
     try {
       setLoading(true)
-      const data = await ApiService.getPacientes()
+      let data = await ApiService.getPacientes()
+      
+      // Se for responsável, filtrar apenas seus pacientes
+      if (user?.tipo_usuario === 'RESPONSAVEL') {
+        data = data.filter(p => p.responsavel_usuario?.id === user.id)
+      }
+      
       setPacientes(data)
       
       // Carregar vínculos para cada paciente
       const vinculosMap = {}
       for (const paciente of data) {
         try {
-          const vinculos = await ApiService.getProfissionaisPaciente(paciente.id, true) // apenas ativos
+          const vinculos = await ApiService.getProfissionaisPaciente(paciente.id, true)
           vinculosMap[paciente.id] = vinculos
         } catch (error) {
           console.warn(`Erro ao carregar vínculos do paciente ${paciente.id}:`, error)
@@ -61,7 +66,6 @@ export default function Pacientes() {
       setLoading(false)
     }
   }
-
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -101,10 +105,6 @@ export default function Pacientes() {
 
   const handleViewVinculos = (paciente) => {
     navigate(`/pacientes/${paciente.id}?tab=vinculos`)
-  }
-
-  const formatDate = (dateString) => {
-    return new Date(dateString).toLocaleDateString('pt-BR')
   }
 
   const handleDelete = async (id) => {
@@ -149,15 +149,14 @@ export default function Pacientes() {
     return `${idade} anos`
   }
 
-  const getDiagnosticoBadgeVariant = (diagnostico) => {
+  const getDiagnosticoBadgeClass = (diagnostico) => {
     switch (diagnostico) {
-      case 'TEA': return 'default'
-      case 'TDAH': return 'secondary'
-      default: return 'outline'
+      case 'TEA': return 'badge-info'
+      case 'TDAH': return 'badge-warning'
+      default: return 'badge-success'
     }
   }
 
-  // 🔹 filtra os pacientes pelo search
   const filteredPacientes = pacientes.filter(p =>
     p.nome.toLowerCase().includes(search.toLowerCase()) ||
     p.responsavel.toLowerCase().includes(search.toLowerCase()) ||
@@ -165,21 +164,27 @@ export default function Pacientes() {
   )
 
   return (
-    <div className="space-y-6">
-      <div className="flex justify-between items-center">
+    <div className="page-section">
+      {/* Header */}
+      <div className="flex justify-between items-center mb-8">
         <div>
-          <h2 className="text-3xl font-bold tracking-tight">Pacientes</h2>
-          <p className="text-muted-foreground">
-            Gerencie os pacientes cadastrados no sistema
+          <h1 className="page-title">Pacientes</h1>
+          <p className="page-subtitle">
+            {user?.tipo_usuario === 'RESPONSAVEL' 
+              ? 'Meus pacientes' 
+              : 'Gerencie os pacientes cadastrados no sistema'
+            }
           </p>
         </div>
         <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-          <DialogTrigger asChild>
-            <Button onClick={resetForm}>
-              <Plus className="mr-2 h-4 w-4" />
-              Novo Paciente
-            </Button>
-          </DialogTrigger>
+          {user?.tipo_usuario !== 'RESPONSAVEL' && (
+            <DialogTrigger asChild>
+              <Button onClick={resetForm} style={{ backgroundColor: '#0ea5e9', color: 'white' }}>
+                <Plus className="mr-2 h-4 w-4" />
+                Novo Paciente
+              </Button>
+            </DialogTrigger>
+          )}
           <DialogContent className="sm:max-w-[425px]">
             <DialogHeader>
               <DialogTitle>
@@ -254,7 +259,7 @@ export default function Pacientes() {
                 <Button type="button" variant="outline" onClick={() => setDialogOpen(false)}>
                   Cancelar
                 </Button>
-                <Button type="submit">
+                <Button type="submit" style={{ backgroundColor: '#0ea5e9', color: 'white' }}>
                   {editingPaciente ? 'Atualizar' : 'Cadastrar'}
                 </Button>
               </DialogFooter>
@@ -263,76 +268,80 @@ export default function Pacientes() {
         </Dialog>
       </div>
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Lista de Pacientes</CardTitle>
-          <CardDescription>
-            Visualize e gerencie todos os pacientes cadastrados
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          {/* 🔎 Campo de busca */}
-          <div className="flex items-center gap-4 max-w-sm pl-8 mb-4">
-            <Search className="h-4 w-4 text-muted-foreground" />
-            <Input
-              className="p-2"
-              placeholder="Buscar paciente..."
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-            />
-          </div>
+      {/* Card com Tabela */}
+      <div className="card-spacing">
+        <div className="section-header mb-6">
+          <Users size={18} className="color-info-icon" />
+          <h2 className="section-header-title">Lista de Pacientes</h2>
+        </div>
 
-          {loading ? (
-            <div className="text-center py-4">Carregando...</div>
-          ) : filteredPacientes.length === 0 ? (
-            <div className="text-center py-8 text-muted-foreground">
-              Nenhum paciente encontrado.
-            </div>
-          ) : (
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Nome</TableHead>
-                  <TableHead>Idade</TableHead>
-                  <TableHead>Responsável</TableHead>
-                  <TableHead>Contato</TableHead>
-                  <TableHead>Diagnóstico</TableHead>
-                  <TableHead>Profissionais Vinculados</TableHead>
-                  <TableHead className="text-right">Ações</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
+        {/* Campo de busca */}
+        <div className="flex items-center gap-2 mb-6 bg-gray-50 px-3 py-2 rounded-lg" style={{ maxWidth: '300px' }}>
+          <Search className="h-4 w-4 text-gray-500" />
+          <Input
+            className="border-0 bg-gray-50 p-0"
+            placeholder="Buscar paciente..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            style={{ outline: 'none' }}
+          />
+        </div>
+
+        {loading ? (
+          <div className="center-flex py-12">
+            <div className="text-lg animate-pulse text-gray-600">Carregando pacientes...</div>
+          </div>
+        ) : filteredPacientes.length === 0 ? (
+          <div className="alert alert-warning">
+            <AlertCircle className="alert-icon" />
+            <p className="alert-content">Nenhum paciente encontrado.</p>
+          </div>
+        ) : (
+          <div className="overflow-x-auto">
+            <table className="table">
+              <thead>
+                <tr>
+                  <th>Nome</th>
+                  <th>Idade</th>
+                  <th>Responsável</th>
+                  <th>Contato</th>
+                  <th>Diagnóstico</th>
+                  <th>Profissionais</th>
+                  <th style={{ textAlign: 'right' }}>Ações</th>
+                </tr>
+              </thead>
+              <tbody>
                 {filteredPacientes.map((paciente) => (
-                  <TableRow key={paciente.id}>
-                    <TableCell className="font-medium">{paciente.nome}</TableCell>
-                    <TableCell>{calcularIdade(paciente.data_nascimento)}</TableCell>
-                    <TableCell>{paciente.responsavel}</TableCell>
-                    <TableCell>{paciente.contato}</TableCell>
-                    <TableCell>
-                      <Badge variant={getDiagnosticoBadgeVariant(paciente.diagnostico)}>
+                  <tr key={paciente.id}>
+                    <td className="font-medium">{paciente.nome}</td>
+                    <td>{calcularIdade(paciente.data_nascimento)}</td>
+                    <td>{paciente.responsavel}</td>
+                    <td>{paciente.contato}</td>
+                    <td>
+                      <span className={`badge ${getDiagnosticoBadgeClass(paciente.diagnostico)}`}>
                         {paciente.diagnostico}
-                      </Badge>
-                    </TableCell>
-                    <TableCell>
-                      <div className="flex flex-wrap gap-1">
+                      </span>
+                    </td>
+                    <td>
+                      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.25rem' }}>
                         {vinculosPorPaciente[paciente.id]?.length > 0 ? (
                           vinculosPorPaciente[paciente.id].slice(0, 2).map((vinculo) => (
-                            <Badge key={vinculo.id} variant="outline" className="text-xs">
+                            <span key={vinculo.id} className="badge badge-info" style={{ fontSize: '0.7rem' }}>
                               {vinculo.profissional.nome.split(' ')[0]} - {vinculo.tipo_atendimento}
-                            </Badge>
+                            </span>
                           ))
                         ) : (
-                          <span className="text-sm text-muted-foreground">Nenhum vínculo</span>
+                          <span style={{ fontSize: '0.875rem', color: '#9ca3af' }}>Nenhum vínculo</span>
                         )}
                         {vinculosPorPaciente[paciente.id]?.length > 2 && (
-                          <Badge variant="secondary" className="text-xs">
+                          <span className="badge badge-success" style={{ fontSize: '0.7rem' }}>
                             +{vinculosPorPaciente[paciente.id].length - 2} mais
-                          </Badge>
+                          </span>
                         )}
                       </div>
-                    </TableCell>
-                    <TableCell className="text-right">
-                      <div className="flex justify-end gap-2">
+                    </td>
+                    <td style={{ textAlign: 'right' }}>
+                      <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '0.5rem' }}>
                         <Button
                           variant="outline"
                           size="sm"
@@ -349,31 +358,35 @@ export default function Pacientes() {
                         >
                           <BarChart3 className="h-4 w-4" />
                         </Button>
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={() => handleEdit(paciente)}
-                          title="Editar"
-                        >
-                          <Edit className="h-4 w-4" />
-                        </Button>
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={() => handleDelete(paciente.id)}
-                          title="Excluir"
-                        >
-                          <Trash2 className="h-4 w-4" />
-                        </Button>
+                        {user?.tipo_usuario !== 'RESPONSAVEL' && (
+                          <>
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={() => handleEdit(paciente)}
+                              title="Editar"
+                            >
+                              <Edit className="h-4 w-4" />
+                            </Button>
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={() => handleDelete(paciente.id)}
+                              title="Excluir"
+                            >
+                              <Trash2 className="h-4 w-4" />
+                            </Button>
+                          </>
+                        )}
                       </div>
-                    </TableCell>
-                  </TableRow>
+                    </td>
+                  </tr>
                 ))}
-              </TableBody>
-            </Table>
-          )}
-        </CardContent>
-      </Card>
+              </tbody>
+            </table>
+          </div>
+        )}
+      </div>
     </div>
   )
 }

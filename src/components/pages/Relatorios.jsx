@@ -7,6 +7,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Badge } from '@/components/ui/badge'
 import { useToast } from '@/hooks/use-toast'
+import { useAuth } from '@/contexts/AuthContext'
 import { 
   LineChart, 
   Line, 
@@ -67,10 +68,11 @@ export default function Relatorios() {
   })
   
   const { toast } = useToast()
+  const { user } = useAuth()
 
   useEffect(() => {
     loadInitialData()
-  }, [])
+  }, [user])
 
   const loadInitialData = async () => {
     try {
@@ -82,9 +84,15 @@ export default function Relatorios() {
         ApiService.getProfissionais()
       ])
       
+      // Se for responsável, filtrar apenas seus pacientes
+      let pacientesFiltered = pacientesData
+      if (user?.tipo_usuario === 'RESPONSAVEL') {
+        pacientesFiltered = pacientesData.filter(p => p.responsavel_usuario?.id === user.id)
+      }
+      
       setDadosDashboard(dashboardData)
       setMetasDisponiveis(metasData)
-      setPacientesDisponiveis(pacientesData)
+      setPacientesDisponiveis(pacientesFiltered)
       setProfissionaisDisponiveis(profissionaisData)
     } catch (error) {
       toast({

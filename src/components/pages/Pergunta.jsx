@@ -103,6 +103,7 @@ export default function Pergunta({ onSubmit }) {
                       <SelectItem value="BOOLEANO">Sim/Não</SelectItem>
                       <SelectItem value="MULTIPLA">Múltipla escolha</SelectItem>
                       <SelectItem value="FORMULA">Fórmula</SelectItem>
+                      <SelectItem value="PERCENTUAL">Percentual</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>

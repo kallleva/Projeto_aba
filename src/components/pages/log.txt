@@ -1,0 +1,234 @@
+api.js:17 API Request: {url: 'http://127.0.0.1:5000/api/pacientes/13', config: {…}}
+api.js:17 API Request: {url: 'http://127.0.0.1:5000/api/relatorios/paciente/13', config: {…}}
+api.js:17 API Request: {url: 'http://127.0.0.1:5000/api/agenda?paciente_id=13', config: {…}}
+api.js:17 API Request: {url: 'http://127.0.0.1:5000/api/profissionais', config: {…}}
+api.js:17 API Request: {url: 'http://127.0.0.1:5000/api/pacientes/13/profissionais?apenas_ativos=true', config: {…}}
+api.js:17 API Request: {url: 'http://127.0.0.1:5000/api/pacientes/13', config: {…}}
+api.js:17 API Request: {url: 'http://127.0.0.1:5000/api/relatorios/paciente/13', config: {…}}
+api.js:17 API Request: {url: 'http://127.0.0.1:5000/api/agenda?paciente_id=13', config: {…}}
+api.js:17 API Request: {url: 'http://127.0.0.1:5000/api/profissionais', config: {…}}
+api.js:17 API Request: {url: 'http://127.0.0.1:5000/api/pacientes/13/profissionais?apenas_ativos=true', config: {…}}
+api.js:18  GET http://127.0.0.1:5000/api/pacientes/13 403 (FORBIDDEN)
+request @ api.js:18
+getPaciente @ api.js:102
+loadPaciente @ PacienteDetalhes.jsx:112
+(anonymous) @ PacienteDetalhes.jsx:101
+commitHookEffectListMount @ chunk-YQ5BCTVV.js?v=29e10907:16963
+commitPassiveMountOnFiber @ chunk-YQ5BCTVV.js?v=29e10907:18206
+commitPassiveMountEffects_complete @ chunk-YQ5BCTVV.js?v=29e10907:18179
+commitPassiveMountEffects_begin @ chunk-YQ5BCTVV.js?v=29e10907:18169
+commitPassiveMountEffects @ chunk-YQ5BCTVV.js?v=29e10907:18159
+flushPassiveEffectsImpl @ chunk-YQ5BCTVV.js?v=29e10907:19543
+flushPassiveEffects @ chunk-YQ5BCTVV.js?v=29e10907:19500
+(anonymous) @ chunk-YQ5BCTVV.js?v=29e10907:19381
+workLoop @ chunk-YQ5BCTVV.js?v=29e10907:197
+flushWork @ chunk-YQ5BCTVV.js?v=29e10907:176
+performWorkUntilDeadline @ chunk-YQ5BCTVV.js?v=29e10907:384
+api.js:19 API Response: {status: 403, ok: false}
+api.js:23 API Error: {erro: 'Acesso negado a este paciente'}
+request @ api.js:23
+await in request
+getPaciente @ api.js:102
+loadPaciente @ PacienteDetalhes.jsx:112
+(anonymous) @ PacienteDetalhes.jsx:101
+commitHookEffectListMount @ chunk-YQ5BCTVV.js?v=29e10907:16963
+commitPassiveMountOnFiber @ chunk-YQ5BCTVV.js?v=29e10907:18206
+commitPassiveMountEffects_complete @ chunk-YQ5BCTVV.js?v=29e10907:18179
+commitPassiveMountEffects_begin @ chunk-YQ5BCTVV.js?v=29e10907:18169
+commitPassiveMountEffects @ chunk-YQ5BCTVV.js?v=29e10907:18159
+flushPassiveEffectsImpl @ chunk-YQ5BCTVV.js?v=29e10907:19543
+flushPassiveEffects @ chunk-YQ5BCTVV.js?v=29e10907:19500
+(anonymous) @ chunk-YQ5BCTVV.js?v=29e10907:19381
+workLoop @ chunk-YQ5BCTVV.js?v=29e10907:197
+flushWork @ chunk-YQ5BCTVV.js?v=29e10907:176
+performWorkUntilDeadline @ chunk-YQ5BCTVV.js?v=29e10907:384
+api.js:34 API Request Failed: Error: Acesso negado a este paciente
+    at ApiService.request (api.js:26:23)
+    at async loadPaciente (PacienteDetalhes.jsx:112:34)
+request @ api.js:34
+await in request
+getPaciente @ api.js:102
+loadPaciente @ PacienteDetalhes.jsx:112
+(anonymous) @ PacienteDetalhes.jsx:101
+commitHookEffectListMount @ chunk-YQ5BCTVV.js?v=29e10907:16963
+commitPassiveMountOnFiber @ chunk-YQ5BCTVV.js?v=29e10907:18206
+commitPassiveMountEffects_complete @ chunk-YQ5BCTVV.js?v=29e10907:18179
+commitPassiveMountEffects_begin @ chunk-YQ5BCTVV.js?v=29e10907:18169
+commitPassiveMountEffects @ chunk-YQ5BCTVV.js?v=29e10907:18159
+flushPassiveEffectsImpl @ chunk-YQ5BCTVV.js?v=29e10907:19543
+flushPassiveEffects @ chunk-YQ5BCTVV.js?v=29e10907:19500
+(anonymous) @ chunk-YQ5BCTVV.js?v=29e10907:19381
+workLoop @ chunk-YQ5BCTVV.js?v=29e10907:197
+flushWork @ chunk-YQ5BCTVV.js?v=29e10907:176
+performWorkUntilDeadline @ chunk-YQ5BCTVV.js?v=29e10907:384
+api.js:18  GET http://127.0.0.1:5000/api/relatorios/paciente/13 403 (FORBIDDEN)
+request @ api.js:18
+getRelatorioPaciente @ api.js:297
+loadRelatorioPaciente @ PacienteDetalhes.jsx:156
+(anonymous) @ PacienteDetalhes.jsx:102
+commitHookEffectListMount @ chunk-YQ5BCTVV.js?v=29e10907:16963
+commitPassiveMountOnFiber @ chunk-YQ5BCTVV.js?v=29e10907:18206
+commitPassiveMountEffects_complete @ chunk-YQ5BCTVV.js?v=29e10907:18179
+commitPassiveMountEffects_begin @ chunk-YQ5BCTVV.js?v=29e10907:18169
+commitPassiveMountEffects @ chunk-YQ5BCTVV.js?v=29e10907:18159
+flushPassiveEffectsImpl @ chunk-YQ5BCTVV.js?v=29e10907:19543
+flushPassiveEffects @ chunk-YQ5BCTVV.js?v=29e10907:19500
+(anonymous) @ chunk-YQ5BCTVV.js?v=29e10907:19381
+workLoop @ chunk-YQ5BCTVV.js?v=29e10907:197
+flushWork @ chunk-YQ5BCTVV.js?v=29e10907:176
+performWorkUntilDeadline @ chunk-YQ5BCTVV.js?v=29e10907:384
+api.js:19 API Response: {status: 403, ok: false}
+api.js:17 API Request: {url: 'http://127.0.0.1:5000/api/pacientes', config: {…}}
+api.js:17 API Request: {url: 'http://127.0.0.1:5000/api/pacientes', config: {…}}
+api.js:18  GET http://127.0.0.1:5000/api/pacientes/13 403 (FORBIDDEN)
+request @ api.js:18
+getPaciente @ api.js:102
+loadPaciente @ PacienteDetalhes.jsx:112
+(anonymous) @ PacienteDetalhes.jsx:101
+commitHookEffectListMount @ chunk-YQ5BCTVV.js?v=29e10907:16963
+invokePassiveEffectMountInDEV @ chunk-YQ5BCTVV.js?v=29e10907:18374
+invokeEffectsInDev @ chunk-YQ5BCTVV.js?v=29e10907:19754
+commitDoubleInvokeEffectsInDEV @ chunk-YQ5BCTVV.js?v=29e10907:19739
+flushPassiveEffectsImpl @ chunk-YQ5BCTVV.js?v=29e10907:19556
+flushPassiveEffects @ chunk-YQ5BCTVV.js?v=29e10907:19500
+(anonymous) @ chunk-YQ5BCTVV.js?v=29e10907:19381
+workLoop @ chunk-YQ5BCTVV.js?v=29e10907:197
+flushWork @ chunk-YQ5BCTVV.js?v=29e10907:176
+performWorkUntilDeadline @ chunk-YQ5BCTVV.js?v=29e10907:384
+api.js:19 API Response: {status: 403, ok: false}
+api.js:19 API Response: {status: 200, ok: true}
+api.js:23 API Error: {erro: 'Acesso negado a este paciente'}
+request @ api.js:23
+await in request
+getRelatorioPaciente @ api.js:297
+loadRelatorioPaciente @ PacienteDetalhes.jsx:156
+(anonymous) @ PacienteDetalhes.jsx:102
+commitHookEffectListMount @ chunk-YQ5BCTVV.js?v=29e10907:16963
+commitPassiveMountOnFiber @ chunk-YQ5BCTVV.js?v=29e10907:18206
+commitPassiveMountEffects_complete @ chunk-YQ5BCTVV.js?v=29e10907:18179
+commitPassiveMountEffects_begin @ chunk-YQ5BCTVV.js?v=29e10907:18169
+commitPassiveMountEffects @ chunk-YQ5BCTVV.js?v=29e10907:18159
+flushPassiveEffectsImpl @ chunk-YQ5BCTVV.js?v=29e10907:19543
+flushPassiveEffects @ chunk-YQ5BCTVV.js?v=29e10907:19500
+(anonymous) @ chunk-YQ5BCTVV.js?v=29e10907:19381
+workLoop @ chunk-YQ5BCTVV.js?v=29e10907:197
+flushWork @ chunk-YQ5BCTVV.js?v=29e10907:176
+performWorkUntilDeadline @ chunk-YQ5BCTVV.js?v=29e10907:384
+api.js:34 API Request Failed: Error: Acesso negado a este paciente
+    at ApiService.request (api.js:26:23)
+    at async loadRelatorioPaciente (PacienteDetalhes.jsx:156:20)
+request @ api.js:34
+await in request
+getRelatorioPaciente @ api.js:297
+loadRelatorioPaciente @ PacienteDetalhes.jsx:156
+(anonymous) @ PacienteDetalhes.jsx:102
+commitHookEffectListMount @ chunk-YQ5BCTVV.js?v=29e10907:16963
+commitPassiveMountOnFiber @ chunk-YQ5BCTVV.js?v=29e10907:18206
+commitPassiveMountEffects_complete @ chunk-YQ5BCTVV.js?v=29e10907:18179
+commitPassiveMountEffects_begin @ chunk-YQ5BCTVV.js?v=29e10907:18169
+commitPassiveMountEffects @ chunk-YQ5BCTVV.js?v=29e10907:18159
+flushPassiveEffectsImpl @ chunk-YQ5BCTVV.js?v=29e10907:19543
+flushPassiveEffects @ chunk-YQ5BCTVV.js?v=29e10907:19500
+(anonymous) @ chunk-YQ5BCTVV.js?v=29e10907:19381
+workLoop @ chunk-YQ5BCTVV.js?v=29e10907:197
+flushWork @ chunk-YQ5BCTVV.js?v=29e10907:176
+performWorkUntilDeadline @ chunk-YQ5BCTVV.js?v=29e10907:384
+api.js:19 API Response: {status: 200, ok: true}
+api.js:19 API Response: {status: 200, ok: true}
+api.js:23 API Error: {erro: 'Acesso negado a este paciente'}
+request @ api.js:23
+await in request
+getPaciente @ api.js:102
+loadPaciente @ PacienteDetalhes.jsx:112
+(anonymous) @ PacienteDetalhes.jsx:101
+commitHookEffectListMount @ chunk-YQ5BCTVV.js?v=29e10907:16963
+invokePassiveEffectMountInDEV @ chunk-YQ5BCTVV.js?v=29e10907:18374
+invokeEffectsInDev @ chunk-YQ5BCTVV.js?v=29e10907:19754
+commitDoubleInvokeEffectsInDEV @ chunk-YQ5BCTVV.js?v=29e10907:19739
+flushPassiveEffectsImpl @ chunk-YQ5BCTVV.js?v=29e10907:19556
+flushPassiveEffects @ chunk-YQ5BCTVV.js?v=29e10907:19500
+(anonymous) @ chunk-YQ5BCTVV.js?v=29e10907:19381
+workLoop @ chunk-YQ5BCTVV.js?v=29e10907:197
+flushWork @ chunk-YQ5BCTVV.js?v=29e10907:176
+performWorkUntilDeadline @ chunk-YQ5BCTVV.js?v=29e10907:384
+api.js:34 API Request Failed: Error: Acesso negado a este paciente
+    at ApiService.request (api.js:26:23)
+    at async loadPaciente (PacienteDetalhes.jsx:112:34)
+request @ api.js:34
+await in request
+getPaciente @ api.js:102
+loadPaciente @ PacienteDetalhes.jsx:112
+(anonymous) @ PacienteDetalhes.jsx:101
+commitHookEffectListMount @ chunk-YQ5BCTVV.js?v=29e10907:16963
+invokePassiveEffectMountInDEV @ chunk-YQ5BCTVV.js?v=29e10907:18374
+invokeEffectsInDev @ chunk-YQ5BCTVV.js?v=29e10907:19754
+commitDoubleInvokeEffectsInDEV @ chunk-YQ5BCTVV.js?v=29e10907:19739
+flushPassiveEffectsImpl @ chunk-YQ5BCTVV.js?v=29e10907:19556
+flushPassiveEffects @ chunk-YQ5BCTVV.js?v=29e10907:19500
+(anonymous) @ chunk-YQ5BCTVV.js?v=29e10907:19381
+workLoop @ chunk-YQ5BCTVV.js?v=29e10907:197
+flushWork @ chunk-YQ5BCTVV.js?v=29e10907:176
+performWorkUntilDeadline @ chunk-YQ5BCTVV.js?v=29e10907:384
+api.js:18  GET http://127.0.0.1:5000/api/relatorios/paciente/13 403 (FORBIDDEN)
+request @ api.js:18
+getRelatorioPaciente @ api.js:297
+loadRelatorioPaciente @ PacienteDetalhes.jsx:156
+(anonymous) @ PacienteDetalhes.jsx:102
+commitHookEffectListMount @ chunk-YQ5BCTVV.js?v=29e10907:16963
+invokePassiveEffectMountInDEV @ chunk-YQ5BCTVV.js?v=29e10907:18374
+invokeEffectsInDev @ chunk-YQ5BCTVV.js?v=29e10907:19754
+commitDoubleInvokeEffectsInDEV @ chunk-YQ5BCTVV.js?v=29e10907:19739
+flushPassiveEffectsImpl @ chunk-YQ5BCTVV.js?v=29e10907:19556
+flushPassiveEffects @ chunk-YQ5BCTVV.js?v=29e10907:19500
+(anonymous) @ chunk-YQ5BCTVV.js?v=29e10907:19381
+workLoop @ chunk-YQ5BCTVV.js?v=29e10907:197
+flushWork @ chunk-YQ5BCTVV.js?v=29e10907:176
+performWorkUntilDeadline @ chunk-YQ5BCTVV.js?v=29e10907:384
+api.js:19 API Response: {status: 403, ok: false}
+api.js:23 API Error: {erro: 'Acesso negado a este paciente'}
+request @ api.js:23
+await in request
+getRelatorioPaciente @ api.js:297
+loadRelatorioPaciente @ PacienteDetalhes.jsx:156
+(anonymous) @ PacienteDetalhes.jsx:102
+commitHookEffectListMount @ chunk-YQ5BCTVV.js?v=29e10907:16963
+invokePassiveEffectMountInDEV @ chunk-YQ5BCTVV.js?v=29e10907:18374
+invokeEffectsInDev @ chunk-YQ5BCTVV.js?v=29e10907:19754
+commitDoubleInvokeEffectsInDEV @ chunk-YQ5BCTVV.js?v=29e10907:19739
+flushPassiveEffectsImpl @ chunk-YQ5BCTVV.js?v=29e10907:19556
+flushPassiveEffects @ chunk-YQ5BCTVV.js?v=29e10907:19500
+(anonymous) @ chunk-YQ5BCTVV.js?v=29e10907:19381
+workLoop @ chunk-YQ5BCTVV.js?v=29e10907:197
+flushWork @ chunk-YQ5BCTVV.js?v=29e10907:176
+performWorkUntilDeadline @ chunk-YQ5BCTVV.js?v=29e10907:384
+api.js:34 API Request Failed: Error: Acesso negado a este paciente
+    at ApiService.request (api.js:26:23)
+    at async loadRelatorioPaciente (PacienteDetalhes.jsx:156:20)
+request @ api.js:34
+await in request
+getRelatorioPaciente @ api.js:297
+loadRelatorioPaciente @ PacienteDetalhes.jsx:156
+(anonymous) @ PacienteDetalhes.jsx:102
+commitHookEffectListMount @ chunk-YQ5BCTVV.js?v=29e10907:16963
+invokePassiveEffectMountInDEV @ chunk-YQ5BCTVV.js?v=29e10907:18374
+invokeEffectsInDev @ chunk-YQ5BCTVV.js?v=29e10907:19754
+commitDoubleInvokeEffectsInDEV @ chunk-YQ5BCTVV.js?v=29e10907:19739
+flushPassiveEffectsImpl @ chunk-YQ5BCTVV.js?v=29e10907:19556
+flushPassiveEffects @ chunk-YQ5BCTVV.js?v=29e10907:19500
+(anonymous) @ chunk-YQ5BCTVV.js?v=29e10907:19381
+workLoop @ chunk-YQ5BCTVV.js?v=29e10907:197
+flushWork @ chunk-YQ5BCTVV.js?v=29e10907:176
+performWorkUntilDeadline @ chunk-YQ5BCTVV.js?v=29e10907:384
+api.js:19 API Response: {status: 200, ok: true}
+api.js:19 API Response: {status: 200, ok: true}
+api.js:19 API Response: {status: 200, ok: true}
+api.js:19 API Response: {status: 200, ok: true}
+api.js:17 API Request: {url: 'http://127.0.0.1:5000/api/pacientes/13/profissionais?apenas_ativos=true', config: {…}}
+api.js:19 API Response: {status: 200, ok: true}
+api.js:17 API Request: {url: 'http://127.0.0.1:5000/api/pacientes/13/profissionais?apenas_ativos=true', config: {…}}
+api.js:19 API Response: {status: 200, ok: true}
+api.js:17 API Request: {url: 'http://127.0.0.1:5000/api/pacientes/15/profissionais?apenas_ativos=true', config: {…}}
+api.js:19 API Response: {status: 200, ok: true}
+api.js:17 API Request: {url: 'http://127.0.0.1:5000/api/pacientes/15/profissionais?apenas_ativos=true', config: {…}}
+api.js:19 API Response: {status: 200, ok: true}
+api.js:19 API Response: {status: 200, ok: true}

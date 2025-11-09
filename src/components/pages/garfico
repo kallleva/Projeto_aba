@@ -1,0 +1,361 @@
+Node cannot be found in the current page.
+chunk-YQ5BCTVV.js?v=77928e19:21609 Download the React DevTools for a better development experience: https://reactjs.org/link/react-devtools
+api.js:15 API Request: {url: 'http://127.0.0.1:5000/api/pacientes', config: {…}}
+api.js:15 API Request: {url: 'http://127.0.0.1:5000/api/relatorios/paciente/13', config: {…}}
+api.js:15 API Request: {url: 'http://127.0.0.1:5000/api/agenda?paciente_id=13', config: {…}}
+api.js:15 API Request: {url: 'http://127.0.0.1:5000/api/profissionais', config: {…}}
+api.js:15 API Request: {url: 'http://127.0.0.1:5000/api/pacientes/13/profissionais?apenas_ativos=true', config: {…}}
+api.js:15 API Request: {url: 'http://127.0.0.1:5000/api/pacientes', config: {…}}
+api.js:15 API Request: {url: 'http://127.0.0.1:5000/api/relatorios/paciente/13', config: {…}}
+api.js:15 API Request: {url: 'http://127.0.0.1:5000/api/agenda?paciente_id=13', config: {…}}
+api.js:15 API Request: {url: 'http://127.0.0.1:5000/api/profissionais', config: {…}}
+api.js:15 API Request: {url: 'http://127.0.0.1:5000/api/pacientes/13/profissionais?apenas_ativos=true', config: {…}}
+api.js:17 API Response: {status: 200, ok: true}
+PacienteRelatorio.jsx:13 Radar: relatorio ou respostas_calculadas_globais ausentes null
+getApexRadarData @ PacienteRelatorio.jsx:13
+PacienteRelatorio @ PacienteRelatorio.jsx:89
+renderWithHooks @ chunk-YQ5BCTVV.js?v=77928e19:11596
+mountIndeterminateComponent @ chunk-YQ5BCTVV.js?v=77928e19:14974
+beginWork @ chunk-YQ5BCTVV.js?v=77928e19:15962
+beginWork$1 @ chunk-YQ5BCTVV.js?v=77928e19:19806
+performUnitOfWork @ chunk-YQ5BCTVV.js?v=77928e19:19251
+workLoopSync @ chunk-YQ5BCTVV.js?v=77928e19:19190
+renderRootSync @ chunk-YQ5BCTVV.js?v=77928e19:19169
+performConcurrentWorkOnRoot @ chunk-YQ5BCTVV.js?v=77928e19:18728
+workLoop @ chunk-YQ5BCTVV.js?v=77928e19:197
+flushWork @ chunk-YQ5BCTVV.js?v=77928e19:176
+performWorkUntilDeadline @ chunk-YQ5BCTVV.js?v=77928e19:384
+PacienteRelatorio.jsx:13 Radar: relatorio ou respostas_calculadas_globais ausentes null
+getApexRadarData @ PacienteRelatorio.jsx:13
+PacienteRelatorio @ PacienteRelatorio.jsx:89
+renderWithHooks @ chunk-YQ5BCTVV.js?v=77928e19:11596
+mountIndeterminateComponent @ chunk-YQ5BCTVV.js?v=77928e19:15024
+beginWork @ chunk-YQ5BCTVV.js?v=77928e19:15962
+beginWork$1 @ chunk-YQ5BCTVV.js?v=77928e19:19806
+performUnitOfWork @ chunk-YQ5BCTVV.js?v=77928e19:19251
+workLoopSync @ chunk-YQ5BCTVV.js?v=77928e19:19190
+renderRootSync @ chunk-YQ5BCTVV.js?v=77928e19:19169
+performConcurrentWorkOnRoot @ chunk-YQ5BCTVV.js?v=77928e19:18728
+workLoop @ chunk-YQ5BCTVV.js?v=77928e19:197
+flushWork @ chunk-YQ5BCTVV.js?v=77928e19:176
+performWorkUntilDeadline @ chunk-YQ5BCTVV.js?v=77928e19:384
+api.js:17 API Response: {status: 200, ok: true}
+api.js:17 API Response: {status: 200, ok: true}
+api.js:17 API Response: {status: 200, ok: true}
+api.js:17 API Response: {status: 200, ok: true}
+api.js:17 API Response: {status: 200, ok: true}
+api.js:17 API Response: {status: 200, ok: true}
+api.js:17 API Response: {status: 200, ok: true}
+api.js:17 API Response: {status: 200, ok: true}ok: truestatus: 200[[Prototype]]: Object
+api.js:17 API Response: {status: 200, ok: true}
+PacienteRelatorio.jsx:21 Radar: datasSelecionadas []
+PacienteRelatorio.jsx:24 Radar: globaisFiltrados []
+PacienteRelatorio.jsx:48 Radar: perguntas (indicadores) []
+PacienteRelatorio.jsx:75 Radar: series montadas []
+PacienteRelatorio.jsx:21 Radar: datasSelecionadas []
+PacienteRelatorio.jsx:24 Radar: globaisFiltrados []
+PacienteRelatorio.jsx:48 Radar: perguntas (indicadores) []length: 0[[Prototype]]: Array(0)
+PacienteRelatorio.jsx:75 Radar: series montadas []
+PacienteRelatorio.jsx:21 Radar: datasSelecionadas []
+PacienteRelatorio.jsx:24 Radar: globaisFiltrados []
+PacienteRelatorio.jsx:48 Radar: perguntas (indicadores) []
+PacienteRelatorio.jsx:75 Radar: series montadas []
+PacienteRelatorio.jsx:21 Radar: datasSelecionadas []
+PacienteRelatorio.jsx:24 Radar: globaisFiltrados []
+PacienteRelatorio.jsx:48 Radar: perguntas (indicadores) []
+PacienteRelatorio.jsx:75 Radar: series montadas []
+PacienteRelatorio.jsx:21 Radar: datasSelecionadas ['2025-10-08']0: "2025-10-08"length: 1[[Prototype]]: Array(0)
+PacienteRelatorio.jsx:24 Radar: globaisFiltrados [{…}]
+PacienteRelatorio.jsx:48 Radar: perguntas (indicadores) (16) [{…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}]
+PacienteRelatorio.jsx:75 Radar: series montadas [{…}]
+PacienteRelatorio.jsx:21 Radar: datasSelecionadas ['2025-10-08']
+PacienteRelatorio.jsx:24 Radar: globaisFiltrados [{…}]
+PacienteRelatorio.jsx:48 Radar: perguntas (indicadores) (16) [{…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}]0: {id: 'Nova pergunta', texto: 'Nova pergunta', sigla: undefined}1: {id: 'Nova pergunta12', texto: 'Nova pergunta12', sigla: undefined}2: {id: 'Nova pergunta6', texto: 'Nova pergunta6', sigla: undefined}3: {id: 'Nova pergunta9', texto: 'Nova pergunta9', sigla: undefined}4: {id: 'Percentual - CogniÃ§Ã£o', texto: 'Percentual - CogniÃ§Ã£o', sigla: undefined}5: {id: 'Percentual - CompetÃªncias Sociais', texto: 'Percentual - CompetÃªncias Sociais', sigla: undefined}6: {id: 'Percentual - Comportamento', texto: 'Percentual - Comportamento', sigla: undefined}7: {id: 'Percentual - ComunicaÃ§Ã£o Expressiva', texto: 'Percentual - ComunicaÃ§Ã£o Expressiva', sigla: undefined}8: {id: 'Percentual - ComunicaÃ§Ã£o Receptiva', texto: 'Percentual - ComunicaÃ§Ã£o Receptiva', sigla: undefined}9: {id: 'Percentual - ImitaÃ§Ã£o', texto: 'Percentual - ImitaÃ§Ã£o', sigla: undefined}10: {id: 'Percentual - IndependÃªncia Pessoal: AlimentaÃ§Ã£o', texto: 'Percentual - IndependÃªncia Pessoal: AlimentaÃ§Ã£o', sigla: undefined}11: {id: 'Percentual - IndependÃªncia Pessoal: Higiene', texto: 'Percentual - IndependÃªncia Pessoal: Higiene', sigla: undefined}12: {id: 'Percentual - IndependÃªncia Pessoal: Vestir', texto: 'Percentual - IndependÃªncia Pessoal: Vestir', sigla: undefined}13: {id: 'Percentual - Jogo', texto: 'Percentual - Jogo', sigla: undefined}14: {id: 'Percentual - Motricidade Fina', texto: 'Percentual - Motricidade Fina', sigla: undefined}15: {id: 'Percentual - Motricidade Grossa', texto: 'Percentual - Motricidade Grossa', sigla: undefined}length: 16[[Prototype]]: Array(0)
+PacienteRelatorio.jsx:75 Radar: series montadas [{…}]
+PacienteRelatorio.jsx:21 Radar: datasSelecionadas (2) ['2025-10-08', '2025-10-09']
+PacienteRelatorio.jsx:24 Radar: globaisFiltrados (2) [{…}, {…}]
+PacienteRelatorio.jsx:48 Radar: perguntas (indicadores) (16) [{…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}]
+PacienteRelatorio.jsx:75 Radar: series montadas (2) [{…}, {…}]
+PacienteRelatorio.jsx:21 Radar: datasSelecionadas (2) ['2025-10-08', '2025-10-09']
+PacienteRelatorio.jsx:24 Radar: globaisFiltrados (2) [{…}, {…}]0: data: "2025-10-08"indices: {Nova pergunta: 50, Nova pergunta12: 75, Nova pergunta6: 75, Nova pergunta9: 100, Percentual - CogniÃ§Ã£o: null, …}[[Prototype]]: Object1: {data: '2025-10-09', indices: {…}}length: 2[[Prototype]]: Array(0)at: ƒ at()concat: ƒ concat()constructor: ƒ Array()copyWithin: ƒ copyWithin()entries: ƒ entries()every: ƒ every()fill: ƒ fill()filter: ƒ filter()find: ƒ find()findIndex: ƒ findIndex()findLast: ƒ findLast()findLastIndex: ƒ findLastIndex()flat: ƒ flat()flatMap: ƒ flatMap()forEach: ƒ forEach()includes: ƒ includes()indexOf: ƒ indexOf()join: ƒ join()keys: ƒ keys()lastIndexOf: ƒ lastIndexOf()length: 0map: ƒ map()pop: ƒ pop()push: ƒ push()reduce: ƒ reduce()reduceRight: ƒ reduceRight()reverse: ƒ reverse()shift: ƒ shift()slice: ƒ slice()some: ƒ some()sort: ƒ sort()splice: ƒ splice()toLocaleString: ƒ toLocaleString()toReversed: ƒ toReversed()toSorted: ƒ toSorted()toSpliced: ƒ toSpliced()toString: ƒ toString()unshift: ƒ unshift()values: ƒ values()with: ƒ with()Symbol(Symbol.iterator): ƒ values()Symbol(Symbol.unscopables): {at: true, copyWithin: true, entries: true, fill: true, find: true, …}[[Prototype]]: Object
+PacienteRelatorio.jsx:48 Radar: perguntas (indicadores) (16) [{…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}]
+PacienteRelatorio.jsx:75 Radar: series montadas (2) [{…}, {…}]0: {name: '2025-10-08', data: Array(16)}1: {name: '2025-10-09', data: Array(16)}length: 2[[Prototype]]: Array(0)
+
+
+[
+    {
+        "data": "2025-10-08",
+        "indices": {
+            "Nova pergunta": 50,
+            "Nova pergunta12": 75,
+            "Nova pergunta6": 75,
+            "Nova pergunta9": 100,
+            "Percentual - CogniÃ§Ã£o": null,
+            "Percentual - CompetÃªncias Sociais": null,
+            "Percentual - Comportamento": null,
+            "Percentual - ComunicaÃ§Ã£o Expressiva": null,
+            "Percentual - ComunicaÃ§Ã£o Receptiva": null,
+            "Percentual - ImitaÃ§Ã£o": null,
+            "Percentual - IndependÃªncia Pessoal: AlimentaÃ§Ã£o": null,
+            "Percentual - IndependÃªncia Pessoal: Higiene": null,
+            "Percentual - IndependÃªncia Pessoal: Vestir": null,
+            "Percentual - Jogo": null,
+            "Percentual - Motricidade Fina": null,
+            "Percentual - Motricidade Grossa": null
+        }
+    }
+]
+
+
+
+
+Node cannot be found in the current page.
+chunk-YQ5BCTVV.js?v=77928e19:21609 Download the React DevTools for a better development experience: https://reactjs.org/link/react-devtools
+api.js:15 API Request: {url: 'http://127.0.0.1:5000/api/pacientes', config: {…}}
+api.js:15 API Request: {url: 'http://127.0.0.1:5000/api/relatorios/paciente/13', config: {…}}
+api.js:15 API Request: {url: 'http://127.0.0.1:5000/api/agenda?paciente_id=13', config: {…}}
+api.js:15 API Request: {url: 'http://127.0.0.1:5000/api/profissionais', config: {…}}
+api.js:15 API Request: {url: 'http://127.0.0.1:5000/api/pacientes/13/profissionais?apenas_ativos=true', config: {…}}
+api.js:15 API Request: {url: 'http://127.0.0.1:5000/api/pacientes', config: {…}}
+api.js:15 API Request: {url: 'http://127.0.0.1:5000/api/relatorios/paciente/13', config: {…}}
+api.js:15 API Request: {url: 'http://127.0.0.1:5000/api/agenda?paciente_id=13', config: {…}}
+api.js:15 API Request: {url: 'http://127.0.0.1:5000/api/profissionais', config: {…}}
+api.js:15 API Request: {url: 'http://127.0.0.1:5000/api/pacientes/13/profissionais?apenas_ativos=true', config: {…}}
+api.js:17 API Response: {status: 200, ok: true}
+PacienteRelatorio.jsx:13 Radar: relatorio ou respostas_calculadas_globais ausentes null
+getApexRadarData @ PacienteRelatorio.jsx:13
+PacienteRelatorio @ PacienteRelatorio.jsx:89
+renderWithHooks @ chunk-YQ5BCTVV.js?v=77928e19:11596
+mountIndeterminateComponent @ chunk-YQ5BCTVV.js?v=77928e19:14974
+beginWork @ chunk-YQ5BCTVV.js?v=77928e19:15962
+beginWork$1 @ chunk-YQ5BCTVV.js?v=77928e19:19806
+performUnitOfWork @ chunk-YQ5BCTVV.js?v=77928e19:19251
+workLoopSync @ chunk-YQ5BCTVV.js?v=77928e19:19190
+renderRootSync @ chunk-YQ5BCTVV.js?v=77928e19:19169
+performConcurrentWorkOnRoot @ chunk-YQ5BCTVV.js?v=77928e19:18728
+workLoop @ chunk-YQ5BCTVV.js?v=77928e19:197
+flushWork @ chunk-YQ5BCTVV.js?v=77928e19:176
+performWorkUntilDeadline @ chunk-YQ5BCTVV.js?v=77928e19:384
+PacienteRelatorio.jsx:13 Radar: relatorio ou respostas_calculadas_globais ausentes null
+getApexRadarData @ PacienteRelatorio.jsx:13
+PacienteRelatorio @ PacienteRelatorio.jsx:89
+renderWithHooks @ chunk-YQ5BCTVV.js?v=77928e19:11596
+mountIndeterminateComponent @ chunk-YQ5BCTVV.js?v=77928e19:15024
+beginWork @ chunk-YQ5BCTVV.js?v=77928e19:15962
+beginWork$1 @ chunk-YQ5BCTVV.js?v=77928e19:19806
+performUnitOfWork @ chunk-YQ5BCTVV.js?v=77928e19:19251
+workLoopSync @ chunk-YQ5BCTVV.js?v=77928e19:19190
+renderRootSync @ chunk-YQ5BCTVV.js?v=77928e19:19169
+performConcurrentWorkOnRoot @ chunk-YQ5BCTVV.js?v=77928e19:18728
+workLoop @ chunk-YQ5BCTVV.js?v=77928e19:197
+flushWork @ chunk-YQ5BCTVV.js?v=77928e19:176
+performWorkUntilDeadline @ chunk-YQ5BCTVV.js?v=77928e19:384
+api.js:17 API Response: {status: 200, ok: true}
+api.js:17 API Response: {status: 200, ok: true}
+api.js:17 API Response: {status: 200, ok: true}
+api.js:17 API Response: {status: 200, ok: true}
+api.js:17 API Response: {status: 200, ok: true}
+api.js:17 API Response: {status: 200, ok: true}
+api.js:17 API Response: {status: 200, ok: true}
+api.js:17 API Response: {status: 200, ok: true}ok: truestatus: 200[[Prototype]]: Object
+api.js:17 API Response: {status: 200, ok: true}
+PacienteRelatorio.jsx:21 Radar: datasSelecionadas []
+PacienteRelatorio.jsx:24 Radar: globaisFiltrados []
+PacienteRelatorio.jsx:48 Radar: perguntas (indicadores) []
+PacienteRelatorio.jsx:75 Radar: series montadas []
+PacienteRelatorio.jsx:21 Radar: datasSelecionadas []
+PacienteRelatorio.jsx:24 Radar: globaisFiltrados []
+PacienteRelatorio.jsx:48 Radar: perguntas (indicadores) []length: 0[[Prototype]]: Array(0)
+PacienteRelatorio.jsx:75 Radar: series montadas []
+PacienteRelatorio.jsx:21 Radar: datasSelecionadas []
+PacienteRelatorio.jsx:24 Radar: globaisFiltrados []
+PacienteRelatorio.jsx:48 Radar: perguntas (indicadores) []
+PacienteRelatorio.jsx:75 Radar: series montadas []
+PacienteRelatorio.jsx:21 Radar: datasSelecionadas []
+PacienteRelatorio.jsx:24 Radar: globaisFiltrados []
+PacienteRelatorio.jsx:48 Radar: perguntas (indicadores) []
+PacienteRelatorio.jsx:75 Radar: series montadas []
+PacienteRelatorio.jsx:21 Radar: datasSelecionadas ['2025-10-08']0: "2025-10-08"length: 1[[Prototype]]: Array(0)
+PacienteRelatorio.jsx:24 Radar: globaisFiltrados [{…}]
+PacienteRelatorio.jsx:48 Radar: perguntas (indicadores) (16) [{…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}]
+PacienteRelatorio.jsx:75 Radar: series montadas [{…}]
+PacienteRelatorio.jsx:21 Radar: datasSelecionadas ['2025-10-08']
+PacienteRelatorio.jsx:24 Radar: globaisFiltrados [{…}]
+PacienteRelatorio.jsx:48 Radar: perguntas (indicadores) (16) [{…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}]0: {id: 'Nova pergunta', texto: 'Nova pergunta', sigla: undefined}1: {id: 'Nova pergunta12', texto: 'Nova pergunta12', sigla: undefined}2: {id: 'Nova pergunta6', texto: 'Nova pergunta6', sigla: undefined}3: {id: 'Nova pergunta9', texto: 'Nova pergunta9', sigla: undefined}4: {id: 'Percentual - CogniÃ§Ã£o', texto: 'Percentual - CogniÃ§Ã£o', sigla: undefined}5: {id: 'Percentual - CompetÃªncias Sociais', texto: 'Percentual - CompetÃªncias Sociais', sigla: undefined}6: {id: 'Percentual - Comportamento', texto: 'Percentual - Comportamento', sigla: undefined}7: {id: 'Percentual - ComunicaÃ§Ã£o Expressiva', texto: 'Percentual - ComunicaÃ§Ã£o Expressiva', sigla: undefined}8: {id: 'Percentual - ComunicaÃ§Ã£o Receptiva', texto: 'Percentual - ComunicaÃ§Ã£o Receptiva', sigla: undefined}9: {id: 'Percentual - ImitaÃ§Ã£o', texto: 'Percentual - ImitaÃ§Ã£o', sigla: undefined}10: {id: 'Percentual - IndependÃªncia Pessoal: AlimentaÃ§Ã£o', texto: 'Percentual - IndependÃªncia Pessoal: AlimentaÃ§Ã£o', sigla: undefined}11: {id: 'Percentual - IndependÃªncia Pessoal: Higiene', texto: 'Percentual - IndependÃªncia Pessoal: Higiene', sigla: undefined}12: {id: 'Percentual - IndependÃªncia Pessoal: Vestir', texto: 'Percentual - IndependÃªncia Pessoal: Vestir', sigla: undefined}13: {id: 'Percentual - Jogo', texto: 'Percentual - Jogo', sigla: undefined}14: {id: 'Percentual - Motricidade Fina', texto: 'Percentual - Motricidade Fina', sigla: undefined}15: {id: 'Percentual - Motricidade Grossa', texto: 'Percentual - Motricidade Grossa', sigla: undefined}length: 16[[Prototype]]: Array(0)
+PacienteRelatorio.jsx:75 Radar: series montadas [{…}]
+PacienteRelatorio.jsx:21 Radar: datasSelecionadas (2) ['2025-10-08', '2025-10-09']
+PacienteRelatorio.jsx:24 Radar: globaisFiltrados (2) [{…}, {…}]
+PacienteRelatorio.jsx:48 Radar: perguntas (indicadores) (16) [{…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}]
+PacienteRelatorio.jsx:75 Radar: series montadas (2) [{…}, {…}]
+PacienteRelatorio.jsx:21 Radar: datasSelecionadas (2) ['2025-10-08', '2025-10-09']
+PacienteRelatorio.jsx:24 Radar: globaisFiltrados (2) [{…}, {…}]0: data: "2025-10-08"indices: {Nova pergunta: 50, Nova pergunta12: 75, Nova pergunta6: 75, Nova pergunta9: 100, Percentual - CogniÃ§Ã£o: null, …}[[Prototype]]: Object1: {data: '2025-10-09', indices: {…}}length: 2[[Prototype]]: Array(0)at: ƒ at()concat: ƒ concat()constructor: ƒ Array()copyWithin: ƒ copyWithin()entries: ƒ entries()every: ƒ every()fill: ƒ fill()filter: ƒ filter()find: ƒ find()findIndex: ƒ findIndex()findLast: ƒ findLast()findLastIndex: ƒ findLastIndex()flat: ƒ flat()flatMap: ƒ flatMap()forEach: ƒ forEach()includes: ƒ includes()indexOf: ƒ indexOf()join: ƒ join()keys: ƒ keys()lastIndexOf: ƒ lastIndexOf()length: 0map: ƒ map()pop: ƒ pop()push: ƒ push()reduce: ƒ reduce()reduceRight: ƒ reduceRight()reverse: ƒ reverse()shift: ƒ shift()slice: ƒ slice()some: ƒ some()sort: ƒ sort()splice: ƒ splice()toLocaleString: ƒ toLocaleString()toReversed: ƒ toReversed()toSorted: ƒ toSorted()toSpliced: ƒ toSpliced()toString: ƒ toString()unshift: ƒ unshift()values: ƒ values()with: ƒ with()Symbol(Symbol.iterator): ƒ values()Symbol(Symbol.unscopables): {at: true, copyWithin: true, entries: true, fill: true, find: true, …}[[Prototype]]: Object
+PacienteRelatorio.jsx:48 Radar: perguntas (indicadores) (16) [{…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}]
+PacienteRelatorio.jsx:75 Radar: series montadas (2) [{…}, {…}]0: {name: '2025-10-08', data: Array(16)}1: {name: '2025-10-09', data: Array(16)}length: 2[[Prototype]]: Array(0)
+
+
+Node cannot be found in the current page.
+chunk-YQ5BCTVV.js?v=77928e19:21609 Download the React DevTools for a better development experience: https://reactjs.org/link/react-devtools
+api.js:15 API Request: {url: 'http://127.0.0.1:5000/api/pacientes', config: {…}}
+api.js:15 API Request: {url: 'http://127.0.0.1:5000/api/relatorios/paciente/13', config: {…}}
+api.js:15 API Request: {url: 'http://127.0.0.1:5000/api/agenda?paciente_id=13', config: {…}}
+api.js:15 API Request: {url: 'http://127.0.0.1:5000/api/profissionais', config: {…}}
+api.js:15 API Request: {url: 'http://127.0.0.1:5000/api/pacientes/13/profissionais?apenas_ativos=true', config: {…}}
+api.js:15 API Request: {url: 'http://127.0.0.1:5000/api/pacientes', config: {…}}
+api.js:15 API Request: {url: 'http://127.0.0.1:5000/api/relatorios/paciente/13', config: {…}}
+api.js:15 API Request: {url: 'http://127.0.0.1:5000/api/agenda?paciente_id=13', config: {…}}
+api.js:15 API Request: {url: 'http://127.0.0.1:5000/api/profissionais', config: {…}}
+api.js:15 API Request: {url: 'http://127.0.0.1:5000/api/pacientes/13/profissionais?apenas_ativos=true', config: {…}}
+api.js:17 API Response: {status: 200, ok: true}
+PacienteRelatorio.jsx:13 Radar: relatorio ou respostas_calculadas_globais ausentes null
+getApexRadarData @ PacienteRelatorio.jsx:13
+PacienteRelatorio @ PacienteRelatorio.jsx:89
+renderWithHooks @ chunk-YQ5BCTVV.js?v=77928e19:11596
+mountIndeterminateComponent @ chunk-YQ5BCTVV.js?v=77928e19:14974
+beginWork @ chunk-YQ5BCTVV.js?v=77928e19:15962
+beginWork$1 @ chunk-YQ5BCTVV.js?v=77928e19:19806
+performUnitOfWork @ chunk-YQ5BCTVV.js?v=77928e19:19251
+workLoopSync @ chunk-YQ5BCTVV.js?v=77928e19:19190
+renderRootSync @ chunk-YQ5BCTVV.js?v=77928e19:19169
+performConcurrentWorkOnRoot @ chunk-YQ5BCTVV.js?v=77928e19:18728
+workLoop @ chunk-YQ5BCTVV.js?v=77928e19:197
+flushWork @ chunk-YQ5BCTVV.js?v=77928e19:176
+performWorkUntilDeadline @ chunk-YQ5BCTVV.js?v=77928e19:384
+PacienteRelatorio.jsx:13 Radar: relatorio ou respostas_calculadas_globais ausentes null
+getApexRadarData @ PacienteRelatorio.jsx:13
+PacienteRelatorio @ PacienteRelatorio.jsx:89
+renderWithHooks @ chunk-YQ5BCTVV.js?v=77928e19:11596
+mountIndeterminateComponent @ chunk-YQ5BCTVV.js?v=77928e19:15024
+beginWork @ chunk-YQ5BCTVV.js?v=77928e19:15962
+beginWork$1 @ chunk-YQ5BCTVV.js?v=77928e19:19806
+performUnitOfWork @ chunk-YQ5BCTVV.js?v=77928e19:19251
+workLoopSync @ chunk-YQ5BCTVV.js?v=77928e19:19190
+renderRootSync @ chunk-YQ5BCTVV.js?v=77928e19:19169
+performConcurrentWorkOnRoot @ chunk-YQ5BCTVV.js?v=77928e19:18728
+workLoop @ chunk-YQ5BCTVV.js?v=77928e19:197
+flushWork @ chunk-YQ5BCTVV.js?v=77928e19:176
+performWorkUntilDeadline @ chunk-YQ5BCTVV.js?v=77928e19:384
+api.js:17 API Response: {status: 200, ok: true}
+api.js:17 API Response: {status: 200, ok: true}
+api.js:17 API Response: {status: 200, ok: true}
+api.js:17 API Response: {status: 200, ok: true}
+api.js:17 API Response: {status: 200, ok: true}
+api.js:17 API Response: {status: 200, ok: true}
+api.js:17 API Response: {status: 200, ok: true}
+api.js:17 API Response: {status: 200, ok: true}ok: truestatus: 200[[Prototype]]: Object
+api.js:17 API Response: {status: 200, ok: true}
+PacienteRelatorio.jsx:21 Radar: datasSelecionadas []
+PacienteRelatorio.jsx:24 Radar: globaisFiltrados []
+PacienteRelatorio.jsx:48 Radar: perguntas (indicadores) []
+PacienteRelatorio.jsx:75 Radar: series montadas []
+PacienteRelatorio.jsx:21 Radar: datasSelecionadas []
+PacienteRelatorio.jsx:24 Radar: globaisFiltrados []
+PacienteRelatorio.jsx:48 Radar: perguntas (indicadores) []length: 0[[Prototype]]: Array(0)
+PacienteRelatorio.jsx:75 Radar: series montadas []
+PacienteRelatorio.jsx:21 Radar: datasSelecionadas []
+PacienteRelatorio.jsx:24 Radar: globaisFiltrados []
+PacienteRelatorio.jsx:48 Radar: perguntas (indicadores) []
+PacienteRelatorio.jsx:75 Radar: series montadas []
+PacienteRelatorio.jsx:21 Radar: datasSelecionadas []
+PacienteRelatorio.jsx:24 Radar: globaisFiltrados []
+PacienteRelatorio.jsx:48 Radar: perguntas (indicadores) []
+PacienteRelatorio.jsx:75 Radar: series montadas []
+PacienteRelatorio.jsx:21 Radar: datasSelecionadas ['2025-10-08']0: "2025-10-08"length: 1[[Prototype]]: Array(0)
+PacienteRelatorio.jsx:24 Radar: globaisFiltrados [{…}]
+PacienteRelatorio.jsx:48 Radar: perguntas (indicadores) (16) [{…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}]
+PacienteRelatorio.jsx:75 Radar: series montadas [{…}]
+PacienteRelatorio.jsx:21 Radar: datasSelecionadas ['2025-10-08']
+PacienteRelatorio.jsx:24 Radar: globaisFiltrados [{…}]
+PacienteRelatorio.jsx:48 Radar: perguntas (indicadores) (16) [{…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}]0: {id: 'Nova pergunta', texto: 'Nova pergunta', sigla: undefined}1: {id: 'Nova pergunta12', texto: 'Nova pergunta12', sigla: undefined}2: {id: 'Nova pergunta6', texto: 'Nova pergunta6', sigla: undefined}3: {id: 'Nova pergunta9', texto: 'Nova pergunta9', sigla: undefined}4: {id: 'Percentual - CogniÃ§Ã£o', texto: 'Percentual - CogniÃ§Ã£o', sigla: undefined}5: {id: 'Percentual - CompetÃªncias Sociais', texto: 'Percentual - CompetÃªncias Sociais', sigla: undefined}6: {id: 'Percentual - Comportamento', texto: 'Percentual - Comportamento', sigla: undefined}7: {id: 'Percentual - ComunicaÃ§Ã£o Expressiva', texto: 'Percentual - ComunicaÃ§Ã£o Expressiva', sigla: undefined}8: {id: 'Percentual - ComunicaÃ§Ã£o Receptiva', texto: 'Percentual - ComunicaÃ§Ã£o Receptiva', sigla: undefined}9: {id: 'Percentual - ImitaÃ§Ã£o', texto: 'Percentual - ImitaÃ§Ã£o', sigla: undefined}10: {id: 'Percentual - IndependÃªncia Pessoal: AlimentaÃ§Ã£o', texto: 'Percentual - IndependÃªncia Pessoal: AlimentaÃ§Ã£o', sigla: undefined}11: {id: 'Percentual - IndependÃªncia Pessoal: Higiene', texto: 'Percentual - IndependÃªncia Pessoal: Higiene', sigla: undefined}12: {id: 'Percentual - IndependÃªncia Pessoal: Vestir', texto: 'Percentual - IndependÃªncia Pessoal: Vestir', sigla: undefined}13: {id: 'Percentual - Jogo', texto: 'Percentual - Jogo', sigla: undefined}14: {id: 'Percentual - Motricidade Fina', texto: 'Percentual - Motricidade Fina', sigla: undefined}15: {id: 'Percentual - Motricidade Grossa', texto: 'Percentual - Motricidade Grossa', sigla: undefined}length: 16[[Prototype]]: Array(0)
+PacienteRelatorio.jsx:75 Radar: series montadas [{…}]
+PacienteRelatorio.jsx:21 Radar: datasSelecionadas (2) ['2025-10-08', '2025-10-09']
+PacienteRelatorio.jsx:24 Radar: globaisFiltrados (2) [{…}, {…}]
+PacienteRelatorio.jsx:48 Radar: perguntas (indicadores) (16) [{…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}]
+PacienteRelatorio.jsx:75 Radar: series montadas (2) [{…}, {…}]
+PacienteRelatorio.jsx:21 Radar: datasSelecionadas (2) ['2025-10-08', '2025-10-09']
+PacienteRelatorio.jsx:24 Radar: globaisFiltrados (2) [{…}, {…}]0: data: "2025-10-08"indices: {Nova pergunta: 50, Nova pergunta12: 75, Nova pergunta6: 75, Nova pergunta9: 100, Percentual - CogniÃ§Ã£o: null, …}[[Prototype]]: Object1: {data: '2025-10-09', indices: {…}}length: 2[[Prototype]]: Array(0)at: ƒ at()concat: ƒ concat()constructor: ƒ Array()copyWithin: ƒ copyWithin()entries: ƒ entries()every: ƒ every()fill: ƒ fill()filter: ƒ filter()find: ƒ find()findIndex: ƒ findIndex()findLast: ƒ findLast()findLastIndex: ƒ findLastIndex()flat: ƒ flat()flatMap: ƒ flatMap()forEach: ƒ forEach()includes: ƒ includes()indexOf: ƒ indexOf()join: ƒ join()keys: ƒ keys()lastIndexOf: ƒ lastIndexOf()length: 0map: ƒ map()pop: ƒ pop()push: ƒ push()reduce: ƒ reduce()reduceRight: ƒ reduceRight()reverse: ƒ reverse()shift: ƒ shift()slice: ƒ slice()some: ƒ some()sort: ƒ sort()splice: ƒ splice()toLocaleString: ƒ toLocaleString()toReversed: ƒ toReversed()toSorted: ƒ toSorted()toSpliced: ƒ toSpliced()toString: ƒ toString()unshift: ƒ unshift()values: ƒ values()with: ƒ with()Symbol(Symbol.iterator): ƒ values()Symbol(Symbol.unscopables): {at: true, copyWithin: true, entries: true, fill: true, find: true, …}[[Prototype]]: Object
+PacienteRelatorio.jsx:48 Radar: perguntas (indicadores) (16) [{…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}]
+PacienteRelatorio.jsx:75 Radar: series montadas (2) [{…}, {…}]0: {name: '2025-10-08', data: Array(16)}1: {name: '2025-10-09', data: Array(16)}length: 2[[Prototype]]: Array(0)
+
+
+Node cannot be found in the current page.
+chunk-YQ5BCTVV.js?v=77928e19:21609 Download the React DevTools for a better development experience: https://reactjs.org/link/react-devtools
+api.js:15 API Request: {url: 'http://127.0.0.1:5000/api/pacientes', config: {…}}
+api.js:15 API Request: {url: 'http://127.0.0.1:5000/api/relatorios/paciente/13', config: {…}}
+api.js:15 API Request: {url: 'http://127.0.0.1:5000/api/agenda?paciente_id=13', config: {…}}
+api.js:15 API Request: {url: 'http://127.0.0.1:5000/api/profissionais', config: {…}}
+api.js:15 API Request: {url: 'http://127.0.0.1:5000/api/pacientes/13/profissionais?apenas_ativos=true', config: {…}}
+api.js:15 API Request: {url: 'http://127.0.0.1:5000/api/pacientes', config: {…}}
+api.js:15 API Request: {url: 'http://127.0.0.1:5000/api/relatorios/paciente/13', config: {…}}
+api.js:15 API Request: {url: 'http://127.0.0.1:5000/api/agenda?paciente_id=13', config: {…}}
+api.js:15 API Request: {url: 'http://127.0.0.1:5000/api/profissionais', config: {…}}
+api.js:15 API Request: {url: 'http://127.0.0.1:5000/api/pacientes/13/profissionais?apenas_ativos=true', config: {…}}
+api.js:17 API Response: {status: 200, ok: true}
+PacienteRelatorio.jsx:13 Radar: relatorio ou respostas_calculadas_globais ausentes null
+getApexRadarData @ PacienteRelatorio.jsx:13
+PacienteRelatorio @ PacienteRelatorio.jsx:89
+renderWithHooks @ chunk-YQ5BCTVV.js?v=77928e19:11596
+mountIndeterminateComponent @ chunk-YQ5BCTVV.js?v=77928e19:14974
+beginWork @ chunk-YQ5BCTVV.js?v=77928e19:15962
+beginWork$1 @ chunk-YQ5BCTVV.js?v=77928e19:19806
+performUnitOfWork @ chunk-YQ5BCTVV.js?v=77928e19:19251
+workLoopSync @ chunk-YQ5BCTVV.js?v=77928e19:19190
+renderRootSync @ chunk-YQ5BCTVV.js?v=77928e19:19169
+performConcurrentWorkOnRoot @ chunk-YQ5BCTVV.js?v=77928e19:18728
+workLoop @ chunk-YQ5BCTVV.js?v=77928e19:197
+flushWork @ chunk-YQ5BCTVV.js?v=77928e19:176
+performWorkUntilDeadline @ chunk-YQ5BCTVV.js?v=77928e19:384
+PacienteRelatorio.jsx:13 Radar: relatorio ou respostas_calculadas_globais ausentes null
+getApexRadarData @ PacienteRelatorio.jsx:13
+PacienteRelatorio @ PacienteRelatorio.jsx:89
+renderWithHooks @ chunk-YQ5BCTVV.js?v=77928e19:11596
+mountIndeterminateComponent @ chunk-YQ5BCTVV.js?v=77928e19:15024
+beginWork @ chunk-YQ5BCTVV.js?v=77928e19:15962
+beginWork$1 @ chunk-YQ5BCTVV.js?v=77928e19:19806
+performUnitOfWork @ chunk-YQ5BCTVV.js?v=77928e19:19251
+workLoopSync @ chunk-YQ5BCTVV.js?v=77928e19:19190
+renderRootSync @ chunk-YQ5BCTVV.js?v=77928e19:19169
+performConcurrentWorkOnRoot @ chunk-YQ5BCTVV.js?v=77928e19:18728
+workLoop @ chunk-YQ5BCTVV.js?v=77928e19:197
+flushWork @ chunk-YQ5BCTVV.js?v=77928e19:176
+performWorkUntilDeadline @ chunk-YQ5BCTVV.js?v=77928e19:384
+api.js:17 API Response: {status: 200, ok: true}
+api.js:17 API Response: {status: 200, ok: true}
+api.js:17 API Response: {status: 200, ok: true}
+api.js:17 API Response: {status: 200, ok: true}
+api.js:17 API Response: {status: 200, ok: true}
+api.js:17 API Response: {status: 200, ok: true}
+api.js:17 API Response: {status: 200, ok: true}
+api.js:17 API Response: {status: 200, ok: true}ok: truestatus: 200[[Prototype]]: Object
+api.js:17 API Response: {status: 200, ok: true}
+PacienteRelatorio.jsx:21 Radar: datasSelecionadas []
+PacienteRelatorio.jsx:24 Radar: globaisFiltrados []
+PacienteRelatorio.jsx:48 Radar: perguntas (indicadores) []
+PacienteRelatorio.jsx:75 Radar: series montadas []
+PacienteRelatorio.jsx:21 Radar: datasSelecionadas []
+PacienteRelatorio.jsx:24 Radar: globaisFiltrados []
+PacienteRelatorio.jsx:48 Radar: perguntas (indicadores) []length: 0[[Prototype]]: Array(0)
+PacienteRelatorio.jsx:75 Radar: series montadas []
+PacienteRelatorio.jsx:21 Radar: datasSelecionadas []
+PacienteRelatorio.jsx:24 Radar: globaisFiltrados []
+PacienteRelatorio.jsx:48 Radar: perguntas (indicadores) []
+PacienteRelatorio.jsx:75 Radar: series montadas []
+PacienteRelatorio.jsx:21 Radar: datasSelecionadas []
+PacienteRelatorio.jsx:24 Radar: globaisFiltrados []
+PacienteRelatorio.jsx:48 Radar: perguntas (indicadores) []
+PacienteRelatorio.jsx:75 Radar: series montadas []
+PacienteRelatorio.jsx:21 Radar: datasSelecionadas ['2025-10-08']0: "2025-10-08"length: 1[[Prototype]]: Array(0)
+PacienteRelatorio.jsx:24 Radar: globaisFiltrados [{…}]
+PacienteRelatorio.jsx:48 Radar: perguntas (indicadores) (16) [{…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}]
+PacienteRelatorio.jsx:75 Radar: series montadas [{…}]
+PacienteRelatorio.jsx:21 Radar: datasSelecionadas ['2025-10-08']
+PacienteRelatorio.jsx:24 Radar: globaisFiltrados [{…}]
+PacienteRelatorio.jsx:48 Radar: perguntas (indicadores) (16) [{…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}]0: {id: 'Nova pergunta', texto: 'Nova pergunta', sigla: undefined}1: {id: 'Nova pergunta12', texto: 'Nova pergunta12', sigla: undefined}2: {id: 'Nova pergunta6', texto: 'Nova pergunta6', sigla: undefined}3: {id: 'Nova pergunta9', texto: 'Nova pergunta9', sigla: undefined}4: {id: 'Percentual - CogniÃ§Ã£o', texto: 'Percentual - CogniÃ§Ã£o', sigla: undefined}5: {id: 'Percentual - CompetÃªncias Sociais', texto: 'Percentual - CompetÃªncias Sociais', sigla: undefined}6: {id: 'Percentual - Comportamento', texto: 'Percentual - Comportamento', sigla: undefined}7: {id: 'Percentual - ComunicaÃ§Ã£o Expressiva', texto: 'Percentual - ComunicaÃ§Ã£o Expressiva', sigla: undefined}8: {id: 'Percentual - ComunicaÃ§Ã£o Receptiva', texto: 'Percentual - ComunicaÃ§Ã£o Receptiva', sigla: undefined}9: {id: 'Percentual - ImitaÃ§Ã£o', texto: 'Percentual - ImitaÃ§Ã£o', sigla: undefined}10: {id: 'Percentual - IndependÃªncia Pessoal: AlimentaÃ§Ã£o', texto: 'Percentual - IndependÃªncia Pessoal: AlimentaÃ§Ã£o', sigla: undefined}11: {id: 'Percentual - IndependÃªncia Pessoal: Higiene', texto: 'Percentual - IndependÃªncia Pessoal: Higiene', sigla: undefined}12: {id: 'Percentual - IndependÃªncia Pessoal: Vestir', texto: 'Percentual - IndependÃªncia Pessoal: Vestir', sigla: undefined}13: {id: 'Percentual - Jogo', texto: 'Percentual - Jogo', sigla: undefined}14: {id: 'Percentual - Motricidade Fina', texto: 'Percentual - Motricidade Fina', sigla: undefined}15: {id: 'Percentual - Motricidade Grossa', texto: 'Percentual - Motricidade Grossa', sigla: undefined}length: 16[[Prototype]]: Array(0)
+PacienteRelatorio.jsx:75 Radar: series montadas [{…}]
+PacienteRelatorio.jsx:21 Radar: datasSelecionadas (2) ['2025-10-08', '2025-10-09']
+PacienteRelatorio.jsx:24 Radar: globaisFiltrados (2) [{…}, {…}]
+PacienteRelatorio.jsx:48 Radar: perguntas (indicadores) (16) [{…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}]
+PacienteRelatorio.jsx:75 Radar: series montadas (2) [{…}, {…}]
+PacienteRelatorio.jsx:21 Radar: datasSelecionadas (2) ['2025-10-08', '2025-10-09']
+PacienteRelatorio.jsx:24 Radar: globaisFiltrados (2) [{…}, {…}]0: data: "2025-10-08"indices: {Nova pergunta: 50, Nova pergunta12: 75, Nova pergunta6: 75, Nova pergunta9: 100, Percentual - CogniÃ§Ã£o: null, …}[[Prototype]]: Object1: {data: '2025-10-09', indices: {…}}length: 2[[Prototype]]: Array(0)at: ƒ at()concat: ƒ concat()constructor: ƒ Array()copyWithin: ƒ copyWithin()entries: ƒ entries()every: ƒ every()fill: ƒ fill()filter: ƒ filter()find: ƒ find()findIndex: ƒ findIndex()findLast: ƒ findLast()findLastIndex: ƒ findLastIndex()flat: ƒ flat()flatMap: ƒ flatMap()forEach: ƒ forEach()includes: ƒ includes()indexOf: ƒ indexOf()join: ƒ join()keys: ƒ keys()lastIndexOf: ƒ lastIndexOf()length: 0map: ƒ map()pop: ƒ pop()push: ƒ push()reduce: ƒ reduce()reduceRight: ƒ reduceRight()reverse: ƒ reverse()shift: ƒ shift()slice: ƒ slice()some: ƒ some()sort: ƒ sort()splice: ƒ splice()toLocaleString: ƒ toLocaleString()toReversed: ƒ toReversed()toSorted: ƒ toSorted()toSpliced: ƒ toSpliced()toString: ƒ toString()unshift: ƒ unshift()values: ƒ values()with: ƒ with()Symbol(Symbol.iterator): ƒ values()Symbol(Symbol.unscopables): {at: true, copyWithin: true, entries: true, fill: true, find: true, …}[[Prototype]]: Object
+PacienteRelatorio.jsx:48 Radar: perguntas (indicadores) (16) [{…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}]
+PacienteRelatorio.jsx:75 Radar: series montadas (2) [{…}, {…}]0: {name: '2025-10-08', data: Array(16)}1: {name: '2025-10-09', data: Array(16)}length: 2[[Prototype]]: Array(0)
