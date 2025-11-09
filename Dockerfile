@@ -18,6 +18,9 @@ RUN pnpm build
 # Estágio 2: Runtime (Nginx)
 FROM nginx:alpine
 
+# Remover configuração padrão do nginx
+RUN rm -rf /etc/nginx/conf.d/default.conf
+
 # Copiar configuração do Nginx
 COPY nginx.conf /etc/nginx/nginx.conf
 
