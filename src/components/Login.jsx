@@ -27,10 +27,24 @@ export default function Login() {
     setLoading(true)
     setError('')
 
+    console.log('='.repeat(50))
+    console.log('🎯 [LOGIN FORM] Formulário submetido')
+    console.log('📝 Dados do formulário:', formData)
+    console.log('🌍 Variáveis de ambiente:', {
+      VITE_API_BASE_URL: import.meta.env.VITE_API_BASE_URL,
+      NODE_ENV: import.meta.env.NODE_ENV
+    })
+    console.log('='.repeat(50))
+
     const result = await login(formData.email, formData.senha)
 
+    console.log('📌 [LOGIN FORM] Resultado do login:', result)
+
     if (!result.success) {
+      console.log('❌ [LOGIN FORM] Erro:', result.error)
       setError(result.error)
+    } else {
+      console.log('✅ [LOGIN FORM] Login realizado com sucesso!')
     }
 
     setLoading(false)

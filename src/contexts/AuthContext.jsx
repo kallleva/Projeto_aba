@@ -15,8 +15,11 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null)
   const [loading, setLoading] = useState(true)
   const [token, setToken] = useState(localStorage.getItem('token'))
-  //const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://kallebaurora-auroraapp-j0jary-ff9ab9-31-97-250-120.traefik.me/api'
-  const API_BASE_URL = import.meta.env.VITE_API_BASE_URL
+  
+  // Debug: Mostrar variáveis de ambiente
+  console.log('🔵 [AuthContext] VITE_API_BASE_URL:', import.meta.env.VITE_API_BASE_URL)
+  const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://kallebaurora-auroraapp-j0jary-ff9ab9-31-97-250-120.traefik.me/api'
+  console.log('🔵 [AuthContext] API_BASE_URL Final:', API_BASE_URL)
   useEffect(() => {
     if (token) {
       verifyToken()
@@ -52,7 +55,15 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (email, senha) => {
     try {
-      const response = await fetch(`${API_BASE_URL}/auth/login`, {
+      console.log('🟢 [LOGIN] Iniciando login...')
+      console.log('📧 [LOGIN] Email:', email)
+      console.log('🔗 [LOGIN] URL da API:', API_BASE_URL)
+      console.log('📍 [LOGIN] Endpoint completo:', `${API_BASE_URL}/auth/login`)
+      
+      const loginUrl = `${API_BASE_URL}/auth/login`
+      console.log('🚀 [LOGIN] Fazendo requisição POST para:', loginUrl)
+      
+      const response = await fetch(loginUrl, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -60,17 +71,25 @@ export const AuthProvider = ({ children }) => {
         body: JSON.stringify({ email, senha })
       })
 
+      console.log('✅ [LOGIN] Resposta recebida com status:', response.status)
+      console.log('📄 [LOGIN] Content-Type:', response.headers.get('content-type'))
+
       const data = await response.json()
+      console.log('📦 [LOGIN] Dados da resposta:', data)
 
       if (response.ok) {
+        console.log('✨ [LOGIN] Login bem-sucedido!')
         setToken(data.token)
         setUser(data.usuario)
         localStorage.setItem('token', data.token)
         return { success: true }
       } else {
+        console.log('❌ [LOGIN] Erro na resposta:', data.erro)
         return { success: false, error: data.erro }
       }
     } catch (error) {
+      console.error('💥 [LOGIN] Erro de conexão:', error)
+      console.error('❌ [LOGIN] Mensagem:', error.message)
       return { success: false, error: 'Erro de conexão' }
     }
   }
