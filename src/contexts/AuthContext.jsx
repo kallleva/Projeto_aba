@@ -18,7 +18,7 @@ export const AuthProvider = ({ children }) => {
   
   // Debug: Mostrar variáveis de ambiente
   console.log('🔵 [AuthContext] VITE_API_BASE_URL:', import.meta.env.VITE_API_BASE_URL)
-  const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://kallebaurora-auroraapp-j0jary-ff9ab9-31-97-250-120.traefik.me/api'
+  const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://kallebaurora-auroraapp-j0jary-ff9ab9-31-97-250-120.traefik.me/api'
   console.log('🔵 [AuthContext] API_BASE_URL Final:', API_BASE_URL)
   useEffect(() => {
     if (token) {
