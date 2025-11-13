@@ -1,1645 +1,919 @@
-import PacienteRelatorio from './PacienteRelatorio';
-import { useState, useEffect } from 'react'
-import { useParams, useNavigate, useSearchParams } from 'react-router-dom'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { useToast } from '@/hooks/use-toast'
-import { 
-  ArrowLeft, 
-  Save, 
-  BarChart3, 
-  TrendingUp, 
-  Target, 
-  Users,
-  Calendar,
-  User,
-  Phone,
-  Mail,
-  Plus,
-  Edit,
-  Trash2,
-  Clock,
-  AlertCircle,
-  List
-} from 'lucide-react'
-import { 
-  LineChart, 
-  Line, 
-  XAxis, 
-  YAxis, 
-  CartesianGrid, 
-  Tooltip, 
-  Legend, 
-  ResponsiveContainer
-} from 'recharts'
-import ApiService from '@/lib/api'
-import { Search } from 'lucide-react'
+import React, { useState } from 'react';
+import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip as RechartsTooltip, Legend as RechartsLegend, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
+import ApexCharts from 'react-apexcharts';
+import { BarChart3, Target, TrendingUp, User, Phone, Calendar, AlertCircle, Filter, RefreshCw } from 'lucide-react';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Button } from '@/components/ui/button';
 
-export default function PacienteDetalhes() {
-  const { id } = useParams()
-  const navigate = useNavigate()
-  const [searchParams] = useSearchParams()
-  const { toast } = useToast()
-  
-  const [paciente, setPaciente] = useState(null)
-  const [relatorioPaciente, setRelatorioPaciente] = useState(null)
-  const [agendamentos, setAgendamentos] = useState([])
-  const [profissionais, setProfissionais] = useState([])
-  const [vinculos, setVinculos] = useState([])
-  const [loading, setLoading] = useState(true)
-  const [loadingRelatorio, setLoadingRelatorio] = useState(false)
-  const [loadingAgendamentos, setLoadingAgendamentos] = useState(false)
-  const [loadingVinculos, setLoadingVinculos] = useState(false)
-  const [saving, setSaving] = useState(false)
-  const [activeTab, setActiveTab] = useState(searchParams.get('tab') || 'editar')
-  const [showAgendamentoForm, setShowAgendamentoForm] = useState(false)
-  const [editingAgendamento, setEditingAgendamento] = useState(null)
-  const [showVinculoForm, setShowVinculoForm] = useState(false)
-  const [editingVinculo, setEditingVinculo] = useState(null)
-  const [currentDate, setCurrentDate] = useState(new Date())
-  const [agendamentosPorDia, setAgendamentosPorDia] = useState({})
-  const [updatingAgendamento, setUpdatingAgendamento] = useState(null)
-  
-  const [formData, setFormData] = useState({
-    nome: '',
-    data_nascimento: '',
-    responsavel: '',
-    contato: '',
-    diagnostico: ''
-  })
-
-  // seleção de usuário responsável
-  const [showResponsavelModal, setShowResponsavelModal] = useState(false)
-  const [usuarios, setUsuarios] = useState([])
-  const [usuariosQuery, setUsuariosQuery] = useState('')
-  const [loadingUsuarios, setLoadingUsuarios] = useState(false)
-  const [selectedResponsavel, setSelectedResponsavel] = useState(null)
-
-  const [agendamentoForm, setAgendamentoForm] = useState({
-    data_hora: '',
-    duracao_minutos: 60,
-    observacoes: '',
-    status: 'AGENDADO',
-    presente: null,
-    profissional_id: ''
-  })
-
-  const [vinculoForm, setVinculoForm] = useState({
-    profissional_id: '',
-    tipo_atendimento: '',
-    data_inicio: new Date().toISOString().split('T')[0],
-    frequencia_semanal: 2,
-    duracao_sessao: 45,
-    observacoes: ''
-  })
-
-  useEffect(() => {
-    if (id) {
-      loadPaciente()
-      loadRelatorioPaciente()
-      loadAgendamentos()
-      loadProfissionais()
-      loadVinculos()
-    }
-  }, [id])
-
-  const loadPaciente = async () => {
-    try {
-      setLoading(true)
-      const pacienteEncontrado = await ApiService.getPaciente(id)
-
-      if (pacienteEncontrado) {
-        setPaciente(pacienteEncontrado)
-        setSelectedResponsavel(pacienteEncontrado.responsavel_usuario || null)
-        setFormData({
-          nome: pacienteEncontrado.nome,
-          data_nascimento: pacienteEncontrado.data_nascimento,
-          responsavel: pacienteEncontrado.responsavel || (pacienteEncontrado.responsavel_usuario ? pacienteEncontrado.responsavel_usuario.nome : ''),
-          contato: pacienteEncontrado.contato,
-          diagnostico: pacienteEncontrado.diagnostico
-        })
-      } else {
-        toast({
-          title: 'Erro',
-          description: 'Paciente não encontrado',
-          variant: 'destructive'
-        })
-        navigate('/pacientes')
-      }
-    } catch (error) {
-      // Verificar se é erro 403 (Acesso Negado)
-      if (error.status === 403) {
-        toast({
-          title: 'Acesso Negado',
-          description: 'Você não tem permissão para acessar este paciente',
-          variant: 'destructive'
-        })
-        navigate('/pacientes')
-      } else {
-        toast({
-          title: 'Erro',
-          description: 'Erro ao carregar paciente: ' + error.message,
-          variant: 'destructive'
-        })
-      }
-    } finally {
-      setLoading(false)
-    }
+// Monta dados para o radar ApexCharts a partir de respostas_calculadas_globais do backend
+function getApexRadarData(relatorio) {
+  if (!relatorio || !relatorio.respostas_calculadas_globais) {
+    console.warn('Radar: relatorio ou respostas_calculadas_globais ausentes', relatorio);
+    return function() {
+      return { series: [], categorias: [], datas: [], perguntas: [] };
+    };
   }
-
-  const loadRelatorioPaciente = async () => {
-    try {
-      setLoadingRelatorio(true)
-      const data = await ApiService.getRelatorioPaciente(id)
-      setRelatorioPaciente(data)
-    } catch (error) {
-      toast({
-        title: 'Erro',
-        description: 'Erro ao carregar relatório do paciente: ' + error.message,
-        variant: 'destructive'
-      })
-    } finally {
-      setLoadingRelatorio(false)
-    }
-  }
-
-  const loadAgendamentos = async () => {
-    try {
-      setLoadingAgendamentos(true)
-      const data = await ApiService.getAgendamentos({ paciente_id: id })
-      setAgendamentos(data)
-      
-      // Organizar agendamentos por dia para o calendário
-      const agendamentosPorDiaObj = {}
-      data.forEach(agendamento => {
-        const dataAgendamento = new Date(agendamento.data_hora)
-        const chaveData = dataAgendamento.toISOString().split('T')[0]
-        if (!agendamentosPorDiaObj[chaveData]) {
-          agendamentosPorDiaObj[chaveData] = []
+  
+  return function(datasSelecionadas) {
+    console.log('Radar: datasSelecionadas', datasSelecionadas);
+    const globaisFiltrados = relatorio.respostas_calculadas_globais.filter(item => datasSelecionadas.includes(item.data));
+    console.log('Radar: globaisFiltrados', globaisFiltrados);
+    
+    const indicadoresInfo = {};
+    const indicadoresSet = new Set();
+    globaisFiltrados.forEach(item => {
+      Object.entries(item.indices).forEach(([key, valor]) => {
+        let idPergunta;
+        if (typeof valor === 'object' && valor !== null && valor.id) {
+          idPergunta = valor.id;
+        } else {
+          idPergunta = key;
         }
-        agendamentosPorDiaObj[chaveData].push(agendamento)
-      })
-      setAgendamentosPorDia(agendamentosPorDiaObj)
-    } catch (error) {
-      toast({
-        title: 'Erro',
-        description: 'Erro ao carregar agendamentos: ' + error.message,
-        variant: 'destructive'
-      })
-    } finally {
-      setLoadingAgendamentos(false)
-    }
-  }
-
-  const loadProfissionais = async () => {
-    try {
-      const data = await ApiService.getProfissionais()
-      setProfissionais(data)
-    } catch (error) {
-      toast({
-        title: 'Erro',
-        description: 'Erro ao carregar profissionais: ' + error.message,
-        variant: 'destructive'
-      })
-    }
-  }
-
-  const loadVinculos = async () => {
-    try {
-      setLoadingVinculos(true)
-      const data = await ApiService.getProfissionaisPaciente(id)
-      setVinculos(data)
-    } catch (error) {
-      toast({
-        title: 'Erro',
-        description: 'Erro ao carregar vínculos: ' + error.message,
-        variant: 'destructive'
-      })
-    } finally {
-      setLoadingVinculos(false)
-    }
-  }
-
-  const handleSubmit = async (e) => {
-    e.preventDefault()
-    try {
-      setSaving(true)
-      await ApiService.updatePaciente(id, formData)
-      toast({
-        title: 'Sucesso',
-        description: 'Paciente atualizado com sucesso!'
-      })
-      // Recarregar dados do paciente
-      await loadPaciente()
-    } catch (error) {
-      toast({
-        title: 'Erro',
-        description: error.message,
-        variant: 'destructive'
-      })
-    } finally {
-      setSaving(false)
-    }
-  }
-
-  const handleAgendamentoSubmit = async (e) => {
-    e.preventDefault()
-    try {
-      setSaving(true)
-      const agendamentoData = {
-        ...agendamentoForm,
-        paciente_id: parseInt(id)
+        indicadoresSet.add(idPergunta);
+        if (!indicadoresInfo[idPergunta]) {
+          indicadoresInfo[idPergunta] = {
+            id: idPergunta,
+            texto: (valor && valor.texto) ? valor.texto : key,
+            sigla: (valor && valor.sigla) ? valor.sigla : undefined
+          };
+        }
+      });
+    });
+    
+    const perguntas = Array.from(indicadoresSet).map(id => indicadoresInfo[id]);
+    perguntas.sort((a, b) => (a.id > b.id ? 1 : -1));
+    console.log('Radar: perguntas (indicadores)', perguntas);
+    
+    const categorias = perguntas.map(p => p.sigla || p.texto);
+    
+    const datas = globaisFiltrados.map(item => {
+      let formularioId = null;
+      for (const v of Object.values(item.indices)) {
+        if (v && typeof v === 'object' && v.formulario_id) {
+          formularioId = v.formulario_id;
+          break;
+        }
       }
+      return formularioId ? `${item.data} (Formulário ${formularioId})` : item.data;
+    });
+    
+    const series = globaisFiltrados.map((item) => {
+      let formularioId = null;
+      for (const v of Object.values(item.indices)) {
+        if (v && typeof v === 'object' && v.formulario_id) {
+          formularioId = v.formulario_id;
+          break;
+        }
+      }
+      const serieData = perguntas.map(p => {
+        if (item && item.indices) {
+          if (item.indices.hasOwnProperty(p.id)) {
+            const v = item.indices[p.id];
+            if (typeof v === 'object' && v !== null && v.valor !== undefined) {
+              return parseFloat(v.valor);
+            } else if (typeof v === 'number' || typeof v === 'string') {
+              return v !== null && v !== undefined ? parseFloat(v) : 0;
+            }
+          } else if (item.indices.hasOwnProperty(p.texto)) {
+            const v = item.indices[p.texto];
+            return v !== null && v !== undefined ? parseFloat(v) : 0;
+          }
+        }
+        return 0;
+      });
+      return {
+        name: formularioId ? `${item.data} (Formulário ${formularioId})` : item.data,
+        data: serieData
+      };
+    });
+    
+    console.log('Radar: series montadas', series);
+    return { series, categorias, datas, perguntas };
+  };
+}
 
-      if (editingAgendamento) {
-        await ApiService.updateAgendamento(editingAgendamento.id, agendamentoData)
-        toast({
-          title: 'Sucesso',
-          description: 'Agendamento atualizado com sucesso!'
-        })
+// Função para determinar o tipo de gráfico e montar dados para barras (comparação simples)
+function getBarChartData(relatorio, datasSelecionadas) {
+  if (!relatorio || !relatorio.respostas_calculadas_globais || datasSelecionadas.length === 0) {
+    return null;
+  }
+
+  const globaisFiltrados = relatorio.respostas_calculadas_globais.filter(item => datasSelecionadas.includes(item.data));
+  
+  // Montar um array de objetos para o gráfico de barras
+  // Cada ponto representa um índice/percentual
+  const barData = [];
+  const indiceNomes = new Set();
+
+  globaisFiltrados.forEach(item => {
+    Object.entries(item.indices).forEach(([key, valor]) => {
+      let sigla = '';
+      if (typeof valor === 'object' && valor !== null && valor.sigla) {
+        sigla = valor.sigla;
       } else {
-        await ApiService.createAgendamento(agendamentoData)
-        toast({
-          title: 'Sucesso',
-          description: 'Agendamento criado com sucesso!'
-        })
+        sigla = key;
       }
+      indiceNomes.add(sigla);
+    });
+  });
 
-      // Recarregar agendamentos e resetar formulário
-      await loadAgendamentos()
-      resetAgendamentoForm()
-    } catch (error) {
-      toast({
-        title: 'Erro',
-        description: error.message,
-        variant: 'destructive'
-      })
-    } finally {
-      setSaving(false)
+  // Criar entry por índice
+  indiceNomes.forEach(sigla => {
+    const entry = { name: sigla };
+    globaisFiltrados.forEach(item => {
+      let dataLabel = new Date(item.data).toLocaleDateString('pt-BR');
+      let valor = 0;
+      Object.entries(item.indices).forEach(([key, v]) => {
+        let itemSigla = '';
+        if (typeof v === 'object' && v !== null && v.sigla) {
+          itemSigla = v.sigla;
+        } else {
+          itemSigla = key;
+        }
+        if (itemSigla === sigla && typeof v === 'object' && v.valor !== undefined) {
+          valor = parseFloat(v.valor);
+        }
+      });
+      entry[dataLabel] = valor;
+    });
+    barData.push(entry);
+  });
+
+  return barData;
+}
+
+// Função para decidir qual gráfico mostrar
+function decideChartType(series, datasSelecionadas) {
+  // Se nenhuma sessão, não mostrar nada
+  if (datasSelecionadas.length === 0) {
+    return null;
+  }
+
+  // Contar quantos índices tem dados > 0
+  let totalIndices = 0;
+  let indicesComDados = 0;
+  
+  if (series && series.length > 0) {
+    const primeiraSerie = series[0];
+    if (primeiraSerie.data && Array.isArray(primeiraSerie.data)) {
+      totalIndices = primeiraSerie.data.length;
+      indicesComDados = primeiraSerie.data.filter(v => typeof v === 'number' && v > 0).length;
     }
   }
 
-  const resetAgendamentoForm = () => {
-    setAgendamentoForm({
-      data_hora: '',
-      duracao_minutos: 60,
-      observacoes: '',
-      status: 'AGENDADO',
-      presente: null,
-      profissional_id: ''
-    })
-    setShowAgendamentoForm(false)
-    setEditingAgendamento(null)
+  // Se 1 sessão com 1 índice, usar barras (comparação simples)
+  if (datasSelecionadas.length === 1 && indicesComDados === 1) {
+    return 'bar';
   }
 
-  const handleVinculoSubmit = async (e) => {
-    e.preventDefault()
+  // Se 1 sessão com múltiplos índices, usar radar
+  if (datasSelecionadas.length === 1) {
+    return 'radar';
+  }
+
+  // Se 2+ sessões com poucos índices (≤ 10), usar barras
+  if (datasSelecionadas.length >= 2 && totalIndices <= 10 && indicesComDados <= 10) {
+    return 'bar';
+  }
+
+  // Caso contrário, radar
+  return 'radar';
+}
+
+export default function PacienteRelatorio({ paciente, relatorioPaciente, agendamentos, loadingRelatorio, formatDate, calcularIdade }) {
+  const [dataInicial, setDataInicial] = useState('');
+  const [dataFinal, setDataFinal] = useState('');
+  const [datasSelecionadas, setDatasSelecionadas] = useState([]);
+  const [refreshGrafico, setRefreshGrafico] = useState(0);
+  const [selectedCharts, setSelectedCharts] = useState([]); // ['radar','bar','line','pie'] – vazio = automático
+
+  // Calcular data padrão (últimos 30 dias)
+  React.useEffect(() => {
+    const hoje = new Date();
+    const trinta = new Date(hoje.getTime() - 30 * 24 * 60 * 60 * 1000);
+    
+    const formatarData = (data) => {
+      const ano = data.getFullYear();
+      const mes = String(data.getMonth() + 1).padStart(2, '0');
+      const dia = String(data.getDate()).padStart(2, '0');
+      return `${ano}-${mes}-${dia}`;
+    };
+    
+    setDataFinal(formatarData(hoje));
+    setDataInicial(formatarData(trinta));
+  }, []);
+
+  // Debug: verificar estrutura do relatorioPaciente
+  React.useEffect(() => {
+    console.log('=== PacienteRelatorio Debug ===');
+    console.log('relatorioPaciente completo:', JSON.stringify(relatorioPaciente, null, 2));
+    if (relatorioPaciente) {
+      console.log('Keys do relatorioPaciente:', Object.keys(relatorioPaciente));
+      console.log('respostas_calculadas_globais:', relatorioPaciente.respostas_calculadas_globais);
+      console.log('Tipo de respostas_calculadas_globais:', Array.isArray(relatorioPaciente.respostas_calculadas_globais) ? 'array' : typeof relatorioPaciente.respostas_calculadas_globais);
+      if (Array.isArray(relatorioPaciente.respostas_calculadas_globais)) {
+        console.log('Tamanho do array:', relatorioPaciente.respostas_calculadas_globais.length);
+        console.log('Primeiros elementos:', relatorioPaciente.respostas_calculadas_globais.slice(0, 2));
+      }
+    }
+    console.log('=== Fim Debug ===');
+  }, [relatorioPaciente]);
+
+  const getRadarData = getApexRadarData(relatorioPaciente);
+  
+  // Construir lista de datas com melhor debug
+  const todasDatas = React.useMemo(() => {
+    if (!relatorioPaciente || !relatorioPaciente.respostas_calculadas_globais) {
+      console.warn('Aviso: relatorioPaciente ou respostas_calculadas_globais ausentes');
+      return [];
+    }
+
+    // Filtrar por intervalo de datas com conversão correta
+    let dataInicialObj = null;
+    let dataFinalObj = null;
+    
+    if (dataInicial) {
+      dataInicialObj = new Date(dataInicial);
+      dataInicialObj.setHours(0, 0, 0, 0); // Início do dia (00:00:00)
+    }
+    
+    if (dataFinal) {
+      dataFinalObj = new Date(dataFinal);
+      dataFinalObj.setHours(23, 59, 59, 999); // Fim do dia (23:59:59)
+    }
+
+    const datas = relatorioPaciente.respostas_calculadas_globais
+      .filter(item => {
+        const dataItem = new Date(item.data);
+        const passaDataInicial = !dataInicialObj || dataItem >= dataInicialObj;
+        const passaDataFinal = !dataFinalObj || dataItem <= dataFinalObj;
+        return passaDataInicial && passaDataFinal;
+      })
+      .map((item, idx) => {
+        let nomeFormulario = null;
+        for (const v of Object.values(item.indices)) {
+          if (v && typeof v === 'object' && v.formulario_nome && v.valor !== undefined && v.valor !== null) {
+            nomeFormulario = v.formulario_nome;
+            break;
+          }
+        }
+        const label = nomeFormulario ? `${formatDate(item.data)} - ${nomeFormulario}` : formatDate(item.data);
+        console.log(`Data ${idx}:`, { value: item.data, label });
+        return {
+          value: item.data,
+          label
+        };
+      });
+
+    console.log('todasDatas montadas:', datas);
+    return datas;
+  }, [relatorioPaciente, formatDate, dataInicial, dataFinal]);
+
+  // Limpar seleção quando o intervalo de datas muda (para evitar inconsistências)
+  React.useEffect(() => {
+    setDatasSelecionadas([]);
+  }, [dataInicial, dataFinal]);
+
+  const { series, categorias, datas, perguntas } = getRadarData(datasSelecionadas);
+
+  // Memoized computation do tipo de gráfico (APÓS series estar definido)
+  const chartType = React.useMemo(() => {
+    if (datasSelecionadas.length === 0) return null;
+    return decideChartType(series, datasSelecionadas);
+  }, [datasSelecionadas, series]);
+
+  const barChartData = React.useMemo(() => {
+    if (selectedCharts.length === 0 && chartType !== 'bar') return null;
+    return getBarChartData(relatorioPaciente, datasSelecionadas);
+  }, [chartType, datasSelecionadas, relatorioPaciente, selectedCharts]);
+
+  // Pie chart data para uma data selecionada (usa a primeira seleção caso haja várias)
+  const pieChartData = React.useMemo(() => {
+    if (!relatorioPaciente || !relatorioPaciente.respostas_calculadas_globais) return null;
+    if (selectedCharts.length > 0 && !selectedCharts.includes('pie')) return null;
+    if (datasSelecionadas.length === 0) return null;
+    const alvo = datasSelecionadas[0];
+    const item = relatorioPaciente.respostas_calculadas_globais.find(i => i.data === alvo);
+    if (!item || !item.indices) return null;
+    const data = [];
+    Object.entries(item.indices).forEach(([key, v]) => {
+      let nome = '';
+      if (typeof v === 'object' && v !== null) {
+        nome = v.sigla || v.texto || key;
+        if (v.valor !== undefined && v.valor !== null) {
+          data.push({ name: nome, value: parseFloat(v.valor) });
+        }
+      } else if (typeof v === 'number' || typeof v === 'string') {
+        const val = parseFloat(v);
+        if (!isNaN(val)) data.push({ name: key, value: val });
+      }
+    });
+    return data.length > 0 ? data : null;
+  }, [relatorioPaciente, datasSelecionadas, selectedCharts]);
+
+  const chartPalette = ["#0ea5e9", "#22c55e", "#f59e0b", "#ef4444", "#8b5cf6", "#ec4899", "#14b8a6", "#84cc16"]; 
+
+  const chartsToShow = React.useMemo(() => {
+    // Sem seleção manual: usar automático
+    if (selectedCharts.length === 0) {
+      return chartType ? [chartType] : [];
+    }
+    return selectedCharts;
+  }, [selectedCharts, chartType]);
+
+  const toggleChart = (type) => {
+    setSelectedCharts((prev) => {
+      if (prev.includes(type)) {
+        const next = prev.filter(t => t !== type);
+        return next;
+      }
+      return [...prev, type];
+    });
+  };
+
+  const handleToggleData = (dataValue) => {
+    if (datasSelecionadas.includes(dataValue)) {
+      setDatasSelecionadas(datasSelecionadas.filter(d => d !== dataValue));
+    } else {
+      setDatasSelecionadas([...datasSelecionadas, dataValue]);
+    }
+  };
+
+  const formatDataLabel = d => {
+    if (!d) return '';
     try {
-      setSaving(true)
-      const vinculoData = {
-        ...vinculoForm,
-        paciente_id: parseInt(id)
-        // criado_por agora é obtido do token no backend
+      const dt = new Date(d);
+      if (!isNaN(dt)) return dt.toLocaleDateString('pt-BR');
+    } catch {}
+    return d;
+  };
+
+  const seriesFiltradas = series;
+
+  // Calcular dados de comparecimento/faltas por data
+  const presencaData = React.useMemo(() => {
+    if (!agendamentos || !Array.isArray(agendamentos) || agendamentos.length === 0) {
+      console.warn('presencaData: Nenhum agendamento disponível');
+      return [];
+    }
+
+    // Filtrar por intervalo de datas com conversão correta
+    let dataInicialObj = null;
+    let dataFinalObj = null;
+    
+    if (dataInicial) {
+      dataInicialObj = new Date(dataInicial);
+      dataInicialObj.setHours(0, 0, 0, 0); // Início do dia (00:00:00)
+    }
+    
+    if (dataFinal) {
+      dataFinalObj = new Date(dataFinal);
+      dataFinalObj.setHours(23, 59, 59, 999); // Fim do dia (23:59:59)
+    }
+
+    const mapa = {};
+
+    // Processar cada agendamento
+    agendamentos.forEach(agend => {
+      if (!agend.data_hora) return; // pular se não tiver data_hora
+      
+      const dataItem = new Date(agend.data_hora);
+      const passaDataInicial = !dataInicialObj || dataItem >= dataInicialObj;
+      const passaDataFinal = !dataFinalObj || dataItem <= dataFinalObj;
+      
+      if (passaDataInicial && passaDataFinal) {
+        const chave = agend.data_hora.split('T')[0]; // pegar só a data (YYYY-MM-DD)
+        if (!mapa[chave]) {
+          mapa[chave] = { data: formatDate(chave), presencas: 0, faltas: 0, ausencias: 0 };
+        }
+        
+        // Contar por presença/status - prioridade: presente > status
+        if (agend.presente === true) {
+          mapa[chave].presencas += 1;
+        } else if (agend.presente === false) {
+          mapa[chave].faltas += 1;
+        } else if (agend.status === 'CANCELADO' || agend.status === 'AUSÊNCIA') {
+          mapa[chave].ausencias += 1;
+        } else {
+          // Se não tem status claro, não contar (agendado mas sem resultado)
+          // ou pode contar como ausência se preferir
+        }
       }
+    });
 
-      if (editingVinculo) {
-        await ApiService.updateVinculo(editingVinculo.id, vinculoData)
-        toast({
-          title: 'Sucesso',
-          description: 'Vínculo atualizado com sucesso!'
-        })
-      } else {
-        await ApiService.createVinculo(vinculoData)
-        toast({
-          title: 'Sucesso',
-          description: 'Vínculo criado com sucesso!'
-        })
-      }
-
-      // Recarregar vínculos e resetar formulário
-      await loadVinculos()
-      resetVinculoForm()
-    } catch (error) {
-      toast({
-        title: 'Erro',
-        description: error.message,
-        variant: 'destructive'
-      })
-    } finally {
-      setSaving(false)
-    }
-  }
-
-  const resetVinculoForm = () => {
-    setVinculoForm({
-      profissional_id: '',
-      tipo_atendimento: '',
-      data_inicio: new Date().toISOString().split('T')[0],
-      frequencia_semanal: 2,
-      duracao_sessao: 45,
-      observacoes: ''
-    })
-    setShowVinculoForm(false)
-    setEditingVinculo(null)
-  }
-
-  const handleEditVinculo = (vinculo) => {
-    setEditingVinculo(vinculo)
-    setVinculoForm({
-      profissional_id: vinculo.profissional.id.toString(),
-      tipo_atendimento: vinculo.tipo_atendimento,
-      data_inicio: vinculo.data_inicio,
-      frequencia_semanal: vinculo.frequencia_semanal,
-      duracao_sessao: vinculo.duracao_sessao,
-      observacoes: vinculo.observacoes || ''
-    })
-    setShowVinculoForm(true)
-  }
-
-  const handleDeleteVinculo = async (vinculoId) => {
-    if (window.confirm('Tem certeza que deseja excluir este vínculo?')) {
-      try {
-        await ApiService.deleteVinculo(vinculoId)
-        toast({
-          title: 'Sucesso',
-          description: 'Vínculo excluído com sucesso!'
-        })
-        await loadVinculos()
-      } catch (error) {
-        toast({
-          title: 'Erro',
-          description: error.message,
-          variant: 'destructive'
-        })
-      }
-    }
-  }
-
-  const handleUpdateStatusVinculo = async (vinculoId, action) => {
-    try {
-      let actionFunction
-      let successMessage
-
-      switch (action) {
-        case 'ativar':
-          actionFunction = () => ApiService.ativarVinculo(vinculoId)
-          successMessage = 'Vínculo ativado com sucesso!'
-          break
-        case 'suspender':
-          actionFunction = () => ApiService.suspenderVinculo(vinculoId)
-          successMessage = 'Vínculo suspenso com sucesso!'
-          break
-        case 'inativar':
-          actionFunction = () => ApiService.inativarVinculo(vinculoId)
-          successMessage = 'Vínculo inativado com sucesso!'
-          break
-        default:
-          throw new Error('Ação inválida')
-      }
-
-      await actionFunction()
-      toast({
-        title: 'Sucesso',
-        description: successMessage
-      })
-      await loadVinculos()
-    } catch (error) {
-      toast({
-        title: 'Erro',
-        description: error.message,
-        variant: 'destructive'
-      })
-    }
-  }
-
-  const handleEditAgendamento = (agendamento) => {
-    setEditingAgendamento(agendamento)
-    setAgendamentoForm({
-      data_hora: agendamento.data_hora.slice(0, 16), // Remove seconds for datetime-local
-      duracao_minutos: agendamento.duracao_minutos,
-      observacoes: agendamento.observacoes || '',
-      status: agendamento.status,
-      presente: agendamento.presente,
-      profissional_id: agendamento.profissional_id.toString()
-    })
-    setShowAgendamentoForm(true)
-  }
-
-  const handleDeleteAgendamento = async (agendamentoId) => {
-    if (window.confirm('Tem certeza que deseja excluir este agendamento?')) {
-      try {
-        await ApiService.deleteAgendamento(agendamentoId)
-        toast({
-          title: 'Sucesso',
-          description: 'Agendamento excluído com sucesso!'
-        })
-        await loadAgendamentos()
-      } catch (error) {
-        toast({
-          title: 'Erro',
-          description: error.message,
-          variant: 'destructive'
-        })
-      }
-    }
-  }
-
-  const handleUpdateStatus = async (agendamentoId, newStatus) => {
-    try {
-      setUpdatingAgendamento(agendamentoId)
-      console.log('Atualizando status:', { agendamentoId, newStatus })
-      await ApiService.updateStatusAgendamento(agendamentoId, newStatus)
-      toast({
-        title: 'Sucesso',
-        description: 'Status do agendamento atualizado!'
-      })
-      await loadAgendamentos()
-    } catch (error) {
-      console.error('Erro ao atualizar status:', error)
-      toast({
-        title: 'Erro',
-        description: `Erro ao atualizar status: ${error.message}`,
-        variant: 'destructive'
-      })
-    } finally {
-      setUpdatingAgendamento(null)
-    }
-  }
-
-  const handleUpdatePresenca = async (agendamentoId, presente) => {
-    try {
-      setUpdatingAgendamento(agendamentoId)
-      console.log('Atualizando presença:', { agendamentoId, presente })
-      await ApiService.updatePresencaAgendamento(agendamentoId, presente)
-      toast({
-        title: 'Sucesso',
-        description: 'Presença atualizada!'
-      })
-      await loadAgendamentos()
-    } catch (error) {
-      console.error('Erro ao atualizar presença:', error)
-      toast({
-        title: 'Erro',
-        description: `Erro ao atualizar presença: ${error.message}`,
-        variant: 'destructive'
-      })
-    } finally {
-      setUpdatingAgendamento(null)
-    }
-  }
-
-  const calcularIdade = (dataNascimento) => {
-    if (!dataNascimento) return '-'
-    const hoje = new Date()
-    const nascimento = new Date(dataNascimento)
-    let idade = hoje.getFullYear() - nascimento.getFullYear()
-    const mes = hoje.getMonth() - nascimento.getMonth()
-    if (mes < 0 || (mes === 0 && hoje.getDate() < nascimento.getDate())) {
-      idade--
-    }
-    return `${idade} anos`
-  }
-
-  const getDiagnosticoBadgeVariant = (diagnostico) => {
-    switch (diagnostico) {
-      case 'TEA': return 'default'
-      case 'TDAH': return 'secondary'
-      default: return 'outline'
-    }
-  }
-
-  const getDiagnosticoBadgeClass = (diagnostico) => {
-    switch (diagnostico) {
-      case 'TEA': return 'badge-info'
-      case 'TDAH': return 'badge-warning'
-      default: return 'badge-success'
-    }
-  }
-
-  const getStatusBadgeVariant = (status) => {
-    switch (status) {
-      case 'AGENDADO': return 'outline'
-      case 'CONFIRMADO': return 'default'
-      case 'REALIZADO': return 'secondary'
-      case 'CANCELADO': return 'destructive'
-      case 'FALTOU': return 'destructive'
-      default: return 'outline'
-    }
-  }
-
-  const getStatusLabel = (status) => {
-    switch (status) {
-      case 'AGENDADO': return 'Agendado'
-      case 'CONFIRMADO': return 'Confirmado'
-      case 'REALIZADO': return 'Realizado'
-      case 'CANCELADO': return 'Cancelado'
-      case 'FALTOU': return 'Faltou'
-      default: return status
-    }
-  }
-
-  const getPresencaLabel = (presente) => {
-    if (presente === true) return 'Presente'
-    if (presente === false) return 'Ausente'
-    return 'Não informado'
-  }
-
-  const getPresencaBadgeVariant = (presente) => {
-    if (presente === true) return 'default'
-    if (presente === false) return 'destructive'
-    return 'outline'
-  }
-
-  const getStatusVinculoBadgeVariant = (status) => {
-    switch (status) {
-      case 'ATIVO': return 'default'
-      case 'INATIVO': return 'secondary'
-      case 'SUSPENSO': return 'destructive'
-      default: return 'outline'
-    }
-  }
-
-  const getStatusVinculoLabel = (status) => {
-    switch (status) {
-      case 'ATIVO': return 'Ativo'
-      case 'INATIVO': return 'Inativo'
-      case 'SUSPENSO': return 'Suspenso'
-      default: return status
-    }
-  }
-
-  const tiposAtendimento = [
-    'Terapia ABA',
-    'Psicologia',
-    'Fonoaudiologia',
-    'Terapia Ocupacional',
-    'Fisioterapia',
-    'Psicopedagogia',
-    'Outro'
-  ]
-
-  const formatDate = (dateString) => {
-    return new Date(dateString).toLocaleDateString('pt-BR')
-  }
-
-  const formatDateTime = (dateString) => {
-    return new Date(dateString).toLocaleString('pt-BR')
-  }
-
-  const formatTime = (dateString) => {
-    return new Date(dateString).toLocaleTimeString('pt-BR', { 
-      hour: '2-digit', 
-      minute: '2-digit' 
-    })
-  }
-
-  const getDaysInMonth = (date) => {
-    const year = date.getFullYear()
-    const month = date.getMonth()
-    const firstDay = new Date(year, month, 1)
-    const lastDay = new Date(year, month + 1, 0)
-    const daysInMonth = lastDay.getDate()
-    const startingDayOfWeek = firstDay.getDay()
+    // Ordenar por data e retornar como array
+    const resultado = Object.values(mapa)
+      .sort((a, b) => new Date(a.data) - new Date(b.data));
     
-    const days = []
-    
-    // Adicionar dias vazios do mês anterior
-    for (let i = 0; i < startingDayOfWeek; i++) {
-      days.push(null)
-    }
-    
-    // Adicionar dias do mês atual
-    for (let day = 1; day <= daysInMonth; day++) {
-      days.push(new Date(year, month, day))
-    }
-    
-    return days
-  }
-
-  const getAgendamentosDoDia = (date) => {
-    if (!date) return []
-    // Validar se a data pertence ao mês selecionado
-    if (date.getMonth() !== currentDate.getMonth() || date.getFullYear() !== currentDate.getFullYear()) {
-      return []
-    }
-    const chaveData = date.toISOString().split('T')[0]
-    return agendamentosPorDia[chaveData] || []
-  }
-
-  const navigateMonth = (direction) => {
-    setCurrentDate(prev => {
-      const newDate = new Date(prev)
-      newDate.setMonth(prev.getMonth() + direction)
-      return newDate
-    })
-  }
-
-  const getDayClassName = (date, agendamentosDoDia) => {
-    if (!date) return 'p-2 h-24 border border-gray-200 bg-gray-50'
-    
-    // Validar se pertence ao mês selecionado
-    if (date.getMonth() !== currentDate.getMonth() || date.getFullYear() !== currentDate.getFullYear()) {
-      return 'p-2 h-24 border border-gray-200 bg-gray-100 opacity-30'
-    }
-    
-    const baseClass = 'p-2 h-24 border border-gray-200 cursor-pointer hover:bg-gray-50'
-    const today = new Date()
-    const isToday = date.toDateString() === today.toDateString()
-    
-    if (isToday) {
-      return `${baseClass} bg-blue-50 border-blue-300`
-    }
-    
-    if (agendamentosDoDia.length > 0) {
-      return `${baseClass} bg-green-50 border-green-300`
-    }
-    
-    return baseClass
-  }
-
-  if (loading) {
-    return (
-      <div className="center-flex py-12">
-        <div className="text-lg animate-pulse text-gray-600">Carregando paciente...</div>
-      </div>
-    )
-  }
-
-  if (!paciente) {
-    return (
-      <div className="alert alert-warning">
-        <AlertCircle className="alert-icon" />
-        <div className="alert-content">
-          <p>Paciente não encontrado</p>
-          <Button onClick={() => navigate('/pacientes')} className="mt-2" style={{ backgroundColor: '#0ea5e9', color: 'white' }}>
-            <ArrowLeft className="mr-2 h-4 w-4" />
-            Voltar para Pacientes
-          </Button>
-        </div>
-      </div>
-    )
-  }
+    console.log('presencaData calculado:', resultado);
+    console.log('Filtro aplicado - Inicial:', dataInicial, 'Final:', dataFinal);
+    return resultado;
+  }, [agendamentos, formatDate, dataInicial, dataFinal, refreshGrafico]);
 
   return (
     <div className="page-section">
       {/* Header */}
       <div className="mb-8">
-        <div className="flex items-center gap-4 mb-4">
-          <Button 
-            variant="outline" 
-            onClick={() => navigate('/pacientes')}
-            className="flex items-center gap-2"
-          >
-            <ArrowLeft className="h-4 w-4" />
-            Voltar
-          </Button>
-        </div>
-        <h1 className="page-title">{paciente.nome}</h1>
+        <h1 className="page-title">Relatório: {paciente.nome}</h1>
         <p className="page-subtitle">
-          <span className={`badge ${getDiagnosticoBadgeClass(paciente.diagnostico)}`}>
-            {paciente.diagnostico}
-          </span>
-          <span className="ml-4">Idade: {calcularIdade(paciente.data_nascimento)}</span>
+          Diagnóstico: {paciente.diagnostico} | Idade: {calcularIdade(paciente.data_nascimento)}
         </p>
       </div>
 
-      {/* Abas */}
-      <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4">
-        <TabsList>
-          <TabsTrigger value="editar" className="flex items-center gap-2">
-            <User className="h-4 w-4" />
-            Editar Informações
-          </TabsTrigger>
-          <TabsTrigger value="vinculos" className="flex items-center gap-2">
-            <Users className="h-4 w-4" />
-            Profissionais Vinculados
-          </TabsTrigger>
-          <TabsTrigger value="agenda" className="flex items-center gap-2">
-            <Calendar className="h-4 w-4" />
-            Agenda
-          </TabsTrigger>
-          <TabsTrigger value="relatorio" className="flex items-center gap-2">
-            <BarChart3 className="h-4 w-4" />
-            Relatório e Gráficos
-          </TabsTrigger>
-        </TabsList>
+      {/* Filtro de Data */}
+      <div className="card-spacing mb-8">
+        <div className="flex items-center gap-2 mb-4">
+          <Filter className="w-5 h-5 text-blue-600" />
+          <h3 className="section-header-title">Filtro de Período</h3>
+        </div>
+        <p className="card-text mb-4">Selecione o intervalo de datas para visualizar os dados</p>
+        
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="form-group">
+            <Label htmlFor="dataInicial" className="text-sm font-semibold text-gray-700 mb-2 block">
+              Data Inicial
+            </Label>
+            <Input
+              id="dataInicial"
+              type="date"
+              value={dataInicial}
+              onChange={(e) => setDataInicial(e.target.value)}
+              className="h-10 bg-white border border-gray-300 rounded-lg hover:border-gray-400 focus:border-[#0ea5e9]"
+            />
+          </div>
+          
+          <div className="form-group">
+            <Label htmlFor="dataFinal" className="text-sm font-semibold text-gray-700 mb-2 block">
+              Data Final
+            </Label>
+            <Input
+              id="dataFinal"
+              type="date"
+              value={dataFinal}
+              onChange={(e) => setDataFinal(e.target.value)}
+              className="h-10 bg-white border border-gray-300 rounded-lg hover:border-gray-400 focus:border-[#0ea5e9]"
+            />
+          </div>
+        </div>
+        
+        <div className="mt-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
+          <p className="text-sm text-gray-700">
+            <span className="font-semibold text-blue-600">📊 Registros encontrados:</span> {todasDatas.length} sessão(ões) no período
+          </p>
+        </div>
+      </div>
 
-        {/* Aba de Edição */}
-        <TabsContent value="editar">
-          <div className="card-spacing">
-            <div className="section-header mb-6">
-              <User size={18} className="color-info-icon" />
-              <h2 className="section-header-title">Editar Informações do Paciente</h2>
+      {loadingRelatorio ? (
+        <div className="center-flex py-12">
+          <div className="text-lg animate-pulse text-gray-600">Carregando relatório...</div>
+        </div>
+      ) : relatorioPaciente ? (
+        <div className="space-y-6">
+          {/* Cards de Resumo */}
+          <div className="card-grid mb-8">
+            <div className="stat-card color-info">
+              <div className="stat-card-icon" style={{ backgroundColor: '#bae6fd' }}>
+                <Target size={24} style={{ color: '#0ea5e9' }} />
+              </div>
+              <div className="stat-card-content">
+                <div className="stat-card-label">Total de Metas</div>
+                <div className="stat-card-value">{relatorioPaciente.resumo.total_metas}</div>
+              </div>
             </div>
-            <p className="card-text mb-6">Atualize as informações pessoais do paciente</p>
-            
-            <form onSubmit={handleSubmit} className="space-y-6">
-              <div className="grid gap-4 md:grid-cols-2">
-                <div className="form-group">
-                  <Label htmlFor="nome">Nome</Label>
-                  <Input
-                    id="nome"
-                    value={formData.nome}
-                    onChange={(e) => setFormData({...formData, nome: e.target.value})}
-                    required
-                  />
+
+            <div className="stat-card color-success">
+              <div className="stat-card-icon" style={{ backgroundColor: '#d1fae5' }}>
+                <TrendingUp size={24} style={{ color: '#22c55e' }} />
+              </div>
+              <div className="stat-card-content">
+                <div className="stat-card-label">Metas Concluídas</div>
+                <div className="stat-card-value">{relatorioPaciente.resumo.metas_concluidas}</div>
+              </div>
+            </div>
+
+            <div className="stat-card color-warning">
+              <div className="stat-card-icon" style={{ backgroundColor: '#fef3c7' }}>
+                <BarChart3 size={24} style={{ color: '#f59e0b' }} />
+              </div>
+              <div className="stat-card-content">
+                <div className="stat-card-label">Média Últimos 30 Dias</div>
+                <div className="stat-card-value">{relatorioPaciente.resumo.media_notas_recentes}</div>
+              </div>
+            </div>
+          </div>
+
+          {/* Gráficos de Evolução por Meta */}
+          {relatorioPaciente && relatorioPaciente.evolucao_por_meta && Object.keys(relatorioPaciente.evolucao_por_meta).length > 0 && (
+            <div className="card-spacing animate-fade-in">
+              <div className="section-header">
+                <TrendingUp size={18} className="color-info-icon" />
+                <h2 className="section-header-title">Evolução por Meta (Últimos 30 dias)</h2>
+              </div>
+              <p className="card-text mb-6">Progresso do paciente em cada meta terapêutica</p>
+              
+              {Object.entries(relatorioPaciente.evolucao_por_meta).map(([metaId, dados]) => (
+                <div key={metaId} className="mb-6">
+                  <h4 className="card-title">{dados.meta_descricao}</h4>
+                  <ResponsiveContainer width="100%" height={300}>
+                    <LineChart data={dados.registros}>
+                      <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
+                      <XAxis 
+                        dataKey="data" 
+                        tickFormatter={formatDate}
+                      />
+                      <YAxis domain={[1, 5]} />
+                      <RechartsTooltip 
+                        labelFormatter={formatDate}
+                        formatter={(value) => [value, 'Nota']}
+                        contentStyle={{ backgroundColor: 'white', border: '1px solid #e5e7eb', borderRadius: '8px' }}
+                      />
+                      <RechartsLegend />
+                      <Line 
+                        type="monotone" 
+                        dataKey="nota" 
+                        stroke="#0ea5e9" 
+                        strokeWidth={2}
+                        dot={{ fill: '#0ea5e9' }}
+                      />
+                    </LineChart>
+                  </ResponsiveContainer>
                 </div>
-                <div className="form-group">
-                  <Label htmlFor="data_nascimento">Data de Nascimento</Label>
-                  <Input
-                    id="data_nascimento"
-                    type="date"
-                    value={formData.data_nascimento}
-                    onChange={(e) => setFormData({...formData, data_nascimento: e.target.value})}
-                    required
-                  />
-                </div>
-                <div className="form-group">
-                  <Label htmlFor="responsavel">Responsável</Label>
-                  <div className="flex items-center gap-2">
-                    <Input
-                      id="responsavel"
-                      value={selectedResponsavel ? `${selectedResponsavel.nome} (${selectedResponsavel.email})` : formData.responsavel}
-                      readOnly
-                      className="bg-white"
-                    />
-                    <button type="button" className="h-9 px-3 rounded-md bg-white border border-gray-200 hover:bg-gray-50" onClick={() => setShowResponsavelModal(true)}>
-                      <Search className="w-4 h-4" />
-                    </button>
+              ))}
+            </div>
+          )}
+
+          {/* Gráfico de Comparecimento/Faltas */}
+          {presencaData && presencaData.length > 0 && (
+            <div className="card-spacing animate-fade-in" style={{ animationDelay: '0.05s' }}>
+              <div className="flex items-center justify-between mb-6">
+                <div className="flex-1">
+                  <div className="section-header">
+                    <TrendingUp size={18} className="color-info-icon" />
+                    <h2 className="section-header-title">Comparecimento vs Faltas/Ausências</h2>
                   </div>
+                  <p className="card-text">Período: {dataInicial && dataFinal ? `${dataInicial} a ${dataFinal}` : 'Últimos 30 dias'}</p>
                 </div>
-                <div className="form-group">
-                  <Label htmlFor="contato">Contato</Label>
-                  <Input
-                    id="contato"
-                    value={formData.contato}
-                    onChange={(e) => setFormData({...formData, contato: e.target.value})}
-                    placeholder="Telefone ou email"
-                    required
-                  />
-                </div>
-                <div className="form-group">
-                  <Label htmlFor="diagnostico">Diagnóstico</Label>
-                  <Select 
-                    value={formData.diagnostico} 
-                    onValueChange={(value) => setFormData({...formData, diagnostico: value})}
-                    required
+                <div className="flex items-center gap-2">
+                  <span className="text-sm text-gray-600 font-medium">{presencaData.length} dia(s) com dados</span>
+                  <button 
+                    onClick={() => setRefreshGrafico(prev => prev + 1)}
+                    className="flex items-center gap-2 h-9 px-3 rounded-lg border border-gray-300 hover:bg-blue-50 hover:border-blue-400 hover:text-blue-600 transition-colors"
+                    title="Atualizar gráfico com o período selecionado"
                   >
-                    <SelectTrigger>
-                      <SelectValue placeholder="Selecione o diagnóstico" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="TEA">TEA (Transtorno do Espectro Autista)</SelectItem>
-                      <SelectItem value="TDAH">TDAH (Transtorno do Déficit de Atenção)</SelectItem>
-                      <SelectItem value="Outro">Outro</SelectItem>
-                    </SelectContent>
-                  </Select>
+                    <RefreshCw size={16} />
+                    <span className="text-sm font-medium">Atualizar</span>
+                  </button>
                 </div>
               </div>
+              
+              <ResponsiveContainer width="100%" height={350}>
+                <LineChart data={presencaData}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
+                  <XAxis 
+                    dataKey="data"
+                    angle={-45}
+                    textAnchor="end"
+                    height={80}
+                  />
+                  <YAxis />
+                  <RechartsTooltip 
+                    contentStyle={{ backgroundColor: 'white', border: '1px solid #e5e7eb', borderRadius: '8px' }}
+                    formatter={(value, name) => {
+                      if (name === 'presencas') return [value, '✅ Presenças'];
+                      if (name === 'faltas') return [value, '❌ Faltas'];
+                      if (name === 'ausencias') return [value, '⏭️ Ausências'];
+                      return [value, name];
+                    }}
+                  />
+                  <RechartsLegend 
+                    formatter={(value) => {
+                      if (value === 'presencas') return '✅ Presenças';
+                      if (value === 'faltas') return '❌ Faltas';
+                      if (value === 'ausencias') return '⏭️ Ausências/Cancelado';
+                      return value;
+                    }}
+                  />
+                  <Line 
+                    type="monotone" 
+                    dataKey="presencas" 
+                    stroke="#22c55e" 
+                    strokeWidth={2}
+                    dot={{ fill: '#22c55e', r: 4 }}
+                    name="Presenças"
+                  />
+                  <Line 
+                    type="monotone" 
+                    dataKey="faltas" 
+                    stroke="#ef4444" 
+                    strokeWidth={2}
+                    dot={{ fill: '#ef4444', r: 4 }}
+                    name="Faltas"
+                  />
+                  <Line 
+                    type="monotone" 
+                    dataKey="ausencias" 
+                    stroke="#f59e0b" 
+                    strokeWidth={2}
+                    dot={{ fill: '#f59e0b', r: 4 }}
+                    name="Ausências/Cancelado"
+                  />
+                </LineChart>
+              </ResponsiveContainer>
+            </div>
+          )}
 
-              <div className="flex justify-end gap-4 pt-4">
-                <Button 
-                  type="button" 
-                  variant="outline" 
-                  onClick={() => navigate('/pacientes')}
-                >
-                  Cancelar
-                </Button>
-                <Button type="submit" disabled={saving} style={{ backgroundColor: '#0ea5e9', color: 'white' }}>
-                  {saving ? (
+          {/* Gráfico Radar com filtro de datas */}
+          {relatorioPaciente && (
+            <div className="card-spacing animate-fade-in" style={{ animationDelay: '0.1s' }}>
+              <div className="section-header">
+                <BarChart3 size={18} className="color-info-icon" />
+                <h2 className="section-header-title">Visualização de Percentuais/Fórmulas</h2>
+              </div>
+              <div className="flex flex-col gap-3 mb-4">
+                <p className="card-text">Cada eixo representa um índice calculado. Compare até 3 sessões (datas).</p>
+                <div className="flex flex-wrap items-center gap-2">
+                  <span className="text-sm text-gray-700 mr-2">Tipos de gráfico:</span>
+                  <Button type="button" variant={chartsToShow.includes('radar') ? 'default' : 'outline'} size="sm" onClick={() => toggleChart('radar')}>
+                    Radar
+                  </Button>
+                  <Button type="button" variant={chartsToShow.includes('bar') ? 'default' : 'outline'} size="sm" onClick={() => toggleChart('bar')}>
+                    Barras
+                  </Button>
+                  <Button type="button" variant={chartsToShow.includes('line') ? 'default' : 'outline'} size="sm" onClick={() => toggleChart('line')}>
+                    Linhas
+                  </Button>
+                  <Button type="button" variant={chartsToShow.includes('pie') ? 'default' : 'outline'} size="sm" onClick={() => toggleChart('pie')}>
+                    Pizza
+                  </Button>
+                  {selectedCharts.length > 0 && (
+                    <Button type="button" variant="ghost" size="sm" onClick={() => setSelectedCharts([])} title="Voltar para seleção automática">
+                      Automático
+                    </Button>
+                  )}
+                </div>
+              </div>
+              
+              {todasDatas.length === 0 ? (
+                <div className="alert alert-info">
+                  <AlertCircle className="alert-icon" />
+                  <p className="alert-content">Nenhuma sessão com dados de percentuais/fórmulas encontrada no período selecionado.</p>
+                </div>
+              ) : (
+                <>
+                  <div className="mb-4">
+                    <label className="label mb-3 block font-semibold text-gray-700">Selecione as sessões para comparar:</label>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 max-h-96 overflow-y-auto p-3 border border-gray-200 rounded-lg bg-gray-50">
+                      {todasDatas.map(({ value, label }) => (
+                        <label key={value} style={{
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '0.5rem',
+                          padding: '0.75rem',
+                          borderRadius: '6px',
+                          border: '1px solid #e5e7eb',
+                          backgroundColor: datasSelecionadas.includes(value) ? '#bae6fd' : 'white',
+                          borderColor: datasSelecionadas.includes(value) ? '#0ea5e9' : '#e5e7eb',
+                          cursor: 'pointer',
+                          transition: 'all 0.2s'
+                        }}>
+                          <input
+                            type="checkbox"
+                            checked={datasSelecionadas.includes(value)}
+                            onChange={() => handleToggleData(value)}
+                            style={{ cursor: 'pointer', width: '18px', height: '18px' }}
+                          />
+                          <span style={{ fontSize: '0.875rem', fontWeight: '500' }}>{label}</span>
+                        </label>
+                      ))}
+                    </div>
+                    <p className="text-xs text-gray-600 mt-2">
+                      <strong>{datasSelecionadas.length}</strong> sessão(ões) selecionada(s) de <strong>{todasDatas.length}</strong>
+                    </p>
+                  </div>
+
+                  {datasSelecionadas.length === 0 && (
+                    <div className="alert alert-info mt-4">
+                      <AlertCircle className="alert-icon" />
+                      <p className="alert-content">Selecione pelo menos uma sessão para visualizar o gráfico.</p>
+                    </div>
+                  )}
+
+                  {/* Barras */}
+                  {datasSelecionadas.length > 0 && chartsToShow.includes('bar') && barChartData && barChartData.length > 0 && (
+                    <div className="space-y-4">
+                      <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 mb-4">
+                        <p className="text-sm text-blue-700">
+                          <strong>📊 Modo de visualização:</strong> Barras para comparar {datasSelecionadas.length} sessão(ões)
+                        </p>
+                      </div>
+                      <ResponsiveContainer width="100%" height={450}>
+                        <BarChart data={barChartData} margin={{ top: 20, right: 30, bottom: 80, left: 20 }}>
+                          <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
+                          <XAxis 
+                            dataKey="name" 
+                            angle={-45} 
+                            textAnchor="end" 
+                            height={120} 
+                            interval={0}
+                            tick={{ fontSize: 11 }}
+                          />
+                          <YAxis 
+                            label={{ value: 'Valor (%)', angle: -90, position: 'insideLeft', style: { fontSize: 12 } }}
+                            tick={{ fontSize: 11 }}
+                          />
+                          <RechartsTooltip 
+                            contentStyle={{ backgroundColor: 'white', border: '1px solid #e5e7eb', borderRadius: '8px' }}
+                            formatter={(value) => [value, 'Valor']}
+                          />
+                          <RechartsLegend wrapperStyle={{ fontSize: '12px' }} />
+                          {Object.keys(barChartData[0] || {})
+                            .filter(key => key !== 'name')
+                            .map((dataKey, idx) => (
+                              <Bar key={dataKey} dataKey={dataKey} fill={chartPalette[idx % chartPalette.length]} />
+                            ))
+                          }
+                        </BarChart>
+                      </ResponsiveContainer>
+                    </div>
+                  )}
+
+                  {/* Linhas (usa o mesmo dataset de barras) */}
+                  {datasSelecionadas.length > 0 && chartsToShow.includes('line') && barChartData && barChartData.length > 0 && (
+                    <div className="space-y-4">
+                      <div className="bg-emerald-50 border border-emerald-200 rounded-lg p-3 mb-4">
+                        <p className="text-sm text-emerald-700">
+                          <strong>📈 Modo de visualização:</strong> Linhas para comparar {datasSelecionadas.length} sessão(ões)
+                        </p>
+                      </div>
+                      <ResponsiveContainer width="100%" height={450}>
+                        <LineChart data={barChartData} margin={{ top: 20, right: 30, bottom: 80, left: 20 }}>
+                          <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
+                          <XAxis 
+                            dataKey="name" 
+                            angle={-45} 
+                            textAnchor="end" 
+                            height={120} 
+                            interval={0}
+                            tick={{ fontSize: 11 }}
+                          />
+                          <YAxis 
+                            label={{ value: 'Valor (%)', angle: -90, position: 'insideLeft', style: { fontSize: 12 } }}
+                            tick={{ fontSize: 11 }}
+                          />
+                          <RechartsTooltip 
+                            contentStyle={{ backgroundColor: 'white', border: '1px solid #e5e7eb', borderRadius: '8px' }}
+                            formatter={(value) => [value, 'Valor']}
+                          />
+                          <RechartsLegend wrapperStyle={{ fontSize: '12px' }} />
+                          {Object.keys(barChartData[0] || {})
+                            .filter(key => key !== 'name')
+                            .map((dataKey, idx) => (
+                              <Line key={dataKey} type="monotone" dataKey={dataKey} stroke={chartPalette[idx % chartPalette.length]} strokeWidth={2} dot={{ r: 3 }} />
+                            ))
+                          }
+                        </LineChart>
+                      </ResponsiveContainer>
+                    </div>
+                  )}
+
+                  {/* Pizza (usa apenas a primeira data selecionada) */}
+                  {datasSelecionadas.length > 0 && chartsToShow.includes('pie') && pieChartData && (
+                    <div className="space-y-4">
+                      {datasSelecionadas.length > 1 && (
+                        <div className="bg-amber-50 border border-amber-200 rounded-lg p-3">
+                          <p className="text-sm text-amber-700">Pizza mostra apenas a primeira sessão selecionada: <strong>{formatDate(datasSelecionadas[0])}</strong></p>
+                        </div>
+                      )}
+                      <ResponsiveContainer width="100%" height={400}>
+                        <PieChart>
+                          <Pie 
+                            data={pieChartData} 
+                            dataKey="value" 
+                            nameKey="name" 
+                            cx="50%" 
+                            cy="50%" 
+                            outerRadius={110}
+                            label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
+                            labelLine={{ stroke: '#666', strokeWidth: 1 }}
+                            style={{ fontSize: '11px' }}
+                          >
+                            {pieChartData.map((entry, index) => (
+                              <Cell key={`cell-${index}`} fill={chartPalette[index % chartPalette.length]} />
+                            ))}
+                          </Pie>
+                          <RechartsTooltip 
+                            formatter={(value, name) => [`${value}%`, name]}
+                            contentStyle={{ fontSize: '12px' }}
+                          />
+                          <RechartsLegend wrapperStyle={{ fontSize: '11px' }} />
+                        </PieChart>
+                      </ResponsiveContainer>
+                    </div>
+                  )}
+
+                  {/* Radar */}
+                  {datasSelecionadas.length > 0 && chartsToShow.includes('radar') && seriesFiltradas.length > 0 && categorias.length > 0 && (
                     <>
-                      <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-                      Salvando...
-                    </>
-                  ) : (
-                    <>
-                      <Save className="mr-2 h-4 w-4" />
-                      Salvar Alterações
+                      {datasSelecionadas.length > 1 && (
+                        <div className="bg-purple-50 border border-purple-200 rounded-lg p-3 mb-4">
+                          <p className="text-sm text-purple-700">
+                            <strong>🎯 Modo de visualização:</strong> Radar para comparar {datasSelecionadas.length} sessão(ões) com múltiplos índices
+                          </p>
+                        </div>
+                      )}
+                      {!seriesFiltradas.some(s => s.data.filter(v => typeof v === 'number' && v > 0).length > 1) && (
+                        <div className="alert alert-warning mb-4">
+                          <AlertCircle className="alert-icon" />
+                          <p className="alert-content">O radar pode não ser representativo pois há poucos índices preenchidos por data.</p>
+                        </div>
+                      )}
+                      <div style={{ width: '100%', minHeight: 550, position: 'relative', overflow: 'visible' }}>
+                        <ApexCharts
+                          options={{
+                            chart: { type: 'radar', toolbar: { show: true }, animations: { enabled: true }, sparkline: { enabled: false } },
+                            stroke: { width: 2 },
+                            fill: { opacity: 0.2 },
+                            colors: chartPalette,
+                            markers: { size: 8 },
+                            dataLabels: { enabled: true, offsetY: 12, style: { fontSize: '14px', fontWeight: 600 } },
+                            legend: { show: true, position: 'bottom', fontSize: '14px', fontFamily: 'inherit', offsetY: 10 },
+                            xaxis: { categories: categorias, labels: { style: { fontSize: '13px', fontWeight: 500 } } },
+                            yaxis: { min: 0, max: 100, tickAmount: 5, labels: { formatter: val => `${val}`, style: { fontSize: '12px' } } },
+                            tooltip: { enabled: true, y: { formatter: val => `${val}` } },
+                            grid: { show: true, strokeDashArray: 4, padding: { top: 20, bottom: 20, left: 20, right: 20 } },
+                            plotOptions: {
+                              radar: {
+                                size: 200,
+                                polygons: {
+                                  connectorColors: '#e0e0e0',
+                                  strokeColors: '#e0e0e0',
+                                  fill: [ '#f8fafc', '#fff' ]
+                                }
+                              }
+                            },
+                            responsive: [ { breakpoint: 600, options: { chart: { width: '100%' }, legend: { fontSize: '12px' } } } ]
+                          }}
+                          series={seriesFiltradas}
+                          type="radar"
+                          height={550}
+                        />
+                      </div>
                     </>
                   )}
-                </Button>
-              </div>
-            </form>
-          </div>
-        </TabsContent>
-
-        {/* Aba de Vínculos */}
-        <TabsContent value="vinculos">
-          <div className="space-y-6">
-            {/* Cabeçalho */}
-            <div className="flex items-center justify-between mb-6">
-              <div>
-                <h2 className="section-header-title">Profissionais Vinculados</h2>
-                <p className="card-text">Gerencie os vínculos terapêuticos de {paciente.nome}</p>
-              </div>
-              <Button 
-                onClick={() => setShowVinculoForm(true)}
-                style={{ backgroundColor: '#0ea5e9', color: 'white' }}
-              >
-                <Plus className="mr-2 h-4 w-4" />
-                Novo Vínculo
-              </Button>
-            </div>
-
-            {/* Formulário de Vínculo */}
-            {showVinculoForm && (
-              <div className="card-spacing animate-fade-in">
-                <div className="section-header mb-6">
-                  <Edit size={18} className="color-info-icon" />
-                  <h3 className="section-header-title">
-                    {editingVinculo ? 'Editar Vínculo' : 'Novo Vínculo'}
-                  </h3>
-                </div>
-                <p className="card-text mb-6">
-                  {editingVinculo 
-                    ? 'Atualize as informações do vínculo terapêutico'
-                    : 'Crie um novo vínculo entre o paciente e um profissional'
-                  }
-                </p>
-                
-                <form onSubmit={handleVinculoSubmit} className="space-y-4">
-                  <div className="grid gap-4 md:grid-cols-2">
-                    <div className="form-group">
-                      <Label htmlFor="profissional_id">Profissional</Label>
-                      <Select 
-                        value={vinculoForm.profissional_id} 
-                        onValueChange={(value) => setVinculoForm({...vinculoForm, profissional_id: value})}
-                        required
-                      >
-                        <SelectTrigger>
-                          <SelectValue placeholder="Selecione o profissional" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {profissionais.map((profissional) => (
-                            <SelectItem key={profissional.id} value={profissional.id.toString()}>
-                              {profissional.nome} - {profissional.especialidade}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    </div>
-                    <div className="form-group">
-                      <Label htmlFor="tipo_atendimento">Tipo de Atendimento</Label>
-                      <Select 
-                        value={vinculoForm.tipo_atendimento} 
-                        onValueChange={(value) => setVinculoForm({...vinculoForm, tipo_atendimento: value})}
-                        required
-                      >
-                        <SelectTrigger>
-                          <SelectValue placeholder="Selecione o tipo" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {tiposAtendimento.map((tipo) => (
-                            <SelectItem key={tipo} value={tipo}>
-                              {tipo}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    </div>
-                    <div className="form-group">
-                      <Label htmlFor="data_inicio">Data de Início</Label>
-                      <Input
-                        id="data_inicio"
-                        type="date"
-                        value={vinculoForm.data_inicio}
-                        onChange={(e) => setVinculoForm({...vinculoForm, data_inicio: e.target.value})}
-                        required
-                      />
-                    </div>
-                    <div className="form-group">
-                      <Label htmlFor="frequencia_semanal">Frequência Semanal</Label>
-                      <Input
-                        id="frequencia_semanal"
-                        type="number"
-                        min="1"
-                        max="7"
-                        value={vinculoForm.frequencia_semanal}
-                        onChange={(e) => setVinculoForm({...vinculoForm, frequencia_semanal: parseInt(e.target.value)})}
-                        required
-                      />
-                    </div>
-                    <div className="form-group">
-                      <Label htmlFor="duracao_sessao">Duração da Sessão (min)</Label>
-                      <Input
-                        id="duracao_sessao"
-                        type="number"
-                        min="15"
-                        max="180"
-                        step="15"
-                        value={vinculoForm.duracao_sessao}
-                        onChange={(e) => setVinculoForm({...vinculoForm, duracao_sessao: parseInt(e.target.value)})}
-                        required
-                      />
-                    </div>
-                  </div>
-                  <div className="form-group">
-                    <Label htmlFor="observacoes_vinculo">Observações</Label>
-                    <Input
-                      id="observacoes_vinculo"
-                      value={vinculoForm.observacoes}
-                      onChange={(e) => setVinculoForm({...vinculoForm, observacoes: e.target.value})}
-                      placeholder="Observações sobre o atendimento (opcional)"
-                    />
-                  </div>
-
-                  <div className="flex justify-end gap-4 pt-4">
-                    <Button 
-                      type="button" 
-                      variant="outline" 
-                      onClick={resetVinculoForm}
-                    >
-                      Cancelar
-                    </Button>
-                    <Button type="submit" disabled={saving} style={{ backgroundColor: '#0ea5e9', color: 'white' }}>
-                      {saving ? (
-                        <>
-                          <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-                          Salvando...
-                        </>
-                      ) : (
-                        <>
-                          <Save className="mr-2 h-4 w-4" />
-                          {editingVinculo ? 'Atualizar' : 'Criar'} Vínculo
-                        </>
-                      )}
-                    </Button>
-                  </div>
-                </form>
-              </div>
-            )}
-
-            {/* Lista de Vínculos */}
-            <div className="card-spacing">
-              <div className="section-header mb-6">
-                <Users size={18} className="color-info-icon" />
-                <h3 className="section-header-title">Vínculos Terapêuticos</h3>
-              </div>
-              <p className="card-text mb-6">Vínculos ativos e histórico do paciente</p>
-              
-              {loadingVinculos ? (
-                <div className="center-flex py-12">
-                  <div className="text-lg animate-pulse text-gray-600">Carregando vínculos...</div>
-                </div>
-              ) : (() => {
-                const vinculosAtivos = vinculos.filter(v => v.status !== 'INATIVO')
-                const vinculosInativos = vinculos.filter(v => v.status === 'INATIVO')
-                
-                return (
-                  <>
-                    {/* Seção de Vínculos Ativos/Suspensos */}
-                    <div className="mb-8">
-                      <h4 className="font-semibold text-base mb-4 text-gray-700">Vínculos Ativos</h4>
-                      {vinculosAtivos.length > 0 ? (
-                        <div className="space-y-4">
-                          {vinculosAtivos.map((vinculo) => (
-                            <div key={vinculo.id} className="border border-gray-200 rounded-lg p-4 hover:shadow-sm transition-shadow bg-white">
-                              <div className="flex items-start justify-between">
-                                <div className="flex-1">
-                                  <div className="flex items-center gap-3 mb-3">
-                                    <h4 className="font-medium text-lg">{vinculo.profissional.nome}</h4>
-                                    <span className={`badge badge-${vinculo.status === 'ATIVO' ? 'success' : vinculo.status === 'SUSPENSO' ? 'warning' : 'neutral'}`}>
-                                      {getStatusVinculoLabel(vinculo.status)}
-                                    </span>
-                                    <span className="badge badge-info">{vinculo.tipo_atendimento}</span>
-                                  </div>
-                                  <div className="grid gap-2 md:grid-cols-2 text-sm">
-                                    <p className="card-text"><strong>Especialidade:</strong> {vinculo.profissional.especialidade}</p>
-                                    <p className="card-text"><strong>Contato:</strong> {vinculo.profissional.telefone}</p>
-                                    <p className="card-text"><strong>Início:</strong> {formatDate(vinculo.data_inicio)}</p>
-                                    {vinculo.data_fim && (
-                                      <p className="card-text"><strong>Fim:</strong> {formatDate(vinculo.data_fim)}</p>
-                                    )}
-                                    <p className="card-text"><strong>Frequência:</strong> {vinculo.frequencia_semanal}x/semana</p>
-                                    <p className="card-text"><strong>Duração:</strong> {vinculo.duracao_sessao} min</p>
-                                    {vinculo.observacoes && (
-                                      <p className="card-text md:col-span-2"><strong>Obs:</strong> {vinculo.observacoes}</p>
-                                    )}
-                                  </div>
-                                </div>
-                                <div className="flex flex-col gap-2 ml-4">
-                                  <Button
-                                    variant="outline"
-                                    size="sm"
-                                    onClick={() => handleEditVinculo(vinculo)}
-                                  >
-                                    <Edit className="h-4 w-4" />
-                                  </Button>
-                                  {vinculo.status === 'ATIVO' && (
-                                    <>
-                                      <Button
-                                        variant="outline"
-                                        size="sm"
-                                        onClick={() => handleUpdateStatusVinculo(vinculo.id, 'suspender')}
-                                      >
-                                        Suspender
-                                      </Button>
-                                      <Button
-                                        variant="outline"
-                                        size="sm"
-                                        onClick={() => handleUpdateStatusVinculo(vinculo.id, 'inativar')}
-                                      >
-                                        Inativar
-                                      </Button>
-                                    </>
-                                  )}
-                                  {vinculo.status === 'SUSPENSO' && (
-                                    <Button
-                                      variant="outline"
-                                      size="sm"
-                                      onClick={() => handleUpdateStatusVinculo(vinculo.id, 'ativar')}
-                                    >
-                                      Ativar
-                                    </Button>
-                                  )}
-                                  <Button
-                                    variant="outline"
-                                    size="sm"
-                                    onClick={() => handleDeleteVinculo(vinculo.id)}
-                                  >
-                                    <Trash2 className="h-4 w-4" />
-                                  </Button>
-                                </div>
-                              </div>
-                            </div>
-                          ))}
-                        </div>
-                      ) : (
-                        <div className="alert alert-info">
-                          <Users className="alert-icon" />
-                          <div className="alert-content">
-                            <p>Nenhum vínculo ativo ou suspenso para este paciente.</p>
-                          </div>
-                        </div>
-                      )}
-                    </div>
-
-                    {/* Seção de Histórico de Vínculos Inativos */}
-                    {vinculosInativos.length > 0 && (
-                      <div className="border-t pt-8">
-                        <h4 className="font-semibold text-base mb-4 text-gray-700 flex items-center gap-2">
-                          <span className="text-gray-400">📋</span>
-                          Histórico - Profissionais Inativos
-                        </h4>
-                        <p className="text-sm text-gray-600 mb-4">Profissionais que deixaram de atender este paciente</p>
-                        <div className="space-y-4">
-                          {vinculosInativos.map((vinculo) => (
-                            <div key={vinculo.id} className="border border-gray-200 rounded-lg p-4 bg-gray-50 hover:shadow-sm transition-shadow opacity-75">
-                              <div className="flex items-start justify-between">
-                                <div className="flex-1">
-                                  <div className="flex items-center gap-3 mb-3">
-                                    <h4 className="font-medium text-lg text-gray-600">{vinculo.profissional.nome}</h4>
-                                    <span className="badge badge-neutral">
-                                      {getStatusVinculoLabel(vinculo.status)}
-                                    </span>
-                                    <span className="badge badge-info text-xs">{vinculo.tipo_atendimento}</span>
-                                  </div>
-                                  <div className="grid gap-2 md:grid-cols-2 text-sm text-gray-600">
-                                    <p className="card-text"><strong>Especialidade:</strong> {vinculo.profissional.especialidade}</p>
-                                    <p className="card-text"><strong>Contato:</strong> {vinculo.profissional.telefone}</p>
-                                    <p className="card-text"><strong>Início:</strong> {formatDate(vinculo.data_inicio)}</p>
-                                    {vinculo.data_fim && (
-                                      <p className="card-text"><strong>Fim:</strong> {formatDate(vinculo.data_fim)}</p>
-                                    )}
-                                    <p className="card-text"><strong>Frequência:</strong> {vinculo.frequencia_semanal}x/semana</p>
-                                    <p className="card-text"><strong>Duração:</strong> {vinculo.duracao_sessao} min</p>
-                                    {vinculo.observacoes && (
-                                      <p className="card-text md:col-span-2"><strong>Obs:</strong> {vinculo.observacoes}</p>
-                                    )}
-                                  </div>
-                                </div>
-                                <div className="flex flex-col gap-2 ml-4">
-                                  <Button
-                                    variant="outline"
-                                    size="sm"
-                                    onClick={() => handleUpdateStatusVinculo(vinculo.id, 'ativar')}
-                                  >
-                                    Reativar
-                                  </Button>
-                                  <Button
-                                    variant="outline"
-                                    size="sm"
-                                    onClick={() => handleDeleteVinculo(vinculo.id)}
-                                  >
-                                    <Trash2 className="h-4 w-4" />
-                                  </Button>
-                                </div>
-                              </div>
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-                    )}
-
-                    {/* Nenhum vínculo */}
-                    {vinculosAtivos.length === 0 && vinculosInativos.length === 0 && (
-                      <div className="alert alert-info">
-                        <Users className="alert-icon" />
-                        <div className="alert-content">
-                          <p>Nenhum vínculo encontrado para este paciente.</p>
-                          <Button 
-                            onClick={() => setShowVinculoForm(true)}
-                            className="mt-3"
-                            style={{ backgroundColor: '#0ea5e9', color: 'white' }}
-                          >
-                            <Plus className="mr-2 h-4 w-4" />
-                            Criar Primeiro Vínculo
-                          </Button>
-                        </div>
-                      </div>
-                    )}
-                  </>
-                )
-              })()}
-            </div>
-          </div>
-        </TabsContent>
-
-        {/* Aba de Agenda */}
-        <TabsContent value="agenda">
-          <div className="space-y-6">
-            {/* Cabeçalho */}
-            <div className="flex items-center justify-between mb-6">
-              <div>
-                <h2 className="section-header-title">Agenda do Paciente</h2>
-                <p className="card-text">Gerencie os agendamentos de {paciente.nome}</p>
-              </div>
-              <Button 
-                onClick={() => setShowAgendamentoForm(true)}
-                style={{ backgroundColor: '#0ea5e9', color: 'white' }}
-              >
-                <Plus className="mr-2 h-4 w-4" />
-                Novo Agendamento
-              </Button>
-            </div>
-
-            {/* Formulário de Agendamento */}
-            {showAgendamentoForm && (
-              <div className="card-spacing animate-fade-in">
-                <div className="section-header mb-6">
-                  <Calendar size={18} className="color-info-icon" />
-                  <h3 className="section-header-title">
-                    {editingAgendamento ? 'Editar Agendamento' : 'Novo Agendamento'}
-                  </h3>
-                </div>
-                <p className="card-text mb-6">
-                  {editingAgendamento 
-                    ? 'Atualize as informações do agendamento'
-                    : 'Crie um novo agendamento para o paciente'
-                  }
-                </p>
-                
-                <form onSubmit={handleAgendamentoSubmit} className="space-y-4">
-                  <div className="grid gap-4 md:grid-cols-2">
-                    <div className="form-group">
-                      <Label htmlFor="data_hora">Data e Hora</Label>
-                      <Input
-                        id="data_hora"
-                        type="datetime-local"
-                        value={agendamentoForm.data_hora}
-                        onChange={(e) => setAgendamentoForm({...agendamentoForm, data_hora: e.target.value})}
-                        required
-                      />
-                    </div>
-                    <div className="form-group">
-                      <Label htmlFor="duracao_minutos">Duração (minutos)</Label>
-                      <Input
-                        id="duracao_minutos"
-                        type="number"
-                        min="15"
-                        max="480"
-                        step="15"
-                        value={agendamentoForm.duracao_minutos}
-                        onChange={(e) => setAgendamentoForm({...agendamentoForm, duracao_minutos: parseInt(e.target.value)})}
-                        required
-                      />
-                    </div>
-                    <div className="form-group">
-                      <Label htmlFor="profissional_id">Profissional</Label>
-                      <Select 
-                        value={agendamentoForm.profissional_id} 
-                        onValueChange={(value) => setAgendamentoForm({...agendamentoForm, profissional_id: value})}
-                        required
-                      >
-                        <SelectTrigger>
-                          <SelectValue placeholder="Selecione o profissional" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {profissionais.map((profissional) => (
-                            <SelectItem key={profissional.id} value={profissional.id.toString()}>
-                              {profissional.nome} - {profissional.especialidade}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    </div>
-                    <div className="form-group">
-                      <Label htmlFor="status">Status</Label>
-                      <Select 
-                        value={agendamentoForm.status} 
-                        onValueChange={(value) => setAgendamentoForm({...agendamentoForm, status: value})}
-                        required
-                      >
-                        <SelectTrigger>
-                          <SelectValue placeholder="Selecione o status" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="AGENDADO">Agendado</SelectItem>
-                          <SelectItem value="CONFIRMADO">Confirmado</SelectItem>
-                          <SelectItem value="REALIZADO">Realizado</SelectItem>
-                          <SelectItem value="CANCELADO">Cancelado</SelectItem>
-                          <SelectItem value="FALTOU">Faltou</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
-                    <div className="form-group">
-                      <Label htmlFor="presente">Presença</Label>
-                      <Select 
-                        value={agendamentoForm.presente === null ? 'null' : agendamentoForm.presente.toString()} 
-                        onValueChange={(value) => {
-                          const presenteValue = value === 'null' ? null : value === 'true'
-                          setAgendamentoForm({...agendamentoForm, presente: presenteValue})
-                        }}
-                      >
-                        <SelectTrigger>
-                          <SelectValue placeholder="Selecione a presença" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="null">Não informado</SelectItem>
-                          <SelectItem value="true">Presente</SelectItem>
-                          <SelectItem value="false">Ausente</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
-                  </div>
-                  <div className="form-group">
-                    <Label htmlFor="observacoes">Observações</Label>
-                    <Input
-                      id="observacoes"
-                      value={agendamentoForm.observacoes}
-                      onChange={(e) => setAgendamentoForm({...agendamentoForm, observacoes: e.target.value})}
-                      placeholder="Observações sobre o agendamento (opcional)"
-                    />
-                  </div>
-
-                  <div className="flex justify-end gap-4 pt-4">
-                    <Button 
-                      type="button" 
-                      variant="outline" 
-                      onClick={resetAgendamentoForm}
-                    >
-                      Cancelar
-                    </Button>
-                    <Button type="submit" disabled={saving} style={{ backgroundColor: '#0ea5e9', color: 'white' }}>
-                      {saving ? (
-                        <>
-                          <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-                          Salvando...
-                        </>
-                      ) : (
-                        <>
-                          <Save className="mr-2 h-4 w-4" />
-                          {editingAgendamento ? 'Atualizar' : 'Criar'} Agendamento
-                        </>
-                      )}
-                    </Button>
-                  </div>
-                </form>
-              </div>
-            )}
-
-            {/* Calendário */}
-            <div className="card-spacing">
-              <div className="section-header">
-                <Calendar size={18} className="color-info-icon" />
-                <h3 className="section-header-title">Calendário de Agendamentos</h3>
-              </div>
-              <p className="card-text mb-6">Visualize os agendamentos por mês</p>
-              
-              <div className="flex items-center justify-between mb-6 pb-4 border-b" style={{borderColor: 'var(--color-neutral-200)'}}>
-                <div className="flex items-center gap-3">
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => navigateMonth(-1)}
-                    className="h-8 w-8 p-0"
-                  >
-                    ←
-                  </Button>
-                  <span className="font-semibold min-w-[140px] text-center" style={{color: 'var(--color-neutral-900)'}}>
-                    {currentDate.toLocaleDateString('pt-BR', { 
-                      month: 'long', 
-                      year: 'numeric' 
-                    }).charAt(0).toUpperCase() + currentDate.toLocaleDateString('pt-BR', { 
-                      month: 'long', 
-                      year: 'numeric' 
-                    }).slice(1)}
-                  </span>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => navigateMonth(1)}
-                    className="h-8 w-8 p-0"
-                  >
-                    →
-                  </Button>
-                </div>
-              </div>
-
-              <div className="grid grid-cols-7 gap-2 mb-4">
-                {/* Cabeçalho dos dias da semana */}
-                {['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'].map(day => (
-                  <div key={day} className="p-3 text-center font-semibold text-xs rounded-lg" style={{backgroundColor: 'var(--color-neutral-100)', color: 'var(--color-neutral-700)'}}>
-                    {day}
-                  </div>
-                ))}
-                
-                {/* Dias do calendário */}
-                {getDaysInMonth(currentDate).map((date, index) => {
-                  const agendamentosDoDia = getAgendamentosDoDia(date)
-                  return (
-                    <div key={index} className={getDayClassName(date, agendamentosDoDia)}>
-                      {date && (
-                        <>
-                          <div className="text-sm font-semibold mb-2" style={{color: 'var(--color-neutral-900)'}}>
-                            {date.getDate()}
-                          </div>
-                          <div className="space-y-1">
-                            {agendamentosDoDia.slice(0, 2).map(agendamento => (
-                              <div
-                                key={agendamento.id}
-                                className="text-xs p-2 rounded font-medium truncate" 
-                                style={{backgroundColor: 'var(--color-info-100)', color: 'var(--color-info-900)'}}
-                                title={`${formatTime(agendamento.data_hora)} - ${agendamento.profissional?.nome}`}
-                              >
-                                {formatTime(agendamento.data_hora)}
-                              </div>
-                            ))}
-                            {agendamentosDoDia.length > 2 && (
-                              <div className="text-xs font-medium" style={{color: 'var(--color-neutral-600)'}}>
-                                +{agendamentosDoDia.length - 2} mais
-                              </div>
-                            )}
-                          </div>
-                        </>
-                      )}
-                    </div>
-                  )
-                })}
-              </div>
-            </div>
-
-            {/* Lista de Agendamentos */}
-            <div className="card-spacing">
-              <div className="section-header">
-                <List size={18} className="color-info-icon" />
-                <h3 className="section-header-title">Lista de Agendamentos - {currentDate.toLocaleDateString('pt-BR', { month: 'long', year: 'numeric' }).charAt(0).toUpperCase() + currentDate.toLocaleDateString('pt-BR', { month: 'long', year: 'numeric' }).slice(1)}</h3>
-              </div>
-              <p className="card-text mb-6">Agendamentos do mês selecionado</p>
-
-              {loadingAgendamentos ? (
-                <div className="text-center py-12">
-                  <div className="animate-spin rounded-full h-10 w-10 border-4 mx-auto" style={{borderColor: 'var(--color-info-200)', borderTopColor: 'var(--color-info-500)'}}></div>
-                  <p className="mt-4 card-text font-medium">Carregando agendamentos...</p>
-                </div>
-              ) : (() => {
-                // Filtrar agendamentos apenas do mês/ano selecionado
-                const agendamentosMes = agendamentos.filter(agend => {
-                  const dataAgend = new Date(agend.data_hora)
-                  return dataAgend.getMonth() === currentDate.getMonth() && 
-                         dataAgend.getFullYear() === currentDate.getFullYear()
-                })
-                return agendamentosMes.length > 0 ? (
-                <div className="space-y-3">
-                  {agendamentosMes.map((agendamento) => (
-                    <div 
-                      key={agendamento.id} 
-                      className="border rounded-lg p-4 hover:bg-opacity-50 transition-all"
-                      style={{borderColor: 'var(--color-neutral-200)', backgroundColor: 'rgba(15, 165, 233, 0.02)'}}
-                    >
-                      <div className="flex items-start justify-between gap-4 flex-wrap">
-                        <div className="flex-1 min-w-64">
-                          <div className="flex items-center gap-3 mb-3 flex-wrap">
-                            <h4 className="font-semibold text-sm" style={{color: 'var(--color-neutral-900)'}}>
-                              {formatDateTime(agendamento.data_hora)}
-                            </h4>
-                            <span className={`badge badge-sm ${
-                              agendamento.status === 'REALIZADO' ? 'badge-success' :
-                              agendamento.status === 'CANCELADO' ? 'badge-error' :
-                              agendamento.status === 'CONFIRMADO' ? 'badge-info' :
-                              agendamento.status === 'FALTOU' ? 'badge-warning' :
-                              'badge-neutral'
-                            }`}>
-                              {getStatusLabel(agendamento.status)}
-                            </span>
-                            <span className={`badge badge-sm ${
-                              agendamento.presente === true ? 'badge-success' :
-                              agendamento.presente === false ? 'badge-error' :
-                              'badge-neutral'
-                            }`}>
-                              {getPresencaLabel(agendamento.presente)}
-                            </span>
-                            <div className="flex items-center gap-1 text-xs font-medium" style={{color: 'var(--color-neutral-600)'}}>
-                              <Clock size={14} />
-                              {agendamento.duracao_minutos} min
-                            </div>
-                          </div>
-                          <div className="text-sm space-y-1" style={{color: 'var(--color-neutral-700)'}}>
-                            <p><strong>Profissional:</strong> {agendamento.profissional?.nome} - {agendamento.profissional?.especialidade}</p>
-                            {agendamento.observacoes && (
-                              <p><strong>Observações:</strong> {agendamento.observacoes}</p>
-                            )}
-                          </div>
-                        </div>
-                        <div className="flex items-center gap-2 flex-wrap">
-                          <Select 
-                            value={agendamento.status} 
-                            onValueChange={(value) => handleUpdateStatus(agendamento.id, value)}
-                            disabled={updatingAgendamento === agendamento.id}
-                          >
-                            <SelectTrigger className="w-32 h-9 text-xs">
-                              <SelectValue />
-                            </SelectTrigger>
-                            <SelectContent>
-                              <SelectItem value="AGENDADO">Agendado</SelectItem>
-                              <SelectItem value="CONFIRMADO">Confirmado</SelectItem>
-                              <SelectItem value="REALIZADO">Realizado</SelectItem>
-                              <SelectItem value="CANCELADO">Cancelado</SelectItem>
-                              <SelectItem value="FALTOU">Faltou</SelectItem>
-                            </SelectContent>
-                          </Select>
-                          <Select 
-                            value={agendamento.presente === null ? 'null' : agendamento.presente.toString()} 
-                            onValueChange={(value) => {
-                              const presenteValue = value === 'null' ? null : value === 'true'
-                              handleUpdatePresenca(agendamento.id, presenteValue)
-                            }}
-                            disabled={updatingAgendamento === agendamento.id}
-                          >
-                            <SelectTrigger className="w-32 h-9 text-xs">
-                              <SelectValue />
-                            </SelectTrigger>
-                            <SelectContent>
-                              <SelectItem value="null">Não informado</SelectItem>
-                              <SelectItem value="true">Presente</SelectItem>
-                              <SelectItem value="false">Ausente</SelectItem>
-                            </SelectContent>
-                          </Select>
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={() => handleEditAgendamento(agendamento)}
-                            className="h-9 w-9 p-0"
-                          >
-                            <Edit size={16} />
-                          </Button>
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={() => handleDeleteAgendamento(agendamento.id)}
-                            className="h-9 w-9 p-0"
-                          >
-                            <Trash2 size={16} />
-                          </Button>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              ) : (
-                <div className="alert alert-info">
-                  <AlertCircle size={18} />
-                  <div className="alert-content">
-                    <p className="font-medium mb-2">Nenhum agendamento encontrado</p>
-                    <p className="text-sm mb-3">Nenhum agendamento registrado para {currentDate.toLocaleDateString('pt-BR', { month: 'long', year: 'numeric' })}.</p>
-                    <Button 
-                      onClick={() => setShowAgendamentoForm(true)}
-                      size="sm"
-                      style={{ backgroundColor: '#0ea5e9', color: 'white' }}
-                    >
-                      <Plus className="mr-2 h-4 w-4" />
-                      Criar Primeiro Agendamento
-                    </Button>
-                  </div>
-                </div>
-              )
-              })()}
-            </div>
-          </div>
-        </TabsContent>
-
-        {/* Aba de Relatório */}
-        <TabsContent value="relatorio">
-          <PacienteRelatorio
-            paciente={paciente}
-            relatorioPaciente={relatorioPaciente}
-            agendamentos={agendamentos}
-            loadingRelatorio={loadingRelatorio}
-            formatDate={formatDate}
-            calcularIdade={calcularIdade}
-          />
-        </TabsContent>
-      </Tabs>
-
-      {/* Modal de Seleção de Responsável */}
-      {showResponsavelModal && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-lg max-w-2xl w-full max-h-96 flex flex-col">
-            <div className="p-6 border-b border-gray-200">
-              <h2 className="text-xl font-bold text-gray-900">Selecionar Responsável</h2>
-              <p className="text-sm text-gray-600 mt-1">Busque e selecione um usuário para atribuir como responsável</p>
-            </div>
-
-            <div className="p-4 border-b border-gray-200">
-              <div className="flex gap-2">
-                <Input
-                  placeholder="Busque por nome ou email..."
-                  value={usuariosQuery}
-                  onChange={(e) => setUsuariosQuery(e.target.value)}
-                  className="flex-1"
-                />
-                <button
-                  onClick={async () => {
-                    if (usuariosQuery.trim()) {
-                      try {
-                        setLoadingUsuarios(true)
-                        const results = await ApiService.getUsuarios(usuariosQuery)
-                        setUsuarios(results)
-                      } catch (error) {
-                        toast({
-                          title: 'Erro',
-                          description: 'Erro ao buscar usuários: ' + error.message,
-                          variant: 'destructive'
-                        })
-                      } finally {
-                        setLoadingUsuarios(false)
-                      }
-                    }
-                  }}
-                  className="h-10 px-4 bg-[#0ea5e9] text-white rounded-lg hover:bg-blue-600"
-                >
-                  <Search className="w-4 h-4" />
-                </button>
-              </div>
-            </div>
-
-            <div className="flex-1 overflow-y-auto p-4 space-y-2">
-              {loadingUsuarios ? (
-                <div className="text-center py-8 text-gray-500">Carregando...</div>
-              ) : usuarios.length === 0 ? (
-                <div className="text-center py-8 text-gray-500">Nenhum usuário encontrado</div>
-              ) : (
-                usuarios.map((u) => (
-                  <button
-                    key={u.id}
-                    onClick={async () => {
-                      try {
-                        await ApiService.assignUsuarioToPaciente(u.id, id)
-                        setSelectedResponsavel(u)
-                        setFormData({...formData, responsavel: u.nome})
-                        setShowResponsavelModal(false)
-                        setUsuarios([])
-                        setUsuariosQuery('')
-                        toast({
-                          title: 'Sucesso',
-                          description: `${u.nome} foi atribuído como responsável`
-                        })
-                      } catch (error) {
-                        toast({
-                          title: 'Erro',
-                          description: 'Erro ao atribuir responsável: ' + error.message,
-                          variant: 'destructive'
-                        })
-                      }
-                    }}
-                    className="w-full text-left p-3 rounded-lg bg-gray-50 hover:bg-gray-100 border border-gray-200 transition-colors"
-                  >
-                    <div className="font-medium text-gray-900">{u.nome}</div>
-                    <div className="text-sm text-gray-600">{u.email}</div>
-                    <div className="text-xs text-gray-500">Tipo: {u.tipo_usuario}</div>
-                  </button>
-                ))
+                </>
               )}
             </div>
+          )}
 
-            <div className="p-4 border-t border-gray-200 flex justify-end gap-2">
-              <button
-                onClick={() => {
-                  setShowResponsavelModal(false)
-                  setUsuarios([])
-                  setUsuariosQuery('')
-                }}
-                className="h-9 px-4 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-50"
-              >
-                Cancelar
-              </button>
+          {/* Informações do Paciente */}
+          <div className="card-spacing animate-fade-in" style={{ animationDelay: '0.2s' }}>
+            <div className="section-header">
+              <User size={18} className="color-info-icon" />
+              <h2 className="section-header-title">Informações do Paciente</h2>
+            </div>
+            
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1.5rem' }}>
+              <div style={{ display: 'flex', gap: '1rem' }}>
+                <User size={18} className="color-info-icon" style={{ marginTop: '0.25rem' }} />
+                <div>
+                  <div className="label">Responsável</div>
+                  <p className="card-text">{paciente.responsavel}</p>
+                </div>
+              </div>
+
+              <div style={{ display: 'flex', gap: '1rem' }}>
+                <Phone size={18} className="color-info-icon" style={{ marginTop: '0.25rem' }} />
+                <div>
+                  <div className="label">Contato</div>
+                  <p className="card-text">{paciente.contato}</p>
+                </div>
+              </div>
+
+              <div style={{ display: 'flex', gap: '1rem' }}>
+                <Calendar size={18} className="color-info-icon" style={{ marginTop: '0.25rem' }} />
+                <div>
+                  <div className="label">Data de Nascimento</div>
+                  <p className="card-text">{paciente.data_nascimento}</p>
+                </div>
+              </div>
+
+              <div style={{ display: 'flex', gap: '1rem' }}>
+                <BarChart3 size={18} className="color-info-icon" style={{ marginTop: '0.25rem' }} />
+                <div>
+                  <div className="label">Registros (Últimos 30 Dias)</div>
+                  <p className="card-text">{relatorioPaciente.resumo.registros_ultimos_30_dias}</p>
+                </div>
+              </div>
             </div>
           </div>
         </div>
+      ) : (
+        <div className="alert alert-warning">
+          <AlertCircle className="alert-icon" />
+          <p className="alert-content">Nenhum dado de relatório disponível para este paciente.</p>
+        </div>
       )}
     </div>
-  )
+  );
 }
