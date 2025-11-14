@@ -21,10 +21,10 @@ export default function Formularios() {
       const data = await ApiService.getFormularios()
       setFormularios(data)
     } catch (err) {
-      console.error('Erro ao buscar formulários:', err)
+      console.error('Erro ao buscar Protocolos:', err)
       toast({
         title: 'Erro',
-        description: 'Erro ao carregar formulários: ' + err.message,
+        description: 'Erro ao carregar Protocolos: ' + err.message,
         variant: 'destructive'
       })
     } finally {
@@ -58,9 +58,9 @@ export default function Formularios() {
       <div className="page-section">
         <div className="flex justify-between items-center gap-4 flex-wrap">
           <div>
-            <h1 className="page-title">Formulários</h1>
+            <h1 className="page-title">Protocolo</h1>
             <p className="page-subtitle">
-              Cadastre modelos de formulários com perguntas estruturadas para checklists diários
+              Cadastre modelos de Protocolo com perguntas estruturadas para checklists diários
             </p>
           </div>
           <Button 
@@ -73,18 +73,18 @@ export default function Formularios() {
         </div>
       </div>
 
-      {/* Lista de Formulários */}
+      {/* Lista de Protocolos */}
       <div className="card-spacing">
         <div className="section-header mb-6">
           <FileText size={18} className="color-info-icon" />
-          <h2 className="section-header-title">Lista de Formulários</h2>
+          <h2 className="section-header-title">Lista de Protocolo</h2>
         </div>
-        <p className="card-text mb-6">Visualize e gerencie os formulários criados para checklists diários</p>
+        <p className="card-text mb-6">Visualize e gerencie os Protocolos criados para checklists diários</p>
 
         {loading ? (
           <div className="text-center py-12">
             <div className="animate-spin rounded-full h-10 w-10 border-4 mx-auto" style={{borderColor: 'var(--color-info-200)', borderTopColor: 'var(--color-info-500)'}}></div>
-            <p className="mt-4 card-text font-medium">Carregando formulários...</p>
+            <p className="mt-4 card-text font-medium">Carregando Protocolos...</p>
           </div>
         ) : formularios.length === 0 ? (
           <div className="alert alert-info">

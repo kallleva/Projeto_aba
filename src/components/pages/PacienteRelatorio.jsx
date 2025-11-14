@@ -5,6 +5,7 @@ import { BarChart3, Target, TrendingUp, User, Phone, Calendar, AlertCircle, Filt
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
+import GraficoFaltas from './PacienteDetalhes/GraficoFaltas';
 
 // Monta dados para o radar ApexCharts a partir de respostas_calculadas_globais do backend
 function getApexRadarData(relatorio) {
@@ -475,45 +476,10 @@ export default function PacienteRelatorio({ paciente, relatorioPaciente, agendam
             </div>
           </div>
 
-          {/* Gráficos de Evolução por Meta */}
-          {relatorioPaciente && relatorioPaciente.evolucao_por_meta && Object.keys(relatorioPaciente.evolucao_por_meta).length > 0 && (
-            <div className="card-spacing animate-fade-in">
-              <div className="section-header">
-                <TrendingUp size={18} className="color-info-icon" />
-                <h2 className="section-header-title">Evolução por Meta (Últimos 30 dias)</h2>
-              </div>
-              <p className="card-text mb-6">Progresso do paciente em cada meta terapêutica</p>
-              
-              {Object.entries(relatorioPaciente.evolucao_por_meta).map(([metaId, dados]) => (
-                <div key={metaId} className="mb-6">
-                  <h4 className="card-title">{dados.meta_descricao}</h4>
-                  <ResponsiveContainer width="100%" height={300}>
-                    <LineChart data={dados.registros}>
-                      <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
-                      <XAxis 
-                        dataKey="data" 
-                        tickFormatter={formatDate}
-                      />
-                      <YAxis domain={[1, 5]} />
-                      <RechartsTooltip 
-                        labelFormatter={formatDate}
-                        formatter={(value) => [value, 'Nota']}
-                        contentStyle={{ backgroundColor: 'white', border: '1px solid #e5e7eb', borderRadius: '8px' }}
-                      />
-                      <RechartsLegend />
-                      <Line 
-                        type="monotone" 
-                        dataKey="nota" 
-                        stroke="#0ea5e9" 
-                        strokeWidth={2}
-                        dot={{ fill: '#0ea5e9' }}
-                      />
-                    </LineChart>
-                  </ResponsiveContainer>
-                </div>
-              ))}
-            </div>
-          )}
+          {/* Gráficos de Estatísticas de Faltas e Presenças */}
+          <div className="card-spacing animate-fade-in">
+            <GraficoFaltas pacienteId={paciente.id} />
+          </div>
 
           {/* Gráfico de Comparecimento/Faltas */}
           {presencaData && presencaData.length > 0 && (

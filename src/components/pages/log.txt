@@ -1,234 +1,563 @@
-api.js:17 API Request: {url: 'http://127.0.0.1:5000/api/pacientes/13', config: {…}}
-api.js:17 API Request: {url: 'http://127.0.0.1:5000/api/relatorios/paciente/13', config: {…}}
-api.js:17 API Request: {url: 'http://127.0.0.1:5000/api/agenda?paciente_id=13', config: {…}}
-api.js:17 API Request: {url: 'http://127.0.0.1:5000/api/profissionais', config: {…}}
-api.js:17 API Request: {url: 'http://127.0.0.1:5000/api/pacientes/13/profissionais?apenas_ativos=true', config: {…}}
-api.js:17 API Request: {url: 'http://127.0.0.1:5000/api/pacientes/13', config: {…}}
-api.js:17 API Request: {url: 'http://127.0.0.1:5000/api/relatorios/paciente/13', config: {…}}
-api.js:17 API Request: {url: 'http://127.0.0.1:5000/api/agenda?paciente_id=13', config: {…}}
-api.js:17 API Request: {url: 'http://127.0.0.1:5000/api/profissionais', config: {…}}
-api.js:17 API Request: {url: 'http://127.0.0.1:5000/api/pacientes/13/profissionais?apenas_ativos=true', config: {…}}
-api.js:18  GET http://127.0.0.1:5000/api/pacientes/13 403 (FORBIDDEN)
-request @ api.js:18
-getPaciente @ api.js:102
-loadPaciente @ PacienteDetalhes.jsx:112
-(anonymous) @ PacienteDetalhes.jsx:101
-commitHookEffectListMount @ chunk-YQ5BCTVV.js?v=29e10907:16963
-commitPassiveMountOnFiber @ chunk-YQ5BCTVV.js?v=29e10907:18206
-commitPassiveMountEffects_complete @ chunk-YQ5BCTVV.js?v=29e10907:18179
-commitPassiveMountEffects_begin @ chunk-YQ5BCTVV.js?v=29e10907:18169
-commitPassiveMountEffects @ chunk-YQ5BCTVV.js?v=29e10907:18159
-flushPassiveEffectsImpl @ chunk-YQ5BCTVV.js?v=29e10907:19543
-flushPassiveEffects @ chunk-YQ5BCTVV.js?v=29e10907:19500
-(anonymous) @ chunk-YQ5BCTVV.js?v=29e10907:19381
-workLoop @ chunk-YQ5BCTVV.js?v=29e10907:197
-flushWork @ chunk-YQ5BCTVV.js?v=29e10907:176
-performWorkUntilDeadline @ chunk-YQ5BCTVV.js?v=29e10907:384
-api.js:19 API Response: {status: 403, ok: false}
-api.js:23 API Error: {erro: 'Acesso negado a este paciente'}
-request @ api.js:23
-await in request
-getPaciente @ api.js:102
-loadPaciente @ PacienteDetalhes.jsx:112
-(anonymous) @ PacienteDetalhes.jsx:101
-commitHookEffectListMount @ chunk-YQ5BCTVV.js?v=29e10907:16963
-commitPassiveMountOnFiber @ chunk-YQ5BCTVV.js?v=29e10907:18206
-commitPassiveMountEffects_complete @ chunk-YQ5BCTVV.js?v=29e10907:18179
-commitPassiveMountEffects_begin @ chunk-YQ5BCTVV.js?v=29e10907:18169
-commitPassiveMountEffects @ chunk-YQ5BCTVV.js?v=29e10907:18159
-flushPassiveEffectsImpl @ chunk-YQ5BCTVV.js?v=29e10907:19543
-flushPassiveEffects @ chunk-YQ5BCTVV.js?v=29e10907:19500
-(anonymous) @ chunk-YQ5BCTVV.js?v=29e10907:19381
-workLoop @ chunk-YQ5BCTVV.js?v=29e10907:197
-flushWork @ chunk-YQ5BCTVV.js?v=29e10907:176
-performWorkUntilDeadline @ chunk-YQ5BCTVV.js?v=29e10907:384
-api.js:34 API Request Failed: Error: Acesso negado a este paciente
-    at ApiService.request (api.js:26:23)
-    at async loadPaciente (PacienteDetalhes.jsx:112:34)
-request @ api.js:34
-await in request
-getPaciente @ api.js:102
-loadPaciente @ PacienteDetalhes.jsx:112
-(anonymous) @ PacienteDetalhes.jsx:101
-commitHookEffectListMount @ chunk-YQ5BCTVV.js?v=29e10907:16963
-commitPassiveMountOnFiber @ chunk-YQ5BCTVV.js?v=29e10907:18206
-commitPassiveMountEffects_complete @ chunk-YQ5BCTVV.js?v=29e10907:18179
-commitPassiveMountEffects_begin @ chunk-YQ5BCTVV.js?v=29e10907:18169
-commitPassiveMountEffects @ chunk-YQ5BCTVV.js?v=29e10907:18159
-flushPassiveEffectsImpl @ chunk-YQ5BCTVV.js?v=29e10907:19543
-flushPassiveEffects @ chunk-YQ5BCTVV.js?v=29e10907:19500
-(anonymous) @ chunk-YQ5BCTVV.js?v=29e10907:19381
-workLoop @ chunk-YQ5BCTVV.js?v=29e10907:197
-flushWork @ chunk-YQ5BCTVV.js?v=29e10907:176
-performWorkUntilDeadline @ chunk-YQ5BCTVV.js?v=29e10907:384
-api.js:18  GET http://127.0.0.1:5000/api/relatorios/paciente/13 403 (FORBIDDEN)
-request @ api.js:18
-getRelatorioPaciente @ api.js:297
-loadRelatorioPaciente @ PacienteDetalhes.jsx:156
-(anonymous) @ PacienteDetalhes.jsx:102
-commitHookEffectListMount @ chunk-YQ5BCTVV.js?v=29e10907:16963
-commitPassiveMountOnFiber @ chunk-YQ5BCTVV.js?v=29e10907:18206
-commitPassiveMountEffects_complete @ chunk-YQ5BCTVV.js?v=29e10907:18179
-commitPassiveMountEffects_begin @ chunk-YQ5BCTVV.js?v=29e10907:18169
-commitPassiveMountEffects @ chunk-YQ5BCTVV.js?v=29e10907:18159
-flushPassiveEffectsImpl @ chunk-YQ5BCTVV.js?v=29e10907:19543
-flushPassiveEffects @ chunk-YQ5BCTVV.js?v=29e10907:19500
-(anonymous) @ chunk-YQ5BCTVV.js?v=29e10907:19381
-workLoop @ chunk-YQ5BCTVV.js?v=29e10907:197
-flushWork @ chunk-YQ5BCTVV.js?v=29e10907:176
-performWorkUntilDeadline @ chunk-YQ5BCTVV.js?v=29e10907:384
-api.js:19 API Response: {status: 403, ok: false}
-api.js:17 API Request: {url: 'http://127.0.0.1:5000/api/pacientes', config: {…}}
-api.js:17 API Request: {url: 'http://127.0.0.1:5000/api/pacientes', config: {…}}
-api.js:18  GET http://127.0.0.1:5000/api/pacientes/13 403 (FORBIDDEN)
-request @ api.js:18
-getPaciente @ api.js:102
-loadPaciente @ PacienteDetalhes.jsx:112
-(anonymous) @ PacienteDetalhes.jsx:101
-commitHookEffectListMount @ chunk-YQ5BCTVV.js?v=29e10907:16963
-invokePassiveEffectMountInDEV @ chunk-YQ5BCTVV.js?v=29e10907:18374
-invokeEffectsInDev @ chunk-YQ5BCTVV.js?v=29e10907:19754
-commitDoubleInvokeEffectsInDEV @ chunk-YQ5BCTVV.js?v=29e10907:19739
-flushPassiveEffectsImpl @ chunk-YQ5BCTVV.js?v=29e10907:19556
-flushPassiveEffects @ chunk-YQ5BCTVV.js?v=29e10907:19500
-(anonymous) @ chunk-YQ5BCTVV.js?v=29e10907:19381
-workLoop @ chunk-YQ5BCTVV.js?v=29e10907:197
-flushWork @ chunk-YQ5BCTVV.js?v=29e10907:176
-performWorkUntilDeadline @ chunk-YQ5BCTVV.js?v=29e10907:384
-api.js:19 API Response: {status: 403, ok: false}
-api.js:19 API Response: {status: 200, ok: true}
-api.js:23 API Error: {erro: 'Acesso negado a este paciente'}
-request @ api.js:23
-await in request
-getRelatorioPaciente @ api.js:297
-loadRelatorioPaciente @ PacienteDetalhes.jsx:156
-(anonymous) @ PacienteDetalhes.jsx:102
-commitHookEffectListMount @ chunk-YQ5BCTVV.js?v=29e10907:16963
-commitPassiveMountOnFiber @ chunk-YQ5BCTVV.js?v=29e10907:18206
-commitPassiveMountEffects_complete @ chunk-YQ5BCTVV.js?v=29e10907:18179
-commitPassiveMountEffects_begin @ chunk-YQ5BCTVV.js?v=29e10907:18169
-commitPassiveMountEffects @ chunk-YQ5BCTVV.js?v=29e10907:18159
-flushPassiveEffectsImpl @ chunk-YQ5BCTVV.js?v=29e10907:19543
-flushPassiveEffects @ chunk-YQ5BCTVV.js?v=29e10907:19500
-(anonymous) @ chunk-YQ5BCTVV.js?v=29e10907:19381
-workLoop @ chunk-YQ5BCTVV.js?v=29e10907:197
-flushWork @ chunk-YQ5BCTVV.js?v=29e10907:176
-performWorkUntilDeadline @ chunk-YQ5BCTVV.js?v=29e10907:384
-api.js:34 API Request Failed: Error: Acesso negado a este paciente
-    at ApiService.request (api.js:26:23)
-    at async loadRelatorioPaciente (PacienteDetalhes.jsx:156:20)
-request @ api.js:34
-await in request
-getRelatorioPaciente @ api.js:297
-loadRelatorioPaciente @ PacienteDetalhes.jsx:156
-(anonymous) @ PacienteDetalhes.jsx:102
-commitHookEffectListMount @ chunk-YQ5BCTVV.js?v=29e10907:16963
-commitPassiveMountOnFiber @ chunk-YQ5BCTVV.js?v=29e10907:18206
-commitPassiveMountEffects_complete @ chunk-YQ5BCTVV.js?v=29e10907:18179
-commitPassiveMountEffects_begin @ chunk-YQ5BCTVV.js?v=29e10907:18169
-commitPassiveMountEffects @ chunk-YQ5BCTVV.js?v=29e10907:18159
-flushPassiveEffectsImpl @ chunk-YQ5BCTVV.js?v=29e10907:19543
-flushPassiveEffects @ chunk-YQ5BCTVV.js?v=29e10907:19500
-(anonymous) @ chunk-YQ5BCTVV.js?v=29e10907:19381
-workLoop @ chunk-YQ5BCTVV.js?v=29e10907:197
-flushWork @ chunk-YQ5BCTVV.js?v=29e10907:176
-performWorkUntilDeadline @ chunk-YQ5BCTVV.js?v=29e10907:384
-api.js:19 API Response: {status: 200, ok: true}
-api.js:19 API Response: {status: 200, ok: true}
-api.js:23 API Error: {erro: 'Acesso negado a este paciente'}
-request @ api.js:23
-await in request
-getPaciente @ api.js:102
-loadPaciente @ PacienteDetalhes.jsx:112
-(anonymous) @ PacienteDetalhes.jsx:101
-commitHookEffectListMount @ chunk-YQ5BCTVV.js?v=29e10907:16963
-invokePassiveEffectMountInDEV @ chunk-YQ5BCTVV.js?v=29e10907:18374
-invokeEffectsInDev @ chunk-YQ5BCTVV.js?v=29e10907:19754
-commitDoubleInvokeEffectsInDEV @ chunk-YQ5BCTVV.js?v=29e10907:19739
-flushPassiveEffectsImpl @ chunk-YQ5BCTVV.js?v=29e10907:19556
-flushPassiveEffects @ chunk-YQ5BCTVV.js?v=29e10907:19500
-(anonymous) @ chunk-YQ5BCTVV.js?v=29e10907:19381
-workLoop @ chunk-YQ5BCTVV.js?v=29e10907:197
-flushWork @ chunk-YQ5BCTVV.js?v=29e10907:176
-performWorkUntilDeadline @ chunk-YQ5BCTVV.js?v=29e10907:384
-api.js:34 API Request Failed: Error: Acesso negado a este paciente
-    at ApiService.request (api.js:26:23)
-    at async loadPaciente (PacienteDetalhes.jsx:112:34)
-request @ api.js:34
-await in request
-getPaciente @ api.js:102
-loadPaciente @ PacienteDetalhes.jsx:112
-(anonymous) @ PacienteDetalhes.jsx:101
-commitHookEffectListMount @ chunk-YQ5BCTVV.js?v=29e10907:16963
-invokePassiveEffectMountInDEV @ chunk-YQ5BCTVV.js?v=29e10907:18374
-invokeEffectsInDev @ chunk-YQ5BCTVV.js?v=29e10907:19754
-commitDoubleInvokeEffectsInDEV @ chunk-YQ5BCTVV.js?v=29e10907:19739
-flushPassiveEffectsImpl @ chunk-YQ5BCTVV.js?v=29e10907:19556
-flushPassiveEffects @ chunk-YQ5BCTVV.js?v=29e10907:19500
-(anonymous) @ chunk-YQ5BCTVV.js?v=29e10907:19381
-workLoop @ chunk-YQ5BCTVV.js?v=29e10907:197
-flushWork @ chunk-YQ5BCTVV.js?v=29e10907:176
-performWorkUntilDeadline @ chunk-YQ5BCTVV.js?v=29e10907:384
-api.js:18  GET http://127.0.0.1:5000/api/relatorios/paciente/13 403 (FORBIDDEN)
-request @ api.js:18
-getRelatorioPaciente @ api.js:297
-loadRelatorioPaciente @ PacienteDetalhes.jsx:156
-(anonymous) @ PacienteDetalhes.jsx:102
-commitHookEffectListMount @ chunk-YQ5BCTVV.js?v=29e10907:16963
-invokePassiveEffectMountInDEV @ chunk-YQ5BCTVV.js?v=29e10907:18374
-invokeEffectsInDev @ chunk-YQ5BCTVV.js?v=29e10907:19754
-commitDoubleInvokeEffectsInDEV @ chunk-YQ5BCTVV.js?v=29e10907:19739
-flushPassiveEffectsImpl @ chunk-YQ5BCTVV.js?v=29e10907:19556
-flushPassiveEffects @ chunk-YQ5BCTVV.js?v=29e10907:19500
-(anonymous) @ chunk-YQ5BCTVV.js?v=29e10907:19381
-workLoop @ chunk-YQ5BCTVV.js?v=29e10907:197
-flushWork @ chunk-YQ5BCTVV.js?v=29e10907:176
-performWorkUntilDeadline @ chunk-YQ5BCTVV.js?v=29e10907:384
-api.js:19 API Response: {status: 403, ok: false}
-api.js:23 API Error: {erro: 'Acesso negado a este paciente'}
-request @ api.js:23
-await in request
-getRelatorioPaciente @ api.js:297
-loadRelatorioPaciente @ PacienteDetalhes.jsx:156
-(anonymous) @ PacienteDetalhes.jsx:102
-commitHookEffectListMount @ chunk-YQ5BCTVV.js?v=29e10907:16963
-invokePassiveEffectMountInDEV @ chunk-YQ5BCTVV.js?v=29e10907:18374
-invokeEffectsInDev @ chunk-YQ5BCTVV.js?v=29e10907:19754
-commitDoubleInvokeEffectsInDEV @ chunk-YQ5BCTVV.js?v=29e10907:19739
-flushPassiveEffectsImpl @ chunk-YQ5BCTVV.js?v=29e10907:19556
-flushPassiveEffects @ chunk-YQ5BCTVV.js?v=29e10907:19500
-(anonymous) @ chunk-YQ5BCTVV.js?v=29e10907:19381
-workLoop @ chunk-YQ5BCTVV.js?v=29e10907:197
-flushWork @ chunk-YQ5BCTVV.js?v=29e10907:176
-performWorkUntilDeadline @ chunk-YQ5BCTVV.js?v=29e10907:384
-api.js:34 API Request Failed: Error: Acesso negado a este paciente
-    at ApiService.request (api.js:26:23)
-    at async loadRelatorioPaciente (PacienteDetalhes.jsx:156:20)
-request @ api.js:34
-await in request
-getRelatorioPaciente @ api.js:297
-loadRelatorioPaciente @ PacienteDetalhes.jsx:156
-(anonymous) @ PacienteDetalhes.jsx:102
-commitHookEffectListMount @ chunk-YQ5BCTVV.js?v=29e10907:16963
-invokePassiveEffectMountInDEV @ chunk-YQ5BCTVV.js?v=29e10907:18374
-invokeEffectsInDev @ chunk-YQ5BCTVV.js?v=29e10907:19754
-commitDoubleInvokeEffectsInDEV @ chunk-YQ5BCTVV.js?v=29e10907:19739
-flushPassiveEffectsImpl @ chunk-YQ5BCTVV.js?v=29e10907:19556
-flushPassiveEffects @ chunk-YQ5BCTVV.js?v=29e10907:19500
-(anonymous) @ chunk-YQ5BCTVV.js?v=29e10907:19381
-workLoop @ chunk-YQ5BCTVV.js?v=29e10907:197
-flushWork @ chunk-YQ5BCTVV.js?v=29e10907:176
-performWorkUntilDeadline @ chunk-YQ5BCTVV.js?v=29e10907:384
-api.js:19 API Response: {status: 200, ok: true}
-api.js:19 API Response: {status: 200, ok: true}
-api.js:19 API Response: {status: 200, ok: true}
-api.js:19 API Response: {status: 200, ok: true}
-api.js:17 API Request: {url: 'http://127.0.0.1:5000/api/pacientes/13/profissionais?apenas_ativos=true', config: {…}}
-api.js:19 API Response: {status: 200, ok: true}
-api.js:17 API Request: {url: 'http://127.0.0.1:5000/api/pacientes/13/profissionais?apenas_ativos=true', config: {…}}
-api.js:19 API Response: {status: 200, ok: true}
-api.js:17 API Request: {url: 'http://127.0.0.1:5000/api/pacientes/15/profissionais?apenas_ativos=true', config: {…}}
-api.js:19 API Response: {status: 200, ok: true}
-api.js:17 API Request: {url: 'http://127.0.0.1:5000/api/pacientes/15/profissionais?apenas_ativos=true', config: {…}}
-api.js:19 API Response: {status: 200, ok: true}
-api.js:19 API Response: {status: 200, ok: true}
+index-Dpixj7fg.js:306 🔧 API_BASE_URL configurado: https://auroraclin.com.br/api
+index-Dpixj7fg.js:306 🔧 VITE_API_BASE_URL: undefined
+index-Dpixj7fg.js:306 🔵 [AuthContext] VITE_API_BASE_URL: undefined
+index-Dpixj7fg.js:306 🔵 [AuthContext] API_BASE_URL Final: https://auroraclin.com.br/api
+index-Dpixj7fg.js:306 🔵 [AuthContext] VITE_API_BASE_URL: undefined
+index-Dpixj7fg.js:306 🔵 [AuthContext] API_BASE_URL Final: https://auroraclin.com.br/api
+/login:1 [DOM] Found 2 elements with non-unique id #email: (More info: https://goo.gl/9p2vKq) null null
+/login:1 [DOM] Found 2 elements with non-unique id #senha: (More info: https://goo.gl/9p2vKq) null null
+index-Dpixj7fg.js:306 ==================================================
+index-Dpixj7fg.js:306 🎯 [LOGIN FORM] Formulário submetido
+index-Dpixj7fg.js:306 📝 Dados do formulário: Object
+index-Dpixj7fg.js:306 🌍 Variáveis de ambiente: Object
+index-Dpixj7fg.js:306 ==================================================
+index-Dpixj7fg.js:306 🟢 [LOGIN] Iniciando login...
+index-Dpixj7fg.js:306 📧 [LOGIN] Email: admin@clinica.com
+index-Dpixj7fg.js:306 🔗 [LOGIN] URL da API: https://auroraclin.com.br/api
+index-Dpixj7fg.js:306 📍 [LOGIN] Endpoint completo: https://auroraclin.com.br/api/auth/login
+index-Dpixj7fg.js:306 🚀 [LOGIN] Fazendo requisição POST para: https://auroraclin.com.br/api/auth/login
+index-Dpixj7fg.js:306 ✅ [LOGIN] Resposta recebida com status: 200
+index-Dpixj7fg.js:306 📄 [LOGIN] Content-Type: application/json
+index-Dpixj7fg.js:306 📦 [LOGIN] Dados da resposta: Object
+index-Dpixj7fg.js:306 ✨ [LOGIN] Login bem-sucedido!
+index-Dpixj7fg.js:306 📌 [LOGIN FORM] Resultado do login: Object
+index-Dpixj7fg.js:306 ✅ [LOGIN FORM] Login realizado com sucesso!
+index-Dpixj7fg.js:306 🔵 [AuthContext] VITE_API_BASE_URL: undefined
+index-Dpixj7fg.js:306 🔵 [AuthContext] API_BASE_URL Final: https://auroraclin.com.br/api
+index-Dpixj7fg.js:306 API Request: Object
+index-Dpixj7fg.js:306 API Request: Object
+index-Dpixj7fg.js:373 `DialogContent` requires a `DialogTitle` for the component to be accessible for screen reader users.
+
+If you want to hide the `DialogTitle`, you can wrap it with our VisuallyHidden component.
+
+For more information, see https://radix-ui.com/primitives/docs/components/dialog
+(anonymous) @ index-Dpixj7fg.js:373
+index-Dpixj7fg.js:373 Warning: Missing `Description` or `aria-describedby={undefined}` for {DialogContent}.
+(anonymous) @ index-Dpixj7fg.js:373
+index-Dpixj7fg.js:306 API Response: Object
+index-Dpixj7fg.js:306 Content-Type: application/json
+index-Dpixj7fg.js:306 API Response: Object
+index-Dpixj7fg.js:306 Content-Type: application/json
+index-Dpixj7fg.js:306 API Response Body (first 500 chars): {
+  "distribuicao_diagnosticos": [
+    {
+      "count": 3,
+      "diagnostico": "TEA"
+    }
+  ],
+  "distribuicao_metas": [
+    {
+      "count": 6,
+      "status": "EmAndamento"
+    }
+  ],
+  "resumo": {
+    "registros_hoje": 1,
+    "total_metas_ativas": 6,
+    "total_pacientes": 3,
+    "total_profissionais": 3
+  }
+}
+
+index-Dpixj7fg.js:306 API Response Body (first 500 chars): [
+  {
+    "data_inicio": "2025-11-08",
+    "data_previsao_termino": "2025-12-08",
+    "descricao": "Comunica\u00e7\u00e3o Verbal: Aumentar vocabul\u00e1rio expressivo em 50%",
+    "empresa_id": 1,
+    "formularios": [
+      {
+        "atualizadoEm": "2025-11-10T04:49:13.726044",
+        "categoria": "avaliacao",
+        "criadoEm": "2025-11-10T04:49:13.726039",
+        "descricao": "",
+        "empresa_id": 1,
+        "id": 1,
+        "nome": "SOCIAL",
+        "perguntas": [
+          {
+        
+index-Dpixj7fg.js:306 🔵 [AuthContext] VITE_API_BASE_URL: undefined
+index-Dpixj7fg.js:306 🔵 [AuthContext] API_BASE_URL Final: https://auroraclin.com.br/api
+index-Dpixj7fg.js:306 API Request: Object
+index-Dpixj7fg.js:306 API Request: Object
+index-Dpixj7fg.js:306 API Response: Object
+index-Dpixj7fg.js:306 Content-Type: application/json
+index-Dpixj7fg.js:306 API Response Body (first 500 chars): {
+  "distribuicao_diagnosticos": [
+    {
+      "count": 3,
+      "diagnostico": "TEA"
+    }
+  ],
+  "distribuicao_metas": [
+    {
+      "count": 6,
+      "status": "EmAndamento"
+    }
+  ],
+  "resumo": {
+    "registros_hoje": 1,
+    "total_metas_ativas": 6,
+    "total_pacientes": 3,
+    "total_profissionais": 3
+  }
+}
+
+index-Dpixj7fg.js:306 API Response: Object
+index-Dpixj7fg.js:306 Content-Type: application/json
+index-Dpixj7fg.js:306 API Response Body (first 500 chars): [
+  {
+    "data_inicio": "2025-11-08",
+    "data_previsao_termino": "2025-12-08",
+    "descricao": "Comunica\u00e7\u00e3o Verbal: Aumentar vocabul\u00e1rio expressivo em 50%",
+    "empresa_id": 1,
+    "formularios": [
+      {
+        "atualizadoEm": "2025-11-10T04:49:13.726044",
+        "categoria": "avaliacao",
+        "criadoEm": "2025-11-10T04:49:13.726039",
+        "descricao": "",
+        "empresa_id": 1,
+        "id": 1,
+        "nome": "SOCIAL",
+        "perguntas": [
+          {
+        
+index-Dpixj7fg.js:306 API Request: Object
+index-Dpixj7fg.js:306 API Response: Object
+index-Dpixj7fg.js:306 Content-Type: application/json
+index-Dpixj7fg.js:306 API Response Body (first 500 chars): [
+  {
+    "contato": "(11) 99999-4444",
+    "data_nascimento": "2018-05-15",
+    "diagnostico": "TEA",
+    "empresa_id": 1,
+    "id": 1,
+    "nome": "Ana Clara Oliveira",
+    "responsavel": "Carlos Oliveira",
+    "responsavel_usuario": null
+  },
+  {
+    "contato": "(11) 99999-5555",
+    "data_nascimento": "2017-08-22",
+    "diagnostico": "TEA",
+    "empresa_id": 1,
+    "id": 2,
+    "nome": "Lucas Ferreira",
+    "responsavel": "Sandra Ferreira",
+    "responsavel_usuario": null
+  },
+  {
+    "conta
+index-Dpixj7fg.js:306 API Request: Object
+index-Dpixj7fg.js:306 API Response: Object
+index-Dpixj7fg.js:306 Content-Type: application/json
+index-Dpixj7fg.js:306 API Response Body (first 500 chars): [
+  {
+    "criado_por": 7,
+    "data_criacao": "2025-11-08",
+    "data_fim": null,
+    "data_inicio": "2025-10-09",
+    "duracao_sessao": 60,
+    "frequencia_semanal": 3,
+    "id": 1,
+    "observacoes": "Paciente com boa evolu\u00e7\u00e3o na comunica\u00e7\u00e3o",
+    "paciente": {
+      "contato": "(11) 99999-4444",
+      "data_nascimento": "2018-05-15",
+      "diagnostico": "TEA",
+      "empresa_id": 1,
+      "id": 1,
+      "nome": "Ana Clara Oliveira",
+      "responsavel": "Carlos Oliveira"
+index-Dpixj7fg.js:306 API Request: Object
+index-Dpixj7fg.js:306 API Response: Object
+index-Dpixj7fg.js:306 Content-Type: application/json
+index-Dpixj7fg.js:306 API Response Body (first 500 chars): [
+  {
+    "criado_por": 7,
+    "data_criacao": "2025-11-08",
+    "data_fim": null,
+    "data_inicio": "2025-09-24",
+    "duracao_sessao": 50,
+    "frequencia_semanal": 2,
+    "id": 3,
+    "observacoes": "Foco em comportamentos adaptativos",
+    "paciente": {
+      "contato": "(11) 99999-5555",
+      "data_nascimento": "2017-08-22",
+      "diagnostico": "TEA",
+      "empresa_id": 1,
+      "id": 2,
+      "nome": "Lucas Ferreira",
+      "responsavel": "Sandra Ferreira",
+      "responsavel_usuario":
+index-Dpixj7fg.js:306 API Request: Object
+index-Dpixj7fg.js:306 API Response: Object
+index-Dpixj7fg.js:306 Content-Type: application/json
+index-Dpixj7fg.js:306 API Response Body (first 500 chars): [
+  {
+    "criado_por": 7,
+    "data_criacao": "2025-11-08",
+    "data_fim": null,
+    "data_inicio": "2025-10-29",
+    "duracao_sessao": 45,
+    "frequencia_semanal": 4,
+    "id": 5,
+    "observacoes": "Paciente iniciante, adapta\u00e7\u00e3o ao ambiente",
+    "paciente": {
+      "contato": "(11) 99999-6666",
+      "data_nascimento": "2019-03-10",
+      "diagnostico": "TEA",
+      "empresa_id": 1,
+      "id": 3,
+      "nome": "Sophia Rodrigues",
+      "responsavel": "Roberto Rodrigues",
+      "
+index-Dpixj7fg.js:306 API Request: Object
+index-Dpixj7fg.js:306 API Request: Object
+index-Dpixj7fg.js:306 API Request: Object
+index-Dpixj7fg.js:306 API Request: Object
+index-Dpixj7fg.js:306 API Request: Object
+index-Dpixj7fg.js:306 API Response: Object
+index-Dpixj7fg.js:306 Content-Type: application/json
+index-Dpixj7fg.js:306 API Response Body (first 500 chars): []
+
+index-Dpixj7fg.js:306 API Response: Object
+index-Dpixj7fg.js:306 Content-Type: application/json
+index-Dpixj7fg.js:306 API Response Body (first 500 chars): [
+  {
+    "criado_por": 7,
+    "data_criacao": "2025-11-08",
+    "data_fim": null,
+    "data_inicio": "2025-10-09",
+    "duracao_sessao": 60,
+    "frequencia_semanal": 3,
+    "id": 1,
+    "observacoes": "Paciente com boa evolu\u00e7\u00e3o na comunica\u00e7\u00e3o",
+    "paciente": {
+      "contato": "(11) 99999-4444",
+      "data_nascimento": "2018-05-15",
+      "diagnostico": "TEA",
+      "empresa_id": 1,
+      "id": 1,
+      "nome": "Ana Clara Oliveira",
+      "responsavel": "Carlos Oliveira"
+index-Dpixj7fg.js:306 API Response: Object
+index-Dpixj7fg.js:306 Content-Type: application/json
+index-Dpixj7fg.js:306 API Response Body (first 500 chars): [
+  {
+    "email": "joao.silva@clinica.com",
+    "empresa_id": 1,
+    "especialidade": "Terapia ABA",
+    "id": 1,
+    "nome": "Dr. Jo\u00e3o Silva",
+    "telefone": "(11) 99999-1111"
+  },
+  {
+    "email": "maria.santos@clinica.com",
+    "empresa_id": 1,
+    "especialidade": "Psicologia Comportamental",
+    "id": 2,
+    "nome": "Dra. Maria Santos",
+    "telefone": "(11) 99999-2222"
+  },
+  {
+    "email": "pedro.costa@clinica.com",
+    "empresa_id": 1,
+    "especialidade": "Fonoaudiologia",
+    "i
+index-Dpixj7fg.js:306 API Response: Object
+index-Dpixj7fg.js:306 Content-Type: application/json
+index-Dpixj7fg.js:306 API Response: Object
+index-Dpixj7fg.js:306 Content-Type: application/json
+index-Dpixj7fg.js:306 API Response Body (first 500 chars): {
+  "evolucao_por_meta": {
+    "1": {
+      "meta_descricao": "Comunica\u00e7\u00e3o Verbal: Aumentar vocabul\u00e1rio expressivo em 50%",
+      "registros": [
+        {
+          "data": "2025-11-10",
+          "formulas_calculadas": [
+            {
+              "formula": "PERCENTUAL(P3:P29)",
+              "pergunta_id": 263,
+              "pergunta_texto": "Percentual - Aten\u00e7\u00e3o Compartilhada/Atentar",
+              "valor_calculado": "50.00",
+              "valor_numerico": 50.0
+ 
+index-Dpixj7fg.js:306 API Response Body (first 500 chars): {
+  "contato": "(11) 99999-4444",
+  "data_nascimento": "2018-05-15",
+  "diagnostico": "TEA",
+  "empresa_id": 1,
+  "id": 1,
+  "nome": "Ana Clara Oliveira",
+  "responsavel": "Carlos Oliveira",
+  "responsavel_usuario": null
+}
+
+index-Dpixj7fg.js:1252 Data 0: Object
+index-Dpixj7fg.js:1252 Data 1: Object
+index-Dpixj7fg.js:1252 Data 2: Object
+index-Dpixj7fg.js:1252 todasDatas montadas: Array(3)
+index-Dpixj7fg.js:1252 Radar: datasSelecionadas Array(0)
+index-Dpixj7fg.js:1252 Radar: globaisFiltrados Array(0)
+index-Dpixj7fg.js:1252 Radar: perguntas (indicadores) Array(0)
+index-Dpixj7fg.js:1252 Radar: series montadas Array(0)
+index-Dpixj7fg.js:1252 presencaData: Nenhum agendamento disponível
+(anonymous) @ index-Dpixj7fg.js:1252
+index-Dpixj7fg.js:1252 === PacienteRelatorio Debug ===
+index-Dpixj7fg.js:1252 relatorioPaciente completo: {
+  "evolucao_por_meta": {
+    "1": {
+      "meta_descricao": "Comunicação Verbal: Aumentar vocabulário expressivo em 50%",
+      "registros": [
+        {
+          "data": "2025-11-10",
+          "formulas_calculadas": [
+            {
+              "formula": "PERCENTUAL(P3:P29)",
+              "pergunta_id": 263,
+              "pergunta_texto": "Percentual - Atenção Compartilhada/Atentar",
+              "valor_calculado": "50.00",
+              "valor_numerico": 50
+            },
+            {
+              "formula": "PERCENTUAL(P30:P38)",
+              "pergunta_id": 264,
+              "pergunta_texto": "Percentual - Cumprimentos",
+              "valor_calculado": "50.00",
+              "valor_numerico": 50
+            },
+            {
+              "formula": "PERCENTUAL(P39:P78)",
+              "pergunta_id": 265,
+              "pergunta_texto": "Percentual - Brincadeira Social",
+              "valor_calculado": "50.00",
+              "valor_numerico": 50
+            },
+            {
+              "formula": "PERCENTUAL(P79:P84)",
+              "pergunta_id": 266,
+              "pergunta_texto": "Percentual - Auto consciência",
+              "valor_calculado": "50.00",
+              "valor_numerico": 50
+            },
+            {
+              "formula": "PERCENTUAL(P85:P105)",
+              "pergunta_id": 267,
+              "pergunta_texto": "Percentual - Habilidade de se acalmar",
+              "valor_calculado": "50.00",
+              "valor_numerico": 50
+            },
+            {
+              "formula": "PERCENTUAL(P106:P133)",
+              "pergunta_id": 268,
+              "pergunta_texto": "Percentual - Conversas",
+              "valor_calculado": "50.00",
+              "valor_numerico": 50
+            },
+            {
+              "formula": "PERCENTUAL(P134:P157)",
+              "pergunta_id": 269,
+              "pergunta_texto": "Percentual - Tomada de perspectiva",
+              "valor_calculado": "50.00",
+              "valor_numerico": 50
+            },
+            {
+              "formula": "PERCENTUAL(P158:P165)",
+              "pergunta_id": 270,
+              "pergunta_texto": "Percentual - Habilidades de Pensamento Crítico",
+              "valor_calculado": "50.00",
+              "valor_numerico": 50
+            },
+            {
+              "formula": "PERCENTUAL(P166:P202)",
+              "pergunta_id": 271,
+              "pergunta_texto": "Percentual - Resolução de problemas",
+              "valor_calculado": "50.00",
+              "valor_numerico": 50
+            },
+            {
+              "formula": "PERCENTUAL(P203:P262)",
+              "pergunta_id": 272,
+              "pergunta_texto": "Percentual - Amizades",
+              "valor_calculado": "68.33",
+              "valor_numerico": 68.33
+            }
+          ],
+          "nota": null
+        },
+        {
+          "data": "2025-11-11",
+          "formulas_calculadas": [
+            {
+              "formula": "PERCENTUAL(P3:P29)",
+              "pergunta_id": 263,
+              "pergunta_texto": "Percentual - Atenção Compartilhada/Atentar",
+              "valor_calculado": "50.00",
+              "valor_numerico": 50
+            },
+            {
+              "formula": "PERCENTUAL(P30:P38)",
+              "pergunta_id": 264,
+              "pergunta_texto": "Percentual - Cumprimentos",
+              "valor_calculado": "50.00",
+              "valor_numerico": 50
+            },
+            {
+              "formula": "PERCENTUAL(P39:P78)",
+              "pergunta_id": 265,
+              "pergunta_texto": "Percentual - Brincadeira Social",
+              "valor_calculado": "50.00",
+              "valor_numerico": 50
+            },
+            {
+              "formula": "PERCENTUAL(P79:P84)",
+              "pergunta_id": 266,
+              "pergunta_texto": "Percentual - Auto consciência",
+              "valor_calculado": "50.00",
+              "valor_numerico": 50
+            },
+            {
+              "formula": "PERCENTUAL(P85:P105)",
+              "pergunta_id": 267,
+              "pergunta_texto": "Percentual - Habilidade de se acalmar",
+              "valor_calculado": "50.00",
+              "valor_numerico": 50
+            },
+            {
+              "formula": "PERCENTUAL(P106:P133)",
+              "pergunta_id": 268,
+              "pergunta_texto": "Percentual - Conversas",
+              "valor_calculado": "50.00",
+              "valor_numerico": 50
+            },
+            {
+              "formula": "PERCENTUAL(P134:P157)",
+              "pergunta_id": 269,
+              "pergunta_texto": "Percentual - Tomada de perspectiva",
+              "valor_calculado": "50.00",
+              "valor_numerico": 50
+            },
+            {
+              "formula": "PERCENTUAL(P158:P165)",
+              "pergunta_id": 270,
+              "pergunta_texto": "Percentual - Habilidades de Pensamento Crítico",
+              "valor_calculado": "50.00",
+              "valor_numerico": 50
+            },
+            {
+  
+index-Dpixj7fg.js:1252 Keys do relatorioPaciente: Array(5)
+index-Dpixj7fg.js:1252 respostas_calculadas_globais: Array(3)
+index-Dpixj7fg.js:1252 Tipo de respostas_calculadas_globais: array
+index-Dpixj7fg.js:1252 Tamanho do array: 3
+index-Dpixj7fg.js:1252 Primeiros elementos: Array(2)
+index-Dpixj7fg.js:1252 === Fim Debug ===
+index-Dpixj7fg.js:1252 Data 0: Object
+index-Dpixj7fg.js:1252 Data 1: Object
+index-Dpixj7fg.js:1252 Data 2: Object
+index-Dpixj7fg.js:1252 todasDatas montadas: Array(3)
+index-Dpixj7fg.js:1252 Radar: datasSelecionadas Array(0)
+index-Dpixj7fg.js:1252 Radar: globaisFiltrados Array(0)
+index-Dpixj7fg.js:1252 Radar: perguntas (indicadores) Array(0)
+index-Dpixj7fg.js:1252 Radar: series montadas Array(0)
+index-Dpixj7fg.js:1252 presencaData: Nenhum agendamento disponível
+(anonymous) @ index-Dpixj7fg.js:1252
+index-Dpixj7fg.js:1252 Radar: datasSelecionadas Array(0)
+index-Dpixj7fg.js:1252 Radar: globaisFiltrados Array(0)
+index-Dpixj7fg.js:1252 Radar: perguntas (indicadores) Array(0)
+index-Dpixj7fg.js:1252 Radar: series montadas Array(0)
+index-Dpixj7fg.js:1252 Data 0: Object
+index-Dpixj7fg.js:1252 Data 1: Object
+index-Dpixj7fg.js:1252 Data 2: Object
+index-Dpixj7fg.js:1252 todasDatas montadas: Array(3)
+index-Dpixj7fg.js:1252 Radar: datasSelecionadas Array(0)
+index-Dpixj7fg.js:1252 Radar: globaisFiltrados Array(0)
+index-Dpixj7fg.js:1252 Radar: perguntas (indicadores) Array(0)
+index-Dpixj7fg.js:1252 Radar: series montadas Array(0)
+index-Dpixj7fg.js:1252 presencaData: Nenhum agendamento disponível
+(anonymous) @ index-Dpixj7fg.js:1252
+index-Dpixj7fg.js:1252 Radar: datasSelecionadas Array(0)
+index-Dpixj7fg.js:1252 Radar: globaisFiltrados Array(0)
+index-Dpixj7fg.js:1252 Radar: perguntas (indicadores) Array(0)
+index-Dpixj7fg.js:1252 Radar: series montadas Array(0)
+index-Dpixj7fg.js:1252 Radar: datasSelecionadas Array(1)
+index-Dpixj7fg.js:1252 Radar: globaisFiltrados Array(1)
+index-Dpixj7fg.js:1252 Radar: perguntas (indicadores) Array(13)
+index-Dpixj7fg.js:1252 Radar: series montadas Array(1)
+index-Dpixj7fg.js:1252 Radar: datasSelecionadas Array(2)
+index-Dpixj7fg.js:1252 Radar: globaisFiltrados Array(2)
+index-Dpixj7fg.js:1252 Radar: perguntas (indicadores) Array(23)
+index-Dpixj7fg.js:1252 Radar: series montadas Array(2)
+index-Dpixj7fg.js:1252 Radar: datasSelecionadas Array(1)
+index-Dpixj7fg.js:1252 Radar: globaisFiltrados Array(1)
+index-Dpixj7fg.js:1252 Radar: perguntas (indicadores) Array(13)
+index-Dpixj7fg.js:1252 Radar: series montadas Array(1)
+index-Dpixj7fg.js:1252 Radar: datasSelecionadas Array(2)
+index-Dpixj7fg.js:1252 Radar: globaisFiltrados Array(2)
+index-Dpixj7fg.js:1252 Radar: perguntas (indicadores) Array(23)
+index-Dpixj7fg.js:1252 Radar: series montadas Array(2)
+index-Dpixj7fg.js:1252 Radar: datasSelecionadas Array(1)
+index-Dpixj7fg.js:1252 Radar: globaisFiltrados Array(1)
+index-Dpixj7fg.js:1252 Radar: perguntas (indicadores) Array(10)
+index-Dpixj7fg.js:1252 Radar: series montadas Array(1)
+index-Dpixj7fg.js:1252 Radar: datasSelecionadas Array(2)
+index-Dpixj7fg.js:1252 Radar: globaisFiltrados Array(2)
+index-Dpixj7fg.js:1252 Radar: perguntas (indicadores) Array(10)
+index-Dpixj7fg.js:1252 Radar: series montadas Array(2)
+index-Dpixj7fg.js:1252 Radar: datasSelecionadas Array(1)
+index-Dpixj7fg.js:1252 Radar: globaisFiltrados Array(1)
+index-Dpixj7fg.js:1252 Radar: perguntas (indicadores) Array(10)
+index-Dpixj7fg.js:1252 Radar: series montadas Array(1)
+index-Dpixj7fg.js:1252 Radar: datasSelecionadas Array(0)
+index-Dpixj7fg.js:1252 Radar: globaisFiltrados Array(0)
+index-Dpixj7fg.js:1252 Radar: perguntas (indicadores) Array(0)
+index-Dpixj7fg.js:1252 Radar: series montadas Array(0)
+index-Dpixj7fg.js:1252 Radar: datasSelecionadas Array(1)
+index-Dpixj7fg.js:1252 Radar: globaisFiltrados Array(1)
+index-Dpixj7fg.js:1252 Radar: perguntas (indicadores) Array(13)
+index-Dpixj7fg.js:1252 Radar: series montadas Array(1)
+index-Dpixj7fg.js:1252 Data 0: Object
+index-Dpixj7fg.js:1252 Data 1: Object
+index-Dpixj7fg.js:1252 Data 2: Object
+index-Dpixj7fg.js:1252 todasDatas montadas: Array(3)
+index-Dpixj7fg.js:1252 Radar: datasSelecionadas Array(1)
+index-Dpixj7fg.js:1252 Radar: globaisFiltrados Array(1)
+index-Dpixj7fg.js:1252 Radar: perguntas (indicadores) Array(13)
+index-Dpixj7fg.js:1252 Radar: series montadas Array(1)
+index-Dpixj7fg.js:1252 presencaData: Nenhum agendamento disponível
+(anonymous) @ index-Dpixj7fg.js:1252
+index-Dpixj7fg.js:306 API Request: Object
+/api/agenda:1  Failed to load resource: the server responded with a status of 500 ()
+index-Dpixj7fg.js:306 API Response: Object
+index-Dpixj7fg.js:306 Content-Type: application/json
+index-Dpixj7fg.js:306 API Error: Object
+request @ index-Dpixj7fg.js:306
+index-Dpixj7fg.js:306 API Request Failed: Error: (psycopg2.errors.NotNullViolation) null value in column "empresa_id" of relation "agenda" violates not-null constraint
+DETAIL:  Failing row contains (1, 2025-11-14 08:24:00, 60, , AGENDADO, null, 1, 2, null).
+
+[SQL: INSERT INTO agenda (data_hora, duracao_minutos, observacoes, status, presente, paciente_id, profissional_id, empresa_id) VALUES (%(data_hora)s, %(duracao_minutos)s, %(observacoes)s, %(status)s, %(presente)s, %(paciente_id)s, %(profissional_id)s, %(empresa_id)s) RETURNING agenda.id]
+[parameters: {'data_hora': datetime.datetime(2025, 11, 14, 8, 24), 'duracao_minutos': 60, 'observacoes': '', 'status': 'AGENDADO', 'presente': None, 'paciente_id': 1, 'profissional_id': '2', 'empresa_id': None}]
+(Background on this error at: https://sqlalche.me/e/20/gkpj)
+    at eG.request (index-Dpixj7fg.js:306:29730)
+    at async Ma (index-Dpixj7fg.js:1252:40576)
+request @ index-Dpixj7fg.js:306
+index-Dpixj7fg.js:306 API Request: Object
+/api/agenda:1  Failed to load resource: the server responded with a status of 500 ()
+index-Dpixj7fg.js:306 API Response: Object
+index-Dpixj7fg.js:306 Content-Type: application/json
+index-Dpixj7fg.js:306 API Error: Object
+request @ index-Dpixj7fg.js:306
+index-Dpixj7fg.js:306 API Request Failed: Error: (psycopg2.errors.NotNullViolation) null value in column "empresa_id" of relation "agenda" violates not-null constraint
+DETAIL:  Failing row contains (2, 2025-11-14 08:24:00, 60, , REALIZADO, null, 1, 2, null).
+
+[SQL: INSERT INTO agenda (data_hora, duracao_minutos, observacoes, status, presente, paciente_id, profissional_id, empresa_id) VALUES (%(data_hora)s, %(duracao_minutos)s, %(observacoes)s, %(status)s, %(presente)s, %(paciente_id)s, %(profissional_id)s, %(empresa_id)s) RETURNING agenda.id]
+[parameters: {'data_hora': datetime.datetime(2025, 11, 14, 8, 24), 'duracao_minutos': 60, 'observacoes': '', 'status': 'REALIZADO', 'presente': None, 'paciente_id': 1, 'profissional_id': '2', 'empresa_id': None}]
+(Background on this error at: https://sqlalche.me/e/20/gkpj)
+    at eG.request (index-Dpixj7fg.js:306:29730)
+    at async Ma (index-Dpixj7fg.js:1252:40576)
+request @ index-Dpixj7fg.js:306
