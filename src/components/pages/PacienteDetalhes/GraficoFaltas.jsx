@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts'
 import { Calendar, UserCheck, UserX, AlertCircle } from 'lucide-react'
-import ApiService from '@/services/ApiService'
+import ApiService from '@/lib/api'
 
 const COLORS = {
   presencas: '#10b981', // green
