@@ -4,6 +4,7 @@ import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip as
 import ApexCharts from 'react-apexcharts';
 import { BarChart3, Target, TrendingUp, User, Phone, Calendar, AlertCircle, Filter, RefreshCw } from 'lucide-react';
 import { Input } from '@/components/ui/input';
+import ApiService from '@/lib/api';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 
@@ -224,13 +225,25 @@ export default function PacienteDetalhes() {
     const carregarDados = async () => {
       setLoadingRelatorio(true);
       try {
-        // Aqui você vai integrar com ApiService
-        // Por enquanto, apenas reseta o estado
-        setPaciente(null);
-        setRelatorioPaciente(null);
-        setAgendamentos([]);
+        console.log('🔄 Carregando dados do paciente:', id);
+        
+        // Carregar dados do paciente
+        const pacienteData = await ApiService.getPaciente(id);
+        console.log('✅ Paciente carregado:', pacienteData);
+        setPaciente(pacienteData);
+        
+        // Carregar relatório do paciente
+        const relatorioData = await ApiService.getRelatorioPaciente(id);
+        console.log('✅ Relatório carregado:', relatorioData);
+        setRelatorioPaciente(relatorioData);
+        
+        // Carregar agendamentos do paciente
+        const agendamentosData = await ApiService.getAgendamentos({ paciente_id: id });
+        console.log('✅ Agendamentos carregados:', agendamentosData);
+        setAgendamentos(agendamentosData || []);
+        
       } catch (error) {
-        console.error('Erro ao carregar dados:', error);
+        console.error('❌ Erro ao carregar dados:', error);
       } finally {
         setLoadingRelatorio(false);
       }
