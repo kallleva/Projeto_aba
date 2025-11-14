@@ -15,6 +15,7 @@ export default function GraficoFaltas({ pacienteId }) {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
   const [periodoMeses, setPeriodoMeses] = useState(6) // últimos 6 meses
+  const [graficoAtivo, setGraficoAtivo] = useState('resumo') // resumo, pizza, evolucao, profissionais
 
   useEffect(() => {
     loadEstatisticas()
@@ -109,8 +110,92 @@ export default function GraficoFaltas({ pacienteId }) {
 
   return (
     <div className="space-y-6">
+      {/* Filtro de período - sempre visível */}
+      <Card>
+        <CardHeader>
+          <CardTitle>Período de Análise</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="flex gap-2">
+            {[3, 6, 12].map((meses) => (
+              <button
+                key={meses}
+                onClick={() => setPeriodoMeses(meses)}
+                className={`px-4 py-2 rounded-md transition-colors ${
+                  periodoMeses === meses
+                    ? 'bg-primary text-primary-foreground'
+                    : 'bg-secondary text-secondary-foreground hover:bg-secondary/80'
+                }`}
+              >
+                Últimos {meses} meses
+              </button>
+            ))}
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Menu de seleção de gráfico */}
+      <Card>
+        <CardHeader>
+          <CardTitle>Visualizações Disponíveis</CardTitle>
+          <CardDescription>Selecione qual gráfico deseja visualizar</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+            <button
+              onClick={() => setGraficoAtivo('resumo')}
+              className={`p-4 rounded-lg border-2 transition-all ${
+                graficoAtivo === 'resumo'
+                  ? 'border-blue-500 bg-blue-50 shadow-md'
+                  : 'border-gray-200 hover:border-blue-300 hover:bg-gray-50'
+              }`}
+            >
+              <Calendar className="h-8 w-8 mx-auto mb-2 text-blue-500" />
+              <div className="font-semibold text-sm">Resumo Geral</div>
+            </button>
+
+            <button
+              onClick={() => setGraficoAtivo('pizza')}
+              className={`p-4 rounded-lg border-2 transition-all ${
+                graficoAtivo === 'pizza'
+                  ? 'border-purple-500 bg-purple-50 shadow-md'
+                  : 'border-gray-200 hover:border-purple-300 hover:bg-gray-50'
+              }`}
+            >
+              <div className="text-3xl mx-auto mb-2">📊</div>
+              <div className="font-semibold text-sm">Distribuição</div>
+            </button>
+
+            <button
+              onClick={() => setGraficoAtivo('evolucao')}
+              className={`p-4 rounded-lg border-2 transition-all ${
+                graficoAtivo === 'evolucao'
+                  ? 'border-green-500 bg-green-50 shadow-md'
+                  : 'border-gray-200 hover:border-green-300 hover:bg-gray-50'
+              }`}
+            >
+              <div className="text-3xl mx-auto mb-2">📈</div>
+              <div className="font-semibold text-sm">Evolução Mensal</div>
+            </button>
+
+            <button
+              onClick={() => setGraficoAtivo('profissionais')}
+              className={`p-4 rounded-lg border-2 transition-all ${
+                graficoAtivo === 'profissionais'
+                  ? 'border-orange-500 bg-orange-50 shadow-md'
+                  : 'border-gray-200 hover:border-orange-300 hover:bg-gray-50'
+              }`}
+            >
+              <div className="text-3xl mx-auto mb-2">👥</div>
+              <div className="font-semibold text-sm">Por Profissional</div>
+            </button>
+          </div>
+        </CardContent>
+      </Card>
+
       {/* Cards de resumo */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+      {graficoAtivo === 'resumo' && (
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 animate-fade-in">
         <Card>
           <CardHeader className="pb-3">
             <CardDescription>Total de Agendamentos</CardDescription>
@@ -164,10 +249,12 @@ export default function GraficoFaltas({ pacienteId }) {
             </div>
           </CardContent>
         </Card>
-      </div>
+        </div>
+      )}
 
       {/* Gráfico de Pizza */}
-      <Card>
+      {graficoAtivo === 'pizza' && (
+        <Card className="animate-fade-in">
         <CardHeader>
           <CardTitle>Distribuição de Presenças e Faltas</CardTitle>
           <CardDescription>Visão geral dos últimos {periodoMeses} meses</CardDescription>
@@ -193,10 +280,12 @@ export default function GraficoFaltas({ pacienteId }) {
             </PieChart>
           </ResponsiveContainer>
         </CardContent>
-      </Card>
+        </Card>
+      )}
 
       {/* Gráfico de Evolução Mensal */}
-      <Card>
+      {graficoAtivo === 'evolucao' && (
+        <Card className="animate-fade-in">
         <CardHeader>
           <CardTitle>Evolução Mensal</CardTitle>
           <CardDescription>Histórico de presenças e faltas por mês</CardDescription>
@@ -215,11 +304,12 @@ export default function GraficoFaltas({ pacienteId }) {
             </BarChart>
           </ResponsiveContainer>
         </CardContent>
-      </Card>
+        </Card>
+      )}
 
       {/* Estatísticas por Profissional */}
-      {estatisticas.por_profissional && estatisticas.por_profissional.length > 0 && (
-        <Card>
+      {graficoAtivo === 'profissionais' && estatisticas.por_profissional && estatisticas.por_profissional.length > 0 && (
+        <Card className="animate-fade-in">
           <CardHeader>
             <CardTitle>Presenças por Profissional</CardTitle>
             <CardDescription>Distribuição de presenças e faltas por profissional</CardDescription>
@@ -270,29 +360,21 @@ export default function GraficoFaltas({ pacienteId }) {
         </Card>
       )}
 
-      {/* Filtro de período */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Período de Análise</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="flex gap-2">
-            {[3, 6, 12].map((meses) => (
-              <button
-                key={meses}
-                onClick={() => setPeriodoMeses(meses)}
-                className={`px-4 py-2 rounded-md transition-colors ${
-                  periodoMeses === meses
-                    ? 'bg-primary text-primary-foreground'
-                    : 'bg-secondary text-secondary-foreground hover:bg-secondary/80'
-                }`}
-              >
-                Últimos {meses} meses
-              </button>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
+      {/* Mensagem quando nenhum profissional tem dados */}
+      {graficoAtivo === 'profissionais' && (!estatisticas.por_profissional || estatisticas.por_profissional.length === 0) && (
+        <Card className="animate-fade-in">
+          <CardHeader>
+            <CardTitle>Presenças por Profissional</CardTitle>
+            <CardDescription>Distribuição de presenças e faltas por profissional</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="flex items-center justify-center h-32 text-muted-foreground">
+              <AlertCircle className="mr-2" />
+              Nenhum dado de profissional disponível no período
+            </div>
+          </CardContent>
+        </Card>
+      )}
     </div>
   )
 }

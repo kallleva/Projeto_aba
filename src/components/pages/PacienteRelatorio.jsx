@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip as RechartsTooltip, Legend as RechartsLegend, ResponsiveContainer } from 'recharts';
+import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip as RechartsTooltip, Legend as RechartsLegend, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
 import ApexCharts from 'react-apexcharts';
 import { BarChart3, Target, TrendingUp, User, Phone, Calendar, AlertCircle, Filter, RefreshCw } from 'lucide-react';
 import { Input } from '@/components/ui/input';
@@ -187,6 +187,7 @@ export default function PacienteRelatorio({ paciente, relatorioPaciente, agendam
   const [dataFinal, setDataFinal] = useState('');
   const [datasSelecionadas, setDatasSelecionadas] = useState([]);
   const [refreshGrafico, setRefreshGrafico] = useState(0);
+  const [tipoGraficoSelecionado, setTipoGraficoSelecionado] = useState('radar'); // radar, barras, linhas, pizza
 
   // Calcular data padrão (últimos 30 dias)
   React.useEffect(() => {
@@ -615,43 +616,200 @@ export default function PacienteRelatorio({ paciente, relatorioPaciente, agendam
                     </div>
                   )}
 
-                  {datasSelecionadas.length > 0 && chartType === 'bar' && barChartData && barChartData.length > 0 && (
-                    <div className="space-y-4">
-                      <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 mb-4">
-                        <p className="text-sm text-blue-700">
-                          <strong>📊 Modo de visualização:</strong> Gráfico em barras para comparar {datasSelecionadas.length} sessão(ões)
+                  {/* Seletor de Tipo de Gráfico */}
+                  {datasSelecionadas.length > 0 && (
+                    <div className="mb-6">
+                      <label className="label mb-3 block font-semibold text-gray-700">Escolha o tipo de visualização:</label>
+                      <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                        <button
+                          onClick={() => setTipoGraficoSelecionado('radar')}
+                          className={`p-4 rounded-lg border-2 transition-all ${
+                            tipoGraficoSelecionado === 'radar'
+                              ? 'border-blue-500 bg-blue-50 shadow-md'
+                              : 'border-gray-200 hover:border-blue-300 hover:bg-gray-50'
+                          }`}
+                        >
+                          <div className="text-3xl mb-2">🎯</div>
+                          <div className="font-semibold text-sm">Radar</div>
+                        </button>
+
+                        <button
+                          onClick={() => setTipoGraficoSelecionado('barras')}
+                          className={`p-4 rounded-lg border-2 transition-all ${
+                            tipoGraficoSelecionado === 'barras'
+                              ? 'border-green-500 bg-green-50 shadow-md'
+                              : 'border-gray-200 hover:border-green-300 hover:bg-gray-50'
+                          }`}
+                        >
+                          <div className="text-3xl mb-2">📊</div>
+                          <div className="font-semibold text-sm">Barras</div>
+                        </button>
+
+                        <button
+                          onClick={() => setTipoGraficoSelecionado('linhas')}
+                          className={`p-4 rounded-lg border-2 transition-all ${
+                            tipoGraficoSelecionado === 'linhas'
+                              ? 'border-purple-500 bg-purple-50 shadow-md'
+                              : 'border-gray-200 hover:border-purple-300 hover:bg-gray-50'
+                          }`}
+                        >
+                          <div className="text-3xl mb-2">📈</div>
+                          <div className="font-semibold text-sm">Linhas</div>
+                        </button>
+
+                        <button
+                          onClick={() => setTipoGraficoSelecionado('pizza')}
+                          className={`p-4 rounded-lg border-2 transition-all ${
+                            tipoGraficoSelecionado === 'pizza'
+                              ? 'border-orange-500 bg-orange-50 shadow-md'
+                              : 'border-gray-200 hover:border-orange-300 hover:bg-gray-50'
+                          }`}
+                        >
+                          <div className="text-3xl mb-2">🥧</div>
+                          <div className="font-semibold text-sm">Pizza</div>
+                        </button>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Gráfico de Barras */}
+                  {datasSelecionadas.length > 0 && tipoGraficoSelecionado === 'barras' && (
+                    <div className="space-y-4 animate-fade-in">
+                      <div className="bg-green-50 border border-green-200 rounded-lg p-3 mb-4">
+                        <p className="text-sm text-green-700">
+                          <strong>📊 Visualização em Barras:</strong> Comparando {datasSelecionadas.length} sessão(ões) com {categorias.length} índice(s)
                         </p>
                       </div>
-                      <ResponsiveContainer width="100%" height={400}>
-                        <BarChart data={barChartData}>
+                      <ResponsiveContainer width="100%" height={450}>
+                        <BarChart data={(() => {
+                          // Transformar dados do radar para formato de barras
+                          const dados = categorias.map((categoria, idx) => {
+                            const item = { name: categoria };
+                            seriesFiltradas.forEach(serie => {
+                              item[serie.name] = serie.data[idx] || 0;
+                            });
+                            return item;
+                          });
+                          return dados;
+                        })()}>
                           <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
-                          <XAxis dataKey="name" angle={-45} textAnchor="end" height={100} />
-                          <YAxis label={{ value: 'Valor (%)', angle: -90, position: 'insideLeft' }} />
+                          <XAxis dataKey="name" angle={-45} textAnchor="end" height={120} />
+                          <YAxis label={{ value: 'Valor (%)', angle: -90, position: 'insideLeft' }} domain={[0, 100]} />
                           <RechartsTooltip 
                             contentStyle={{ backgroundColor: 'white', border: '1px solid #e5e7eb', borderRadius: '8px' }}
-                            formatter={(value) => [value, 'Valor']}
+                            formatter={(value) => [`${value}%`, 'Valor']}
                           />
                           <RechartsLegend />
-                          {Object.keys(barChartData[0] || {})
-                            .filter(key => key !== 'name')
-                            .map((dataKey, idx) => (
-                              <Bar key={dataKey} dataKey={dataKey} fill={["#0ea5e9", "#22c55e", "#f59e0b", "#ef4444"][idx % 4]} />
-                            ))
-                          }
+                          {seriesFiltradas.map((serie, idx) => (
+                            <Bar 
+                              key={serie.name} 
+                              dataKey={serie.name} 
+                              fill={["#0ea5e9", "#22c55e", "#f59e0b", "#ef4444", "#8b5cf6", "#ec4899"][idx % 6]} 
+                            />
+                          ))}
                         </BarChart>
                       </ResponsiveContainer>
                     </div>
                   )}
 
-                  {datasSelecionadas.length > 0 && chartType === 'radar' && seriesFiltradas.length > 0 && categorias.length > 0 && (
-                    <>
-                      {datasSelecionadas.length > 1 && (
-                        <div className="bg-purple-50 border border-purple-200 rounded-lg p-3 mb-4">
-                          <p className="text-sm text-purple-700">
-                            <strong>🎯 Modo de visualização:</strong> Radar para comparar {datasSelecionadas.length} sessão(ões) com múltiplos índices
+                  {/* Gráfico de Linhas */}
+                  {datasSelecionadas.length > 0 && tipoGraficoSelecionado === 'linhas' && (
+                    <div className="space-y-4 animate-fade-in">
+                      <div className="bg-purple-50 border border-purple-200 rounded-lg p-3 mb-4">
+                        <p className="text-sm text-purple-700">
+                          <strong>📈 Visualização em Linhas:</strong> Evolução de {categorias.length} índice(s) através de {datasSelecionadas.length} sessão(ões)
+                        </p>
+                      </div>
+                      <ResponsiveContainer width="100%" height={450}>
+                        <LineChart data={(() => {
+                          // Transformar dados do radar para formato de linhas
+                          const dados = categorias.map((categoria, idx) => {
+                            const item = { name: categoria };
+                            seriesFiltradas.forEach(serie => {
+                              item[serie.name] = serie.data[idx] || 0;
+                            });
+                            return item;
+                          });
+                          return dados;
+                        })()}>
+                          <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
+                          <XAxis dataKey="name" angle={-45} textAnchor="end" height={120} />
+                          <YAxis label={{ value: 'Valor (%)', angle: -90, position: 'insideLeft' }} domain={[0, 100]} />
+                          <RechartsTooltip 
+                            contentStyle={{ backgroundColor: 'white', border: '1px solid #e5e7eb', borderRadius: '8px' }}
+                            formatter={(value) => [`${value}%`, 'Valor']}
+                          />
+                          <RechartsLegend />
+                          {seriesFiltradas.map((serie, idx) => (
+                            <Line 
+                              key={serie.name} 
+                              type="monotone"
+                              dataKey={serie.name} 
+                              stroke={["#0ea5e9", "#22c55e", "#f59e0b", "#ef4444", "#8b5cf6", "#ec4899"][idx % 6]}
+                              strokeWidth={2}
+                              dot={{ r: 5 }}
+                            />
+                          ))}
+                        </LineChart>
+                      </ResponsiveContainer>
+                    </div>
+                  )}
+
+                  {/* Gráfico de Pizza (Pizza Chart) */}
+                  {datasSelecionadas.length > 0 && tipoGraficoSelecionado === 'pizza' && (
+                    <div className="space-y-4 animate-fade-in">
+                      <div className="bg-orange-50 border border-orange-200 rounded-lg p-3 mb-4">
+                        <p className="text-sm text-orange-700">
+                          <strong>🥧 Visualização em Pizza:</strong> Distribuição proporcional dos {categorias.length} índice(s)
+                        </p>
+                        {datasSelecionadas.length > 1 && (
+                          <p className="text-xs text-orange-600 mt-1">
+                            ℹ️ Exibindo dados da primeira sessão selecionada. Para comparar múltiplas sessões, use Radar, Barras ou Linhas.
                           </p>
-                        </div>
-                      )}
+                        )}
+                      </div>
+                      <ResponsiveContainer width="100%" height={450}>
+                        <PieChart>
+                          <Pie
+                            data={(() => {
+                              // Usar dados da primeira série selecionada
+                              const primeiraeSerie = seriesFiltradas[0];
+                              if (!primeiraeSerie) return [];
+                              return categorias.map((categoria, idx) => ({
+                                name: categoria,
+                                value: primeiraeSerie.data[idx] || 0
+                              })).filter(item => item.value > 0);
+                            })()}
+                            cx="50%"
+                            cy="50%"
+                            labelLine={true}
+                            label={({ name, value, percent }) => `${name}: ${value}% (${(percent * 100).toFixed(1)}%)`}
+                            outerRadius={150}
+                            fill="#8884d8"
+                            dataKey="value"
+                          >
+                            {categorias.map((_, idx) => (
+                              <Cell key={`cell-${idx}`} fill={["#0ea5e9", "#22c55e", "#f59e0b", "#ef4444", "#8b5cf6", "#ec4899", "#06b6d4", "#84cc16"][idx % 8]} />
+                            ))}
+                          </Pie>
+                          <RechartsTooltip 
+                            contentStyle={{ backgroundColor: 'white', border: '1px solid #e5e7eb', borderRadius: '8px' }}
+                            formatter={(value) => [`${value}%`, 'Valor']}
+                          />
+                          <RechartsLegend />
+                        </PieChart>
+                      </ResponsiveContainer>
+                    </div>
+                  )}
+
+                  {/* Gráfico Radar (mantido do código original) */}
+                  {datasSelecionadas.length > 0 && tipoGraficoSelecionado === 'radar' && seriesFiltradas.length > 0 && categorias.length > 0 && (
+                    <div className="space-y-4 animate-fade-in">
+                      <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 mb-4">
+                        <p className="text-sm text-blue-700">
+                          <strong>🎯 Visualização Radar:</strong> Comparando {datasSelecionadas.length} sessão(ões) com {categorias.length} índice(s) em múltiplas dimensões
+                        </p>
+                      </div>
                       {!seriesFiltradas.some(s => s.data.filter(v => typeof v === 'number' && v > 0).length > 1) && (
                         <div className="alert alert-warning mb-4">
                           <AlertCircle className="alert-icon" />
@@ -689,7 +847,7 @@ export default function PacienteRelatorio({ paciente, relatorioPaciente, agendam
                           height={550}
                         />
                       </div>
-                    </>
+                    </div>
                   )}
                 </>
               )}
