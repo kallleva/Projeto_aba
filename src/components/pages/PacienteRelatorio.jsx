@@ -366,6 +366,18 @@ export default function PacienteRelatorio({ paciente, relatorioPaciente, agendam
     return resultado;
   }, [agendamentos, formatDate, dataInicial, dataFinal, refreshGrafico]);
 
+  // Guard: se paciente ou relatorioPaciente faltam, mostrar erro ou carregamento
+  if (!paciente) {
+    return (
+      <div className="page-section">
+        <div className="alert alert-warning">
+          <AlertCircle className="alert-icon" />
+          <p className="alert-content">Erro: Dados do paciente não foram carregados.</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="page-section">
       {/* Header */}
@@ -423,7 +435,12 @@ export default function PacienteRelatorio({ paciente, relatorioPaciente, agendam
         <div className="center-flex py-12">
           <div className="text-lg animate-pulse text-gray-600">Carregando relatório...</div>
         </div>
-      ) : relatorioPaciente ? (
+      ) : !relatorioPaciente ? (
+        <div className="alert alert-warning">
+          <AlertCircle className="alert-icon" />
+          <p className="alert-content">Nenhum dado de relatório disponível para este paciente. Não há sessões registradas ou dados de avaliação.</p>
+        </div>
+      ) : (
         <div className="space-y-6">
           {/* Cards de Resumo */}
           <div className="card-grid mb-8">
@@ -754,11 +771,6 @@ export default function PacienteRelatorio({ paciente, relatorioPaciente, agendam
               </div>
             </div>
           </div>
-        </div>
-      ) : (
-        <div className="alert alert-warning">
-          <AlertCircle className="alert-icon" />
-          <p className="alert-content">Nenhum dado de relatório disponível para este paciente.</p>
         </div>
       )}
     </div>

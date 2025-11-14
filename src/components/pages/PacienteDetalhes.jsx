@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
 import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip as RechartsTooltip, Legend as RechartsLegend, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
 import ApexCharts from 'react-apexcharts';
 import { BarChart3, Target, TrendingUp, User, Phone, Calendar, AlertCircle, Filter, RefreshCw } from 'lucide-react';
@@ -181,7 +182,64 @@ function decideChartType(series, datasSelecionadas) {
   return 'radar';
 }
 
-export default function PacienteRelatorio({ paciente, relatorioPaciente, agendamentos, loadingRelatorio, formatDate, calcularIdade }) {
+export default function PacienteDetalhes() {
+  const { id } = useParams();
+  
+  // Props que será carregado do backend
+  const [paciente, setPaciente] = useState(null);
+  const [relatorioPaciente, setRelatorioPaciente] = useState(null);
+  const [agendamentos, setAgendamentos] = useState([]);
+  const [loadingRelatorio, setLoadingRelatorio] = useState(true);
+  
+  // Props helpers (utilitários)
+  const formatDate = (dateStr) => {
+    if (!dateStr) return '';
+    try {
+      const dt = new Date(dateStr);
+      if (!isNaN(dt)) return dt.toLocaleDateString('pt-BR');
+    } catch {}
+    return dateStr;
+  };
+  
+  const calcularIdade = (dataNascimento) => {
+    if (!dataNascimento) return 'N/A';
+    try {
+      const nasc = new Date(dataNascimento);
+      const hoje = new Date();
+      let idade = hoje.getFullYear() - nasc.getFullYear();
+      const mes = hoje.getMonth() - nasc.getMonth();
+      if (mes < 0 || (mes === 0 && hoje.getDate() < nasc.getDate())) {
+        idade--;
+      }
+      return idade;
+    } catch {
+      return 'N/A';
+    }
+  };
+
+  // Carregar dados do backend quando o ID mudar
+  useEffect(() => {
+    if (!id) return;
+    
+    const carregarDados = async () => {
+      setLoadingRelatorio(true);
+      try {
+        // Aqui você vai integrar com ApiService
+        // Por enquanto, apenas reseta o estado
+        setPaciente(null);
+        setRelatorioPaciente(null);
+        setAgendamentos([]);
+      } catch (error) {
+        console.error('Erro ao carregar dados:', error);
+      } finally {
+        setLoadingRelatorio(false);
+      }
+    };
+    
+    carregarDados();
+  }, [id]);
+
+  // Estados locais do componente
   const [dataInicial, setDataInicial] = useState('');
   const [dataFinal, setDataFinal] = useState('');
   const [datasSelecionadas, setDatasSelecionadas] = useState([]);
@@ -411,6 +469,18 @@ export default function PacienteRelatorio({ paciente, relatorioPaciente, agendam
     return resultado;
   }, [agendamentos, formatDate, dataInicial, dataFinal, refreshGrafico]);
 
+  // Guard: se paciente ou relatorioPaciente faltam, mostrar erro ou carregamento
+  if (!paciente) {
+    return (
+      <div className="page-section">
+        <div className="alert alert-warning">
+          <AlertCircle className="alert-icon" />
+          <p className="alert-content">Erro: Dados do paciente não foram carregados.</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="page-section">
       {/* Header */}
@@ -468,7 +538,12 @@ export default function PacienteRelatorio({ paciente, relatorioPaciente, agendam
         <div className="center-flex py-12">
           <div className="text-lg animate-pulse text-gray-600">Carregando relatório...</div>
         </div>
-      ) : relatorioPaciente ? (
+      ) : !relatorioPaciente ? (
+        <div className="alert alert-warning">
+          <AlertCircle className="alert-icon" />
+          <p className="alert-content">Nenhum dado de relatório disponível para este paciente. Não há sessões registradas ou dados de avaliação.</p>
+        </div>
+      ) : (
         <div className="space-y-6">
           {/* Cards de Resumo */}
           <div className="card-grid mb-8">
@@ -907,11 +982,6 @@ export default function PacienteRelatorio({ paciente, relatorioPaciente, agendam
               </div>
             </div>
           </div>
-        </div>
-      ) : (
-        <div className="alert alert-warning">
-          <AlertCircle className="alert-icon" />
-          <p className="alert-content">Nenhum dado de relatório disponível para este paciente.</p>
         </div>
       )}
     </div>
