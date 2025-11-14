@@ -148,9 +148,21 @@ export default function RegistroDiarioEdit() {
   };
 
   const carregarPerguntas = (formularioId) => {
+    if (!formularioId) {
+      console.warn('⚠️ formularioId vazio');
+      return;
+    }
+    
     const formulario = formularios.find(f => f.id === parseInt(formularioId));
+    if (!formulario) {
+      console.warn('⚠️ Formulário não encontrado:', formularioId);
+      return;
+    }
+    
+    console.log('📋 Carregando perguntas do formulário:', formulario.nome, 'Total:', formulario.perguntas?.length);
     setFormularioSelecionado(formulario);
-    setPerguntas(formulario ? formulario.perguntas : []);
+    setPerguntas(formulario.perguntas || []);
+    
     // Mantém respostas já preenchidas para perguntas que existem, e deixa novas em branco
     setFormData(prev => {
       const novasRespostas = {};
@@ -166,14 +178,23 @@ export default function RegistroDiarioEdit() {
 
   const carregarMetasEFormularios = async (pacienteId) => {
     try {
+      console.log('🔄 Carregando metas e formulários para paciente:', pacienteId);
+      if (!pacienteId) {
+        console.warn('⚠️ pacienteId vazio, abortando carregamento');
+        return;
+      }
+      
       const dados = await ApiService.getMetasEFormulariosPaciente(pacienteId);
+      console.log('✅ Dados carregados:', { paciente: dados.paciente?.nome, metas: dados.metas?.length, formularios: dados.formularios?.length });
+      
       setPacienteSelecionado(dados.paciente);
-      setMetas(dados.metas);
-      setFormularios(dados.formularios);
+      setMetas(dados.metas || []);
+      setFormularios(dados.formularios || []);
       setFormData(prev => ({ ...prev, meta_id: '' }));
       setFormularioSelecionado(null);
       setPerguntas([]);
     } catch (error) {
+      console.error('❌ Erro ao carregar metas e formulários:', error);
       toast({
         title: 'Erro',
         description: 'Erro ao carregar metas e formulários: ' + error.message,

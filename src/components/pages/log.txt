@@ -1,65 +1,255 @@
-index-Dpixj7fg.js:306 🔧 API_BASE_URL configurado: https://auroraclin.com.br/api
-index-Dpixj7fg.js:306 🔧 VITE_API_BASE_URL: undefined
-index-Dpixj7fg.js:306 🔵 [AuthContext] VITE_API_BASE_URL: undefined
-index-Dpixj7fg.js:306 🔵 [AuthContext] API_BASE_URL Final: https://auroraclin.com.br/api
-index-Dpixj7fg.js:306 🔵 [AuthContext] VITE_API_BASE_URL: undefined
-index-Dpixj7fg.js:306 🔵 [AuthContext] API_BASE_URL Final: https://auroraclin.com.br/api
-/login:1 [DOM] Found 2 elements with non-unique id #email: (More info: https://goo.gl/9p2vKq) null null
-/login:1 [DOM] Found 2 elements with non-unique id #senha: (More info: https://goo.gl/9p2vKq) null null
-index-Dpixj7fg.js:306 ==================================================
-index-Dpixj7fg.js:306 🎯 [LOGIN FORM] Formulário submetido
-index-Dpixj7fg.js:306 📝 Dados do formulário: Object
-index-Dpixj7fg.js:306 🌍 Variáveis de ambiente: Object
-index-Dpixj7fg.js:306 ==================================================
-index-Dpixj7fg.js:306 🟢 [LOGIN] Iniciando login...
-index-Dpixj7fg.js:306 📧 [LOGIN] Email: admin@clinica.com
-index-Dpixj7fg.js:306 🔗 [LOGIN] URL da API: https://auroraclin.com.br/api
-index-Dpixj7fg.js:306 📍 [LOGIN] Endpoint completo: https://auroraclin.com.br/api/auth/login
-index-Dpixj7fg.js:306 🚀 [LOGIN] Fazendo requisição POST para: https://auroraclin.com.br/api/auth/login
-index-Dpixj7fg.js:306 ✅ [LOGIN] Resposta recebida com status: 200
-index-Dpixj7fg.js:306 📄 [LOGIN] Content-Type: application/json
-index-Dpixj7fg.js:306 📦 [LOGIN] Dados da resposta: Object
-index-Dpixj7fg.js:306 ✨ [LOGIN] Login bem-sucedido!
-index-Dpixj7fg.js:306 📌 [LOGIN FORM] Resultado do login: Object
-index-Dpixj7fg.js:306 ✅ [LOGIN FORM] Login realizado com sucesso!
-index-Dpixj7fg.js:306 🔵 [AuthContext] VITE_API_BASE_URL: undefined
-index-Dpixj7fg.js:306 🔵 [AuthContext] API_BASE_URL Final: https://auroraclin.com.br/api
-index-Dpixj7fg.js:306 API Request: Object
-index-Dpixj7fg.js:306 API Request: Object
-index-Dpixj7fg.js:373 `DialogContent` requires a `DialogTitle` for the component to be accessible for screen reader users.
+chunk-NXESFFTV.js?v=c3e38135:21609 Download the React DevTools for a better development experience: https://reactjs.org/link/react-devtools
+api.js:2 🔧 API_BASE_URL configurado: http://localhost:5000/api
+api.js:3 🔧 VITE_API_BASE_URL: http://localhost:5000/api/
+AuthContext.jsx:20 🔵 [AuthContext] VITE_API_BASE_URL: http://localhost:5000/api/
+AuthContext.jsx:22 🔵 [AuthContext] API_BASE_URL Final: http://localhost:5000/api
+AuthContext.jsx:20 🔵 [AuthContext] VITE_API_BASE_URL: http://localhost:5000/api/
+AuthContext.jsx:22 🔵 [AuthContext] API_BASE_URL Final: http://localhost:5000/api
+AuthContext.jsx:20 🔵 [AuthContext] VITE_API_BASE_URL: http://localhost:5000/api/
+AuthContext.jsx:22 🔵 [AuthContext] API_BASE_URL Final: http://localhost:5000/api
+AuthContext.jsx:20 🔵 [AuthContext] VITE_API_BASE_URL: http://localhost:5000/api/
+AuthContext.jsx:22 🔵 [AuthContext] API_BASE_URL Final: http://localhost:5000/api
+api.js:10 🔐 Token obtido: ✓ Presente
+api.js:21 🔗 [API] Requisição: {url: 'http://localhost:5000/api/checklists-diarios', endpoint: '/checklists-diarios', cleanEndpoint: 'checklists-diarios'}
+api.js:10 🔐 Token obtido: ✓ Presente
+api.js:21 🔗 [API] Requisição: {url: 'http://localhost:5000/api/metas-terapeuticas', endpoint: '/metas-terapeuticas', cleanEndpoint: 'metas-terapeuticas'}
+api.js:10 🔐 Token obtido: ✓ Presente
+api.js:21 🔗 [API] Requisição: {url: 'http://localhost:5000/api/checklists-diarios', endpoint: '/checklists-diarios', cleanEndpoint: 'checklists-diarios'}
+api.js:10 🔐 Token obtido: ✓ Presente
+api.js:21 🔗 [API] Requisição: {url: 'http://localhost:5000/api/metas-terapeuticas', endpoint: '/metas-terapeuticas', cleanEndpoint: 'metas-terapeuticas'}
+@radix-ui_react-dialog.js?v=c3e38135:325 `DialogContent` requires a `DialogTitle` for the component to be accessible for screen reader users.
 
 If you want to hide the `DialogTitle`, you can wrap it with our VisuallyHidden component.
 
 For more information, see https://radix-ui.com/primitives/docs/components/dialog
-(anonymous) @ index-Dpixj7fg.js:373
-index-Dpixj7fg.js:373 Warning: Missing `Description` or `aria-describedby={undefined}` for {DialogContent}.
-(anonymous) @ index-Dpixj7fg.js:373
-index-Dpixj7fg.js:306 API Response: Object
-index-Dpixj7fg.js:306 Content-Type: application/json
-index-Dpixj7fg.js:306 API Response: Object
-index-Dpixj7fg.js:306 Content-Type: application/json
-index-Dpixj7fg.js:306 API Response Body (first 500 chars): {
-  "distribuicao_diagnosticos": [
-    {
-      "count": 3,
-      "diagnostico": "TEA"
-    }
-  ],
-  "distribuicao_metas": [
-    {
-      "count": 6,
-      "status": "EmAndamento"
-    }
-  ],
-  "resumo": {
-    "registros_hoje": 1,
-    "total_metas_ativas": 6,
-    "total_pacientes": 3,
-    "total_profissionais": 3
-  }
-}
+(anonymous) @ @radix-ui_react-dialog.js?v=c3e38135:325
+commitHookEffectListMount @ chunk-NXESFFTV.js?v=c3e38135:16963
+commitPassiveMountOnFiber @ chunk-NXESFFTV.js?v=c3e38135:18206
+commitPassiveMountEffects_complete @ chunk-NXESFFTV.js?v=c3e38135:18179
+commitPassiveMountEffects_begin @ chunk-NXESFFTV.js?v=c3e38135:18169
+commitPassiveMountEffects @ chunk-NXESFFTV.js?v=c3e38135:18159
+flushPassiveEffectsImpl @ chunk-NXESFFTV.js?v=c3e38135:19543
+flushPassiveEffects @ chunk-NXESFFTV.js?v=c3e38135:19500
+commitRootImpl @ chunk-NXESFFTV.js?v=c3e38135:19469
+commitRoot @ chunk-NXESFFTV.js?v=c3e38135:19330
+performSyncWorkOnRoot @ chunk-NXESFFTV.js?v=c3e38135:18948
+flushSyncCallbacks @ chunk-NXESFFTV.js?v=c3e38135:9166
+commitRootImpl @ chunk-NXESFFTV.js?v=c3e38135:19485
+commitRoot @ chunk-NXESFFTV.js?v=c3e38135:19330
+finishConcurrentRender @ chunk-NXESFFTV.js?v=c3e38135:18858
+performConcurrentWorkOnRoot @ chunk-NXESFFTV.js?v=c3e38135:18768
+workLoop @ chunk-NXESFFTV.js?v=c3e38135:197
+flushWork @ chunk-NXESFFTV.js?v=c3e38135:176
+performWorkUntilDeadline @ chunk-NXESFFTV.js?v=c3e38135:384
+@radix-ui_react-dialog.js?v=c3e38135:339 Warning: Missing `Description` or `aria-describedby={undefined}` for {DialogContent}.
+(anonymous) @ @radix-ui_react-dialog.js?v=c3e38135:339
+commitHookEffectListMount @ chunk-NXESFFTV.js?v=c3e38135:16963
+commitPassiveMountOnFiber @ chunk-NXESFFTV.js?v=c3e38135:18206
+commitPassiveMountEffects_complete @ chunk-NXESFFTV.js?v=c3e38135:18179
+commitPassiveMountEffects_begin @ chunk-NXESFFTV.js?v=c3e38135:18169
+commitPassiveMountEffects @ chunk-NXESFFTV.js?v=c3e38135:18159
+flushPassiveEffectsImpl @ chunk-NXESFFTV.js?v=c3e38135:19543
+flushPassiveEffects @ chunk-NXESFFTV.js?v=c3e38135:19500
+commitRootImpl @ chunk-NXESFFTV.js?v=c3e38135:19469
+commitRoot @ chunk-NXESFFTV.js?v=c3e38135:19330
+performSyncWorkOnRoot @ chunk-NXESFFTV.js?v=c3e38135:18948
+flushSyncCallbacks @ chunk-NXESFFTV.js?v=c3e38135:9166
+commitRootImpl @ chunk-NXESFFTV.js?v=c3e38135:19485
+commitRoot @ chunk-NXESFFTV.js?v=c3e38135:19330
+finishConcurrentRender @ chunk-NXESFFTV.js?v=c3e38135:18858
+performConcurrentWorkOnRoot @ chunk-NXESFFTV.js?v=c3e38135:18768
+workLoop @ chunk-NXESFFTV.js?v=c3e38135:197
+flushWork @ chunk-NXESFFTV.js?v=c3e38135:176
+performWorkUntilDeadline @ chunk-NXESFFTV.js?v=c3e38135:384
+@radix-ui_react-dialog.js?v=c3e38135:325 `DialogContent` requires a `DialogTitle` for the component to be accessible for screen reader users.
 
-index-Dpixj7fg.js:306 API Response Body (first 500 chars): [
+If you want to hide the `DialogTitle`, you can wrap it with our VisuallyHidden component.
+
+For more information, see https://radix-ui.com/primitives/docs/components/dialog
+(anonymous) @ @radix-ui_react-dialog.js?v=c3e38135:325
+commitHookEffectListMount @ chunk-NXESFFTV.js?v=c3e38135:16963
+invokePassiveEffectMountInDEV @ chunk-NXESFFTV.js?v=c3e38135:18374
+invokeEffectsInDev @ chunk-NXESFFTV.js?v=c3e38135:19754
+commitDoubleInvokeEffectsInDEV @ chunk-NXESFFTV.js?v=c3e38135:19739
+flushPassiveEffectsImpl @ chunk-NXESFFTV.js?v=c3e38135:19556
+flushPassiveEffects @ chunk-NXESFFTV.js?v=c3e38135:19500
+commitRootImpl @ chunk-NXESFFTV.js?v=c3e38135:19469
+commitRoot @ chunk-NXESFFTV.js?v=c3e38135:19330
+performSyncWorkOnRoot @ chunk-NXESFFTV.js?v=c3e38135:18948
+flushSyncCallbacks @ chunk-NXESFFTV.js?v=c3e38135:9166
+commitRootImpl @ chunk-NXESFFTV.js?v=c3e38135:19485
+commitRoot @ chunk-NXESFFTV.js?v=c3e38135:19330
+finishConcurrentRender @ chunk-NXESFFTV.js?v=c3e38135:18858
+performConcurrentWorkOnRoot @ chunk-NXESFFTV.js?v=c3e38135:18768
+workLoop @ chunk-NXESFFTV.js?v=c3e38135:197
+flushWork @ chunk-NXESFFTV.js?v=c3e38135:176
+performWorkUntilDeadline @ chunk-NXESFFTV.js?v=c3e38135:384
+@radix-ui_react-dialog.js?v=c3e38135:339 Warning: Missing `Description` or `aria-describedby={undefined}` for {DialogContent}.
+(anonymous) @ @radix-ui_react-dialog.js?v=c3e38135:339
+commitHookEffectListMount @ chunk-NXESFFTV.js?v=c3e38135:16963
+invokePassiveEffectMountInDEV @ chunk-NXESFFTV.js?v=c3e38135:18374
+invokeEffectsInDev @ chunk-NXESFFTV.js?v=c3e38135:19754
+commitDoubleInvokeEffectsInDEV @ chunk-NXESFFTV.js?v=c3e38135:19739
+flushPassiveEffectsImpl @ chunk-NXESFFTV.js?v=c3e38135:19556
+flushPassiveEffects @ chunk-NXESFFTV.js?v=c3e38135:19500
+commitRootImpl @ chunk-NXESFFTV.js?v=c3e38135:19469
+commitRoot @ chunk-NXESFFTV.js?v=c3e38135:19330
+performSyncWorkOnRoot @ chunk-NXESFFTV.js?v=c3e38135:18948
+flushSyncCallbacks @ chunk-NXESFFTV.js?v=c3e38135:9166
+commitRootImpl @ chunk-NXESFFTV.js?v=c3e38135:19485
+commitRoot @ chunk-NXESFFTV.js?v=c3e38135:19330
+finishConcurrentRender @ chunk-NXESFFTV.js?v=c3e38135:18858
+performConcurrentWorkOnRoot @ chunk-NXESFFTV.js?v=c3e38135:18768
+workLoop @ chunk-NXESFFTV.js?v=c3e38135:197
+flushWork @ chunk-NXESFFTV.js?v=c3e38135:176
+performWorkUntilDeadline @ chunk-NXESFFTV.js?v=c3e38135:384
+api.js:22  GET http://localhost:5000/api/checklists-diarios 500 (INTERNAL SERVER ERROR)
+request @ api.js:22
+getChecklistsDiarios @ api.js:282
+loadData @ RegistroDiarioGrid.jsx:39
+(anonymous) @ RegistroDiarioGrid.jsx:28
+commitHookEffectListMount @ chunk-NXESFFTV.js?v=c3e38135:16963
+commitPassiveMountOnFiber @ chunk-NXESFFTV.js?v=c3e38135:18206
+commitPassiveMountEffects_complete @ chunk-NXESFFTV.js?v=c3e38135:18179
+commitPassiveMountEffects_begin @ chunk-NXESFFTV.js?v=c3e38135:18169
+commitPassiveMountEffects @ chunk-NXESFFTV.js?v=c3e38135:18159
+flushPassiveEffectsImpl @ chunk-NXESFFTV.js?v=c3e38135:19543
+flushPassiveEffects @ chunk-NXESFFTV.js?v=c3e38135:19500
+performSyncWorkOnRoot @ chunk-NXESFFTV.js?v=c3e38135:18921
+flushSyncCallbacks @ chunk-NXESFFTV.js?v=c3e38135:9166
+commitRootImpl @ chunk-NXESFFTV.js?v=c3e38135:19485
+commitRoot @ chunk-NXESFFTV.js?v=c3e38135:19330
+finishConcurrentRender @ chunk-NXESFFTV.js?v=c3e38135:18858
+performConcurrentWorkOnRoot @ chunk-NXESFFTV.js?v=c3e38135:18768
+workLoop @ chunk-NXESFFTV.js?v=c3e38135:197
+flushWork @ chunk-NXESFFTV.js?v=c3e38135:176
+performWorkUntilDeadline @ chunk-NXESFFTV.js?v=c3e38135:384
+api.js:23 📨 [API] Resposta recebida: {status: 500, ok: false}
+api.js:27 📄 [API] Content-Type: application/json
+api.js:30 🔐 [API] Headers: {authorization: '✓ Presente', contentType: 'application/json', statusCode: 500}
+api.js:38 API Error: {erro: "name 'MetaTerapeutico' is not defined"}
+request @ api.js:38
+await in request
+getChecklistsDiarios @ api.js:282
+loadData @ RegistroDiarioGrid.jsx:39
+(anonymous) @ RegistroDiarioGrid.jsx:28
+commitHookEffectListMount @ chunk-NXESFFTV.js?v=c3e38135:16963
+commitPassiveMountOnFiber @ chunk-NXESFFTV.js?v=c3e38135:18206
+commitPassiveMountEffects_complete @ chunk-NXESFFTV.js?v=c3e38135:18179
+commitPassiveMountEffects_begin @ chunk-NXESFFTV.js?v=c3e38135:18169
+commitPassiveMountEffects @ chunk-NXESFFTV.js?v=c3e38135:18159
+flushPassiveEffectsImpl @ chunk-NXESFFTV.js?v=c3e38135:19543
+flushPassiveEffects @ chunk-NXESFFTV.js?v=c3e38135:19500
+performSyncWorkOnRoot @ chunk-NXESFFTV.js?v=c3e38135:18921
+flushSyncCallbacks @ chunk-NXESFFTV.js?v=c3e38135:9166
+commitRootImpl @ chunk-NXESFFTV.js?v=c3e38135:19485
+commitRoot @ chunk-NXESFFTV.js?v=c3e38135:19330
+finishConcurrentRender @ chunk-NXESFFTV.js?v=c3e38135:18858
+performConcurrentWorkOnRoot @ chunk-NXESFFTV.js?v=c3e38135:18768
+workLoop @ chunk-NXESFFTV.js?v=c3e38135:197
+flushWork @ chunk-NXESFFTV.js?v=c3e38135:176
+performWorkUntilDeadline @ chunk-NXESFFTV.js?v=c3e38135:384
+api.js:64 API Request Failed: Error: name 'MetaTerapeutico' is not defined
+    at ApiService.request (api.js:46:23)
+    at async Promise.all (index 0)
+    at async loadData (RegistroDiarioGrid.jsx:38:42)
+request @ api.js:64
+await in request
+getChecklistsDiarios @ api.js:282
+loadData @ RegistroDiarioGrid.jsx:39
+(anonymous) @ RegistroDiarioGrid.jsx:28
+commitHookEffectListMount @ chunk-NXESFFTV.js?v=c3e38135:16963
+commitPassiveMountOnFiber @ chunk-NXESFFTV.js?v=c3e38135:18206
+commitPassiveMountEffects_complete @ chunk-NXESFFTV.js?v=c3e38135:18179
+commitPassiveMountEffects_begin @ chunk-NXESFFTV.js?v=c3e38135:18169
+commitPassiveMountEffects @ chunk-NXESFFTV.js?v=c3e38135:18159
+flushPassiveEffectsImpl @ chunk-NXESFFTV.js?v=c3e38135:19543
+flushPassiveEffects @ chunk-NXESFFTV.js?v=c3e38135:19500
+performSyncWorkOnRoot @ chunk-NXESFFTV.js?v=c3e38135:18921
+flushSyncCallbacks @ chunk-NXESFFTV.js?v=c3e38135:9166
+commitRootImpl @ chunk-NXESFFTV.js?v=c3e38135:19485
+commitRoot @ chunk-NXESFFTV.js?v=c3e38135:19330
+finishConcurrentRender @ chunk-NXESFFTV.js?v=c3e38135:18858
+performConcurrentWorkOnRoot @ chunk-NXESFFTV.js?v=c3e38135:18768
+workLoop @ chunk-NXESFFTV.js?v=c3e38135:197
+flushWork @ chunk-NXESFFTV.js?v=c3e38135:176
+performWorkUntilDeadline @ chunk-NXESFFTV.js?v=c3e38135:384
+AuthContext.jsx:20 🔵 [AuthContext] VITE_API_BASE_URL: http://localhost:5000/api/
+AuthContext.jsx:22 🔵 [AuthContext] API_BASE_URL Final: http://localhost:5000/api
+AuthContext.jsx:20 🔵 [AuthContext] VITE_API_BASE_URL: http://localhost:5000/api/
+AuthContext.jsx:22 🔵 [AuthContext] API_BASE_URL Final: http://localhost:5000/api
+api.js:22  GET http://localhost:5000/api/checklists-diarios 500 (INTERNAL SERVER ERROR)
+request @ api.js:22
+getChecklistsDiarios @ api.js:282
+loadData @ RegistroDiarioGrid.jsx:39
+(anonymous) @ RegistroDiarioGrid.jsx:28
+commitHookEffectListMount @ chunk-NXESFFTV.js?v=c3e38135:16963
+invokePassiveEffectMountInDEV @ chunk-NXESFFTV.js?v=c3e38135:18374
+invokeEffectsInDev @ chunk-NXESFFTV.js?v=c3e38135:19754
+commitDoubleInvokeEffectsInDEV @ chunk-NXESFFTV.js?v=c3e38135:19739
+flushPassiveEffectsImpl @ chunk-NXESFFTV.js?v=c3e38135:19556
+flushPassiveEffects @ chunk-NXESFFTV.js?v=c3e38135:19500
+performSyncWorkOnRoot @ chunk-NXESFFTV.js?v=c3e38135:18921
+flushSyncCallbacks @ chunk-NXESFFTV.js?v=c3e38135:9166
+commitRootImpl @ chunk-NXESFFTV.js?v=c3e38135:19485
+commitRoot @ chunk-NXESFFTV.js?v=c3e38135:19330
+finishConcurrentRender @ chunk-NXESFFTV.js?v=c3e38135:18858
+performConcurrentWorkOnRoot @ chunk-NXESFFTV.js?v=c3e38135:18768
+workLoop @ chunk-NXESFFTV.js?v=c3e38135:197
+flushWork @ chunk-NXESFFTV.js?v=c3e38135:176
+performWorkUntilDeadline @ chunk-NXESFFTV.js?v=c3e38135:384
+api.js:23 📨 [API] Resposta recebida: {status: 500, ok: false}
+api.js:27 📄 [API] Content-Type: application/json
+api.js:30 🔐 [API] Headers: {authorization: '✓ Presente', contentType: 'application/json', statusCode: 500}
+api.js:38 API Error: {erro: "name 'MetaTerapeutico' is not defined"}
+request @ api.js:38
+await in request
+getChecklistsDiarios @ api.js:282
+loadData @ RegistroDiarioGrid.jsx:39
+(anonymous) @ RegistroDiarioGrid.jsx:28
+commitHookEffectListMount @ chunk-NXESFFTV.js?v=c3e38135:16963
+invokePassiveEffectMountInDEV @ chunk-NXESFFTV.js?v=c3e38135:18374
+invokeEffectsInDev @ chunk-NXESFFTV.js?v=c3e38135:19754
+commitDoubleInvokeEffectsInDEV @ chunk-NXESFFTV.js?v=c3e38135:19739
+flushPassiveEffectsImpl @ chunk-NXESFFTV.js?v=c3e38135:19556
+flushPassiveEffects @ chunk-NXESFFTV.js?v=c3e38135:19500
+performSyncWorkOnRoot @ chunk-NXESFFTV.js?v=c3e38135:18921
+flushSyncCallbacks @ chunk-NXESFFTV.js?v=c3e38135:9166
+commitRootImpl @ chunk-NXESFFTV.js?v=c3e38135:19485
+commitRoot @ chunk-NXESFFTV.js?v=c3e38135:19330
+finishConcurrentRender @ chunk-NXESFFTV.js?v=c3e38135:18858
+performConcurrentWorkOnRoot @ chunk-NXESFFTV.js?v=c3e38135:18768
+workLoop @ chunk-NXESFFTV.js?v=c3e38135:197
+flushWork @ chunk-NXESFFTV.js?v=c3e38135:176
+performWorkUntilDeadline @ chunk-NXESFFTV.js?v=c3e38135:384
+api.js:64 API Request Failed: Error: name 'MetaTerapeutico' is not defined
+    at ApiService.request (api.js:46:23)
+    at async Promise.all (index 0)
+    at async loadData (RegistroDiarioGrid.jsx:38:42)
+request @ api.js:64
+await in request
+getChecklistsDiarios @ api.js:282
+loadData @ RegistroDiarioGrid.jsx:39
+(anonymous) @ RegistroDiarioGrid.jsx:28
+commitHookEffectListMount @ chunk-NXESFFTV.js?v=c3e38135:16963
+invokePassiveEffectMountInDEV @ chunk-NXESFFTV.js?v=c3e38135:18374
+invokeEffectsInDev @ chunk-NXESFFTV.js?v=c3e38135:19754
+commitDoubleInvokeEffectsInDEV @ chunk-NXESFFTV.js?v=c3e38135:19739
+flushPassiveEffectsImpl @ chunk-NXESFFTV.js?v=c3e38135:19556
+flushPassiveEffects @ chunk-NXESFFTV.js?v=c3e38135:19500
+performSyncWorkOnRoot @ chunk-NXESFFTV.js?v=c3e38135:18921
+flushSyncCallbacks @ chunk-NXESFFTV.js?v=c3e38135:9166
+commitRootImpl @ chunk-NXESFFTV.js?v=c3e38135:19485
+commitRoot @ chunk-NXESFFTV.js?v=c3e38135:19330
+finishConcurrentRender @ chunk-NXESFFTV.js?v=c3e38135:18858
+performConcurrentWorkOnRoot @ chunk-NXESFFTV.js?v=c3e38135:18768
+workLoop @ chunk-NXESFFTV.js?v=c3e38135:197
+flushWork @ chunk-NXESFFTV.js?v=c3e38135:176
+performWorkUntilDeadline @ chunk-NXESFFTV.js?v=c3e38135:384
+api.js:23 📨 [API] Resposta recebida: {status: 200, ok: true}
+api.js:27 📄 [API] Content-Type: application/json
+api.js:30 🔐 [API] Headers: {authorization: '✓ Presente', contentType: 'application/json', statusCode: 200}
+api.js:54 API Response Body (first 500 chars): [
   {
     "data_inicio": "2025-11-08",
     "data_previsao_termino": "2025-12-08",
@@ -77,36 +267,10 @@ index-Dpixj7fg.js:306 API Response Body (first 500 chars): [
         "perguntas": [
           {
         
-index-Dpixj7fg.js:306 🔵 [AuthContext] VITE_API_BASE_URL: undefined
-index-Dpixj7fg.js:306 🔵 [AuthContext] API_BASE_URL Final: https://auroraclin.com.br/api
-index-Dpixj7fg.js:306 API Request: Object
-index-Dpixj7fg.js:306 API Request: Object
-index-Dpixj7fg.js:306 API Response: Object
-index-Dpixj7fg.js:306 Content-Type: application/json
-index-Dpixj7fg.js:306 API Response Body (first 500 chars): {
-  "distribuicao_diagnosticos": [
-    {
-      "count": 3,
-      "diagnostico": "TEA"
-    }
-  ],
-  "distribuicao_metas": [
-    {
-      "count": 6,
-      "status": "EmAndamento"
-    }
-  ],
-  "resumo": {
-    "registros_hoje": 1,
-    "total_metas_ativas": 6,
-    "total_pacientes": 3,
-    "total_profissionais": 3
-  }
-}
-
-index-Dpixj7fg.js:306 API Response: Object
-index-Dpixj7fg.js:306 Content-Type: application/json
-index-Dpixj7fg.js:306 API Response Body (first 500 chars): [
+api.js:23 📨 [API] Resposta recebida: {status: 200, ok: true}
+api.js:27 📄 [API] Content-Type: application/json
+api.js:30 🔐 [API] Headers: {authorization: '✓ Presente', contentType: 'application/json', statusCode: 200}
+api.js:54 API Response Body (first 500 chars): [
   {
     "data_inicio": "2025-11-08",
     "data_previsao_termino": "2025-12-08",
@@ -124,440 +288,3 @@ index-Dpixj7fg.js:306 API Response Body (first 500 chars): [
         "perguntas": [
           {
         
-index-Dpixj7fg.js:306 API Request: Object
-index-Dpixj7fg.js:306 API Response: Object
-index-Dpixj7fg.js:306 Content-Type: application/json
-index-Dpixj7fg.js:306 API Response Body (first 500 chars): [
-  {
-    "contato": "(11) 99999-4444",
-    "data_nascimento": "2018-05-15",
-    "diagnostico": "TEA",
-    "empresa_id": 1,
-    "id": 1,
-    "nome": "Ana Clara Oliveira",
-    "responsavel": "Carlos Oliveira",
-    "responsavel_usuario": null
-  },
-  {
-    "contato": "(11) 99999-5555",
-    "data_nascimento": "2017-08-22",
-    "diagnostico": "TEA",
-    "empresa_id": 1,
-    "id": 2,
-    "nome": "Lucas Ferreira",
-    "responsavel": "Sandra Ferreira",
-    "responsavel_usuario": null
-  },
-  {
-    "conta
-index-Dpixj7fg.js:306 API Request: Object
-index-Dpixj7fg.js:306 API Response: Object
-index-Dpixj7fg.js:306 Content-Type: application/json
-index-Dpixj7fg.js:306 API Response Body (first 500 chars): [
-  {
-    "criado_por": 7,
-    "data_criacao": "2025-11-08",
-    "data_fim": null,
-    "data_inicio": "2025-10-09",
-    "duracao_sessao": 60,
-    "frequencia_semanal": 3,
-    "id": 1,
-    "observacoes": "Paciente com boa evolu\u00e7\u00e3o na comunica\u00e7\u00e3o",
-    "paciente": {
-      "contato": "(11) 99999-4444",
-      "data_nascimento": "2018-05-15",
-      "diagnostico": "TEA",
-      "empresa_id": 1,
-      "id": 1,
-      "nome": "Ana Clara Oliveira",
-      "responsavel": "Carlos Oliveira"
-index-Dpixj7fg.js:306 API Request: Object
-index-Dpixj7fg.js:306 API Response: Object
-index-Dpixj7fg.js:306 Content-Type: application/json
-index-Dpixj7fg.js:306 API Response Body (first 500 chars): [
-  {
-    "criado_por": 7,
-    "data_criacao": "2025-11-08",
-    "data_fim": null,
-    "data_inicio": "2025-09-24",
-    "duracao_sessao": 50,
-    "frequencia_semanal": 2,
-    "id": 3,
-    "observacoes": "Foco em comportamentos adaptativos",
-    "paciente": {
-      "contato": "(11) 99999-5555",
-      "data_nascimento": "2017-08-22",
-      "diagnostico": "TEA",
-      "empresa_id": 1,
-      "id": 2,
-      "nome": "Lucas Ferreira",
-      "responsavel": "Sandra Ferreira",
-      "responsavel_usuario":
-index-Dpixj7fg.js:306 API Request: Object
-index-Dpixj7fg.js:306 API Response: Object
-index-Dpixj7fg.js:306 Content-Type: application/json
-index-Dpixj7fg.js:306 API Response Body (first 500 chars): [
-  {
-    "criado_por": 7,
-    "data_criacao": "2025-11-08",
-    "data_fim": null,
-    "data_inicio": "2025-10-29",
-    "duracao_sessao": 45,
-    "frequencia_semanal": 4,
-    "id": 5,
-    "observacoes": "Paciente iniciante, adapta\u00e7\u00e3o ao ambiente",
-    "paciente": {
-      "contato": "(11) 99999-6666",
-      "data_nascimento": "2019-03-10",
-      "diagnostico": "TEA",
-      "empresa_id": 1,
-      "id": 3,
-      "nome": "Sophia Rodrigues",
-      "responsavel": "Roberto Rodrigues",
-      "
-index-Dpixj7fg.js:306 API Request: Object
-index-Dpixj7fg.js:306 API Request: Object
-index-Dpixj7fg.js:306 API Request: Object
-index-Dpixj7fg.js:306 API Request: Object
-index-Dpixj7fg.js:306 API Request: Object
-index-Dpixj7fg.js:306 API Response: Object
-index-Dpixj7fg.js:306 Content-Type: application/json
-index-Dpixj7fg.js:306 API Response Body (first 500 chars): []
-
-index-Dpixj7fg.js:306 API Response: Object
-index-Dpixj7fg.js:306 Content-Type: application/json
-index-Dpixj7fg.js:306 API Response Body (first 500 chars): [
-  {
-    "criado_por": 7,
-    "data_criacao": "2025-11-08",
-    "data_fim": null,
-    "data_inicio": "2025-10-09",
-    "duracao_sessao": 60,
-    "frequencia_semanal": 3,
-    "id": 1,
-    "observacoes": "Paciente com boa evolu\u00e7\u00e3o na comunica\u00e7\u00e3o",
-    "paciente": {
-      "contato": "(11) 99999-4444",
-      "data_nascimento": "2018-05-15",
-      "diagnostico": "TEA",
-      "empresa_id": 1,
-      "id": 1,
-      "nome": "Ana Clara Oliveira",
-      "responsavel": "Carlos Oliveira"
-index-Dpixj7fg.js:306 API Response: Object
-index-Dpixj7fg.js:306 Content-Type: application/json
-index-Dpixj7fg.js:306 API Response Body (first 500 chars): [
-  {
-    "email": "joao.silva@clinica.com",
-    "empresa_id": 1,
-    "especialidade": "Terapia ABA",
-    "id": 1,
-    "nome": "Dr. Jo\u00e3o Silva",
-    "telefone": "(11) 99999-1111"
-  },
-  {
-    "email": "maria.santos@clinica.com",
-    "empresa_id": 1,
-    "especialidade": "Psicologia Comportamental",
-    "id": 2,
-    "nome": "Dra. Maria Santos",
-    "telefone": "(11) 99999-2222"
-  },
-  {
-    "email": "pedro.costa@clinica.com",
-    "empresa_id": 1,
-    "especialidade": "Fonoaudiologia",
-    "i
-index-Dpixj7fg.js:306 API Response: Object
-index-Dpixj7fg.js:306 Content-Type: application/json
-index-Dpixj7fg.js:306 API Response: Object
-index-Dpixj7fg.js:306 Content-Type: application/json
-index-Dpixj7fg.js:306 API Response Body (first 500 chars): {
-  "evolucao_por_meta": {
-    "1": {
-      "meta_descricao": "Comunica\u00e7\u00e3o Verbal: Aumentar vocabul\u00e1rio expressivo em 50%",
-      "registros": [
-        {
-          "data": "2025-11-10",
-          "formulas_calculadas": [
-            {
-              "formula": "PERCENTUAL(P3:P29)",
-              "pergunta_id": 263,
-              "pergunta_texto": "Percentual - Aten\u00e7\u00e3o Compartilhada/Atentar",
-              "valor_calculado": "50.00",
-              "valor_numerico": 50.0
- 
-index-Dpixj7fg.js:306 API Response Body (first 500 chars): {
-  "contato": "(11) 99999-4444",
-  "data_nascimento": "2018-05-15",
-  "diagnostico": "TEA",
-  "empresa_id": 1,
-  "id": 1,
-  "nome": "Ana Clara Oliveira",
-  "responsavel": "Carlos Oliveira",
-  "responsavel_usuario": null
-}
-
-index-Dpixj7fg.js:1252 Data 0: Object
-index-Dpixj7fg.js:1252 Data 1: Object
-index-Dpixj7fg.js:1252 Data 2: Object
-index-Dpixj7fg.js:1252 todasDatas montadas: Array(3)
-index-Dpixj7fg.js:1252 Radar: datasSelecionadas Array(0)
-index-Dpixj7fg.js:1252 Radar: globaisFiltrados Array(0)
-index-Dpixj7fg.js:1252 Radar: perguntas (indicadores) Array(0)
-index-Dpixj7fg.js:1252 Radar: series montadas Array(0)
-index-Dpixj7fg.js:1252 presencaData: Nenhum agendamento disponível
-(anonymous) @ index-Dpixj7fg.js:1252
-index-Dpixj7fg.js:1252 === PacienteRelatorio Debug ===
-index-Dpixj7fg.js:1252 relatorioPaciente completo: {
-  "evolucao_por_meta": {
-    "1": {
-      "meta_descricao": "Comunicação Verbal: Aumentar vocabulário expressivo em 50%",
-      "registros": [
-        {
-          "data": "2025-11-10",
-          "formulas_calculadas": [
-            {
-              "formula": "PERCENTUAL(P3:P29)",
-              "pergunta_id": 263,
-              "pergunta_texto": "Percentual - Atenção Compartilhada/Atentar",
-              "valor_calculado": "50.00",
-              "valor_numerico": 50
-            },
-            {
-              "formula": "PERCENTUAL(P30:P38)",
-              "pergunta_id": 264,
-              "pergunta_texto": "Percentual - Cumprimentos",
-              "valor_calculado": "50.00",
-              "valor_numerico": 50
-            },
-            {
-              "formula": "PERCENTUAL(P39:P78)",
-              "pergunta_id": 265,
-              "pergunta_texto": "Percentual - Brincadeira Social",
-              "valor_calculado": "50.00",
-              "valor_numerico": 50
-            },
-            {
-              "formula": "PERCENTUAL(P79:P84)",
-              "pergunta_id": 266,
-              "pergunta_texto": "Percentual - Auto consciência",
-              "valor_calculado": "50.00",
-              "valor_numerico": 50
-            },
-            {
-              "formula": "PERCENTUAL(P85:P105)",
-              "pergunta_id": 267,
-              "pergunta_texto": "Percentual - Habilidade de se acalmar",
-              "valor_calculado": "50.00",
-              "valor_numerico": 50
-            },
-            {
-              "formula": "PERCENTUAL(P106:P133)",
-              "pergunta_id": 268,
-              "pergunta_texto": "Percentual - Conversas",
-              "valor_calculado": "50.00",
-              "valor_numerico": 50
-            },
-            {
-              "formula": "PERCENTUAL(P134:P157)",
-              "pergunta_id": 269,
-              "pergunta_texto": "Percentual - Tomada de perspectiva",
-              "valor_calculado": "50.00",
-              "valor_numerico": 50
-            },
-            {
-              "formula": "PERCENTUAL(P158:P165)",
-              "pergunta_id": 270,
-              "pergunta_texto": "Percentual - Habilidades de Pensamento Crítico",
-              "valor_calculado": "50.00",
-              "valor_numerico": 50
-            },
-            {
-              "formula": "PERCENTUAL(P166:P202)",
-              "pergunta_id": 271,
-              "pergunta_texto": "Percentual - Resolução de problemas",
-              "valor_calculado": "50.00",
-              "valor_numerico": 50
-            },
-            {
-              "formula": "PERCENTUAL(P203:P262)",
-              "pergunta_id": 272,
-              "pergunta_texto": "Percentual - Amizades",
-              "valor_calculado": "68.33",
-              "valor_numerico": 68.33
-            }
-          ],
-          "nota": null
-        },
-        {
-          "data": "2025-11-11",
-          "formulas_calculadas": [
-            {
-              "formula": "PERCENTUAL(P3:P29)",
-              "pergunta_id": 263,
-              "pergunta_texto": "Percentual - Atenção Compartilhada/Atentar",
-              "valor_calculado": "50.00",
-              "valor_numerico": 50
-            },
-            {
-              "formula": "PERCENTUAL(P30:P38)",
-              "pergunta_id": 264,
-              "pergunta_texto": "Percentual - Cumprimentos",
-              "valor_calculado": "50.00",
-              "valor_numerico": 50
-            },
-            {
-              "formula": "PERCENTUAL(P39:P78)",
-              "pergunta_id": 265,
-              "pergunta_texto": "Percentual - Brincadeira Social",
-              "valor_calculado": "50.00",
-              "valor_numerico": 50
-            },
-            {
-              "formula": "PERCENTUAL(P79:P84)",
-              "pergunta_id": 266,
-              "pergunta_texto": "Percentual - Auto consciência",
-              "valor_calculado": "50.00",
-              "valor_numerico": 50
-            },
-            {
-              "formula": "PERCENTUAL(P85:P105)",
-              "pergunta_id": 267,
-              "pergunta_texto": "Percentual - Habilidade de se acalmar",
-              "valor_calculado": "50.00",
-              "valor_numerico": 50
-            },
-            {
-              "formula": "PERCENTUAL(P106:P133)",
-              "pergunta_id": 268,
-              "pergunta_texto": "Percentual - Conversas",
-              "valor_calculado": "50.00",
-              "valor_numerico": 50
-            },
-            {
-              "formula": "PERCENTUAL(P134:P157)",
-              "pergunta_id": 269,
-              "pergunta_texto": "Percentual - Tomada de perspectiva",
-              "valor_calculado": "50.00",
-              "valor_numerico": 50
-            },
-            {
-              "formula": "PERCENTUAL(P158:P165)",
-              "pergunta_id": 270,
-              "pergunta_texto": "Percentual - Habilidades de Pensamento Crítico",
-              "valor_calculado": "50.00",
-              "valor_numerico": 50
-            },
-            {
-  
-index-Dpixj7fg.js:1252 Keys do relatorioPaciente: Array(5)
-index-Dpixj7fg.js:1252 respostas_calculadas_globais: Array(3)
-index-Dpixj7fg.js:1252 Tipo de respostas_calculadas_globais: array
-index-Dpixj7fg.js:1252 Tamanho do array: 3
-index-Dpixj7fg.js:1252 Primeiros elementos: Array(2)
-index-Dpixj7fg.js:1252 === Fim Debug ===
-index-Dpixj7fg.js:1252 Data 0: Object
-index-Dpixj7fg.js:1252 Data 1: Object
-index-Dpixj7fg.js:1252 Data 2: Object
-index-Dpixj7fg.js:1252 todasDatas montadas: Array(3)
-index-Dpixj7fg.js:1252 Radar: datasSelecionadas Array(0)
-index-Dpixj7fg.js:1252 Radar: globaisFiltrados Array(0)
-index-Dpixj7fg.js:1252 Radar: perguntas (indicadores) Array(0)
-index-Dpixj7fg.js:1252 Radar: series montadas Array(0)
-index-Dpixj7fg.js:1252 presencaData: Nenhum agendamento disponível
-(anonymous) @ index-Dpixj7fg.js:1252
-index-Dpixj7fg.js:1252 Radar: datasSelecionadas Array(0)
-index-Dpixj7fg.js:1252 Radar: globaisFiltrados Array(0)
-index-Dpixj7fg.js:1252 Radar: perguntas (indicadores) Array(0)
-index-Dpixj7fg.js:1252 Radar: series montadas Array(0)
-index-Dpixj7fg.js:1252 Data 0: Object
-index-Dpixj7fg.js:1252 Data 1: Object
-index-Dpixj7fg.js:1252 Data 2: Object
-index-Dpixj7fg.js:1252 todasDatas montadas: Array(3)
-index-Dpixj7fg.js:1252 Radar: datasSelecionadas Array(0)
-index-Dpixj7fg.js:1252 Radar: globaisFiltrados Array(0)
-index-Dpixj7fg.js:1252 Radar: perguntas (indicadores) Array(0)
-index-Dpixj7fg.js:1252 Radar: series montadas Array(0)
-index-Dpixj7fg.js:1252 presencaData: Nenhum agendamento disponível
-(anonymous) @ index-Dpixj7fg.js:1252
-index-Dpixj7fg.js:1252 Radar: datasSelecionadas Array(0)
-index-Dpixj7fg.js:1252 Radar: globaisFiltrados Array(0)
-index-Dpixj7fg.js:1252 Radar: perguntas (indicadores) Array(0)
-index-Dpixj7fg.js:1252 Radar: series montadas Array(0)
-index-Dpixj7fg.js:1252 Radar: datasSelecionadas Array(1)
-index-Dpixj7fg.js:1252 Radar: globaisFiltrados Array(1)
-index-Dpixj7fg.js:1252 Radar: perguntas (indicadores) Array(13)
-index-Dpixj7fg.js:1252 Radar: series montadas Array(1)
-index-Dpixj7fg.js:1252 Radar: datasSelecionadas Array(2)
-index-Dpixj7fg.js:1252 Radar: globaisFiltrados Array(2)
-index-Dpixj7fg.js:1252 Radar: perguntas (indicadores) Array(23)
-index-Dpixj7fg.js:1252 Radar: series montadas Array(2)
-index-Dpixj7fg.js:1252 Radar: datasSelecionadas Array(1)
-index-Dpixj7fg.js:1252 Radar: globaisFiltrados Array(1)
-index-Dpixj7fg.js:1252 Radar: perguntas (indicadores) Array(13)
-index-Dpixj7fg.js:1252 Radar: series montadas Array(1)
-index-Dpixj7fg.js:1252 Radar: datasSelecionadas Array(2)
-index-Dpixj7fg.js:1252 Radar: globaisFiltrados Array(2)
-index-Dpixj7fg.js:1252 Radar: perguntas (indicadores) Array(23)
-index-Dpixj7fg.js:1252 Radar: series montadas Array(2)
-index-Dpixj7fg.js:1252 Radar: datasSelecionadas Array(1)
-index-Dpixj7fg.js:1252 Radar: globaisFiltrados Array(1)
-index-Dpixj7fg.js:1252 Radar: perguntas (indicadores) Array(10)
-index-Dpixj7fg.js:1252 Radar: series montadas Array(1)
-index-Dpixj7fg.js:1252 Radar: datasSelecionadas Array(2)
-index-Dpixj7fg.js:1252 Radar: globaisFiltrados Array(2)
-index-Dpixj7fg.js:1252 Radar: perguntas (indicadores) Array(10)
-index-Dpixj7fg.js:1252 Radar: series montadas Array(2)
-index-Dpixj7fg.js:1252 Radar: datasSelecionadas Array(1)
-index-Dpixj7fg.js:1252 Radar: globaisFiltrados Array(1)
-index-Dpixj7fg.js:1252 Radar: perguntas (indicadores) Array(10)
-index-Dpixj7fg.js:1252 Radar: series montadas Array(1)
-index-Dpixj7fg.js:1252 Radar: datasSelecionadas Array(0)
-index-Dpixj7fg.js:1252 Radar: globaisFiltrados Array(0)
-index-Dpixj7fg.js:1252 Radar: perguntas (indicadores) Array(0)
-index-Dpixj7fg.js:1252 Radar: series montadas Array(0)
-index-Dpixj7fg.js:1252 Radar: datasSelecionadas Array(1)
-index-Dpixj7fg.js:1252 Radar: globaisFiltrados Array(1)
-index-Dpixj7fg.js:1252 Radar: perguntas (indicadores) Array(13)
-index-Dpixj7fg.js:1252 Radar: series montadas Array(1)
-index-Dpixj7fg.js:1252 Data 0: Object
-index-Dpixj7fg.js:1252 Data 1: Object
-index-Dpixj7fg.js:1252 Data 2: Object
-index-Dpixj7fg.js:1252 todasDatas montadas: Array(3)
-index-Dpixj7fg.js:1252 Radar: datasSelecionadas Array(1)
-index-Dpixj7fg.js:1252 Radar: globaisFiltrados Array(1)
-index-Dpixj7fg.js:1252 Radar: perguntas (indicadores) Array(13)
-index-Dpixj7fg.js:1252 Radar: series montadas Array(1)
-index-Dpixj7fg.js:1252 presencaData: Nenhum agendamento disponível
-(anonymous) @ index-Dpixj7fg.js:1252
-index-Dpixj7fg.js:306 API Request: Object
-/api/agenda:1  Failed to load resource: the server responded with a status of 500 ()
-index-Dpixj7fg.js:306 API Response: Object
-index-Dpixj7fg.js:306 Content-Type: application/json
-index-Dpixj7fg.js:306 API Error: Object
-request @ index-Dpixj7fg.js:306
-index-Dpixj7fg.js:306 API Request Failed: Error: (psycopg2.errors.NotNullViolation) null value in column "empresa_id" of relation "agenda" violates not-null constraint
-DETAIL:  Failing row contains (1, 2025-11-14 08:24:00, 60, , AGENDADO, null, 1, 2, null).
-
-[SQL: INSERT INTO agenda (data_hora, duracao_minutos, observacoes, status, presente, paciente_id, profissional_id, empresa_id) VALUES (%(data_hora)s, %(duracao_minutos)s, %(observacoes)s, %(status)s, %(presente)s, %(paciente_id)s, %(profissional_id)s, %(empresa_id)s) RETURNING agenda.id]
-[parameters: {'data_hora': datetime.datetime(2025, 11, 14, 8, 24), 'duracao_minutos': 60, 'observacoes': '', 'status': 'AGENDADO', 'presente': None, 'paciente_id': 1, 'profissional_id': '2', 'empresa_id': None}]
-(Background on this error at: https://sqlalche.me/e/20/gkpj)
-    at eG.request (index-Dpixj7fg.js:306:29730)
-    at async Ma (index-Dpixj7fg.js:1252:40576)
-request @ index-Dpixj7fg.js:306
-index-Dpixj7fg.js:306 API Request: Object
-/api/agenda:1  Failed to load resource: the server responded with a status of 500 ()
-index-Dpixj7fg.js:306 API Response: Object
-index-Dpixj7fg.js:306 Content-Type: application/json
-index-Dpixj7fg.js:306 API Error: Object
-request @ index-Dpixj7fg.js:306
-index-Dpixj7fg.js:306 API Request Failed: Error: (psycopg2.errors.NotNullViolation) null value in column "empresa_id" of relation "agenda" violates not-null constraint
-DETAIL:  Failing row contains (2, 2025-11-14 08:24:00, 60, , REALIZADO, null, 1, 2, null).
-
-[SQL: INSERT INTO agenda (data_hora, duracao_minutos, observacoes, status, presente, paciente_id, profissional_id, empresa_id) VALUES (%(data_hora)s, %(duracao_minutos)s, %(observacoes)s, %(status)s, %(presente)s, %(paciente_id)s, %(profissional_id)s, %(empresa_id)s) RETURNING agenda.id]
-[parameters: {'data_hora': datetime.datetime(2025, 11, 14, 8, 24), 'duracao_minutos': 60, 'observacoes': '', 'status': 'REALIZADO', 'presente': None, 'paciente_id': 1, 'profissional_id': '2', 'empresa_id': None}]
-(Background on this error at: https://sqlalche.me/e/20/gkpj)
-    at eG.request (index-Dpixj7fg.js:306:29730)
-    at async Ma (index-Dpixj7fg.js:1252:40576)
-request @ index-Dpixj7fg.js:306

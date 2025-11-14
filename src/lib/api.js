@@ -1,10 +1,13 @@
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://auroraclin.com.br/api'
+const API_BASE_URL = (import.meta.env.VITE_API_BASE_URL || 'https://auroraclin.com.br/api').replace(/\/$/, '')
 console.log('🔧 API_BASE_URL configurado:', API_BASE_URL)
 console.log('🔧 VITE_API_BASE_URL:', import.meta.env.VITE_API_BASE_URL)
 class ApiService {
   async request(endpoint, options = {}) {
-    const url = `${API_BASE_URL}${endpoint}`
+    // Remove barra inicial e final para evitar duplas barras
+    const cleanEndpoint = endpoint.replace(/^\/+|\/+$/g, '')
+    const url = `${API_BASE_URL}/${cleanEndpoint}`
     const token = localStorage.getItem('token')
+    console.log('🔐 Token obtido:', token ? '✓ Presente' : '✗ Ausente')
     const config = {
       headers: {
         'Content-Type': 'application/json',
@@ -15,17 +18,29 @@ class ApiService {
     }
 
     try {
-      console.log('API Request:', { url, config })
+      console.log('🔗 [API] Requisição:', { url, endpoint, cleanEndpoint })
       const response = await fetch(url, config)
-      console.log('API Response:', { status: response.status, ok: response.ok })
+      console.log('📨 [API] Resposta recebida:', { status: response.status, ok: response.ok })
       
       // Log do Content-Type para debug
       const contentType = response.headers.get('content-type')
-      console.log('Content-Type:', contentType)
+      console.log('📄 [API] Content-Type:', contentType)
+      
+      // Log de headers importantes
+      console.log('🔐 [API] Headers:', {
+        authorization: config.headers.Authorization ? '✓ Presente' : '✗ Ausente',
+        contentType: contentType,
+        statusCode: response.status
+      })
       
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}))
         console.error('API Error:', errorData)
+        
+        // Log especial para erro 401
+        if (response.status === 401) {
+          console.error('❌ [401 UNAUTHORIZED] Token inválido ou ausente. Verifique o localStorage "token".')
+        }
         
         // Criar erro com código de status
         const error = new Error(errorData.erro || `HTTP error! status: ${response.status}`)
