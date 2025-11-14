@@ -226,7 +226,29 @@ export default function FormularioEditor() {
       try {
         const data = await ApiService.getFormulario(id)
         console.log('Formulário carregado:', data)
-        setFormData(data)
+
+        const PADRAO = ['Não Adquirido', 'Parcial', 'Adquirido']
+        const perguntasMapeadas = (Array.isArray(data.perguntas) ? data.perguntas : []).map((p, idx) => {
+          const opcoesArr = Array.isArray(p.opcoes) ? p.opcoes : []
+          const ehPadrao = opcoesArr.length === PADRAO.length && PADRAO.every((v, i) => opcoesArr[i] === v)
+          return {
+            ...p,
+            ordem: p.ordem ?? (idx + 1),
+            tipo: (p.tipo || 'TEXTO').toUpperCase(),
+            obrigatoria: !!p.obrigatoria,
+            opcoes: opcoesArr,
+            opcoes_padronizadas: ehPadrao,
+          }
+        })
+
+        setFormData(prev => ({
+          ...prev,
+          id: data.id,
+          nome: data.nome || '',
+          categoria: data.categoria || '',
+          descricao: data.descricao || '',
+          perguntas: perguntasMapeadas,
+        }))
       } catch (err) {
         console.error("Erro ao carregar formulário:", err)
         toast({
