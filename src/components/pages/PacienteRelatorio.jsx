@@ -619,54 +619,50 @@ export default function PacienteRelatorio({ paciente, relatorioPaciente, agendam
                   {/* Seletor de Tipo de Gráfico */}
                   {datasSelecionadas.length > 0 && (
                     <div className="mb-6">
-                      <label className="label mb-3 block font-semibold text-gray-700">Escolha o tipo de visualização:</label>
-                      <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                      <label className="label mb-2 block font-semibold text-gray-700">Tipo de visualização:</label>
+                      <div className="flex gap-2 flex-wrap">
                         <button
                           onClick={() => setTipoGraficoSelecionado('radar')}
-                          className={`p-4 rounded-lg border-2 transition-all ${
+                          className={`px-4 py-2 rounded-md text-sm font-medium transition-all ${
                             tipoGraficoSelecionado === 'radar'
-                              ? 'border-blue-500 bg-blue-50 shadow-md'
-                              : 'border-gray-200 hover:border-blue-300 hover:bg-gray-50'
+                              ? 'bg-blue-500 text-white shadow-sm'
+                              : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                           }`}
                         >
-                          <div className="text-3xl mb-2">🎯</div>
-                          <div className="font-semibold text-sm">Radar</div>
+                          Radar
                         </button>
 
                         <button
                           onClick={() => setTipoGraficoSelecionado('barras')}
-                          className={`p-4 rounded-lg border-2 transition-all ${
+                          className={`px-4 py-2 rounded-md text-sm font-medium transition-all ${
                             tipoGraficoSelecionado === 'barras'
-                              ? 'border-green-500 bg-green-50 shadow-md'
-                              : 'border-gray-200 hover:border-green-300 hover:bg-gray-50'
+                              ? 'bg-green-500 text-white shadow-sm'
+                              : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                           }`}
                         >
-                          <div className="text-3xl mb-2">📊</div>
-                          <div className="font-semibold text-sm">Barras</div>
+                          Barras
                         </button>
 
                         <button
                           onClick={() => setTipoGraficoSelecionado('linhas')}
-                          className={`p-4 rounded-lg border-2 transition-all ${
+                          className={`px-4 py-2 rounded-md text-sm font-medium transition-all ${
                             tipoGraficoSelecionado === 'linhas'
-                              ? 'border-purple-500 bg-purple-50 shadow-md'
-                              : 'border-gray-200 hover:border-purple-300 hover:bg-gray-50'
+                              ? 'bg-purple-500 text-white shadow-sm'
+                              : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                           }`}
                         >
-                          <div className="text-3xl mb-2">📈</div>
-                          <div className="font-semibold text-sm">Linhas</div>
+                          Linhas
                         </button>
 
                         <button
                           onClick={() => setTipoGraficoSelecionado('pizza')}
-                          className={`p-4 rounded-lg border-2 transition-all ${
+                          className={`px-4 py-2 rounded-md text-sm font-medium transition-all ${
                             tipoGraficoSelecionado === 'pizza'
-                              ? 'border-orange-500 bg-orange-50 shadow-md'
-                              : 'border-gray-200 hover:border-orange-300 hover:bg-gray-50'
+                              ? 'bg-orange-500 text-white shadow-sm'
+                              : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                           }`}
                         >
-                          <div className="text-3xl mb-2">🥧</div>
-                          <div className="font-semibold text-sm">Pizza</div>
+                          Pizza
                         </button>
                       </div>
                     </div>
@@ -693,8 +689,8 @@ export default function PacienteRelatorio({ paciente, relatorioPaciente, agendam
                           return dados;
                         })()}>
                           <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
-                          <XAxis dataKey="name" angle={-45} textAnchor="end" height={120} />
-                          <YAxis label={{ value: 'Valor (%)', angle: -90, position: 'insideLeft' }} domain={[0, 100]} />
+                          <XAxis dataKey="name" angle={-45} textAnchor="end" height={120} style={{ fontSize: '11px' }} />
+                          <YAxis label={{ value: 'Valor (%)', angle: -90, position: 'insideLeft', style: { fontSize: '11px' } }} domain={[0, 100]} />
                           <RechartsTooltip 
                             contentStyle={{ backgroundColor: 'white', border: '1px solid #e5e7eb', borderRadius: '8px' }}
                             formatter={(value) => [`${value}%`, 'Valor']}
@@ -733,8 +729,8 @@ export default function PacienteRelatorio({ paciente, relatorioPaciente, agendam
                           return dados;
                         })()}>
                           <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
-                          <XAxis dataKey="name" angle={-45} textAnchor="end" height={120} />
-                          <YAxis label={{ value: 'Valor (%)', angle: -90, position: 'insideLeft' }} domain={[0, 100]} />
+                          <XAxis dataKey="name" angle={-45} textAnchor="end" height={120} style={{ fontSize: '11px' }} />
+                          <YAxis label={{ value: 'Valor (%)', angle: -90, position: 'insideLeft', style: { fontSize: '11px' } }} domain={[0, 100]} />
                           <RechartsTooltip 
                             contentStyle={{ backgroundColor: 'white', border: '1px solid #e5e7eb', borderRadius: '8px' }}
                             formatter={(value) => [`${value}%`, 'Valor']}
@@ -783,7 +779,7 @@ export default function PacienteRelatorio({ paciente, relatorioPaciente, agendam
                             cx="50%"
                             cy="50%"
                             labelLine={true}
-                            label={({ name, value, percent }) => `${name}: ${value}% (${(percent * 100).toFixed(1)}%)`}
+                            label={({ name, value, percent }) => `${name}: ${value}%`}
                             outerRadius={150}
                             fill="#8884d8"
                             dataKey="value"
@@ -823,11 +819,11 @@ export default function PacienteRelatorio({ paciente, relatorioPaciente, agendam
                             stroke: { width: 2 },
                             fill: { opacity: 0.2 },
                             colors: ["#0ea5e9", "#22c55e", "#f59e0b", "#ef4444", "#8b5cf6", "#ec4899"],
-                            markers: { size: 8 },
-                            dataLabels: { enabled: true, offsetY: 12, style: { fontSize: '14px', fontWeight: 600 } },
-                            legend: { show: true, position: 'bottom', fontSize: '14px', fontFamily: 'inherit', offsetY: 10 },
-                            xaxis: { categories: categorias, labels: { style: { fontSize: '13px', fontWeight: 500 } } },
-                            yaxis: { min: 0, max: 100, tickAmount: 5, labels: { formatter: val => `${val}`, style: { fontSize: '12px' } } },
+                            markers: { size: 6 },
+                            dataLabels: { enabled: true, offsetY: 8, style: { fontSize: '10px', fontWeight: 500 } },
+                            legend: { show: true, position: 'bottom', fontSize: '12px', fontFamily: 'inherit', offsetY: 10 },
+                            xaxis: { categories: categorias, labels: { style: { fontSize: '11px', fontWeight: 400 } } },
+                            yaxis: { min: 0, max: 100, tickAmount: 5, labels: { formatter: val => `${val}`, style: { fontSize: '11px' } } },
                             tooltip: { enabled: true, y: { formatter: val => `${val}` } },
                             grid: { show: true, strokeDashArray: 4, padding: { top: 20, bottom: 20, left: 20, right: 20 } },
                             plotOptions: {
