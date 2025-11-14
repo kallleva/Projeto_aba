@@ -1,34 +1,156 @@
-index-7WdBM06D.js:306 API Request: Object
-index-7WdBM06D.js:373 `DialogContent` requires a `DialogTitle` for the component to be accessible for screen reader users.
+index-e8McQD_k.js:301 🔧 API_BASE_URL configurado: https://auroraclin.com.br/api
+index-e8McQD_k.js:301 🔧 VITE_API_BASE_URL: undefined
+index-e8McQD_k.js:301 🔵 [AuthContext] VITE_API_BASE_URL: undefined
+index-e8McQD_k.js:301 🔵 [AuthContext] API_BASE_URL Final: https://auroraclin.com.br/api
+index-e8McQD_k.js:301 🔵 [AuthContext] VITE_API_BASE_URL: undefined
+index-e8McQD_k.js:301 🔵 [AuthContext] API_BASE_URL Final: https://auroraclin.com.br/api
+index-e8McQD_k.js:1247 Radar: relatorio ou respostas_calculadas_globais ausentes null
+Lge @ index-e8McQD_k.js:1247
+$ge @ index-e8McQD_k.js:1247
+Ay @ index-e8McQD_k.js:38
+YP @ index-e8McQD_k.js:40
+HP @ index-e8McQD_k.js:40
+cH @ index-e8McQD_k.js:40
+H0 @ index-e8McQD_k.js:40
+BP @ index-e8McQD_k.js:40
+R @ index-e8McQD_k.js:25
+re @ index-e8McQD_k.js:25
+index-e8McQD_k.js:1247 Aviso: relatorioPaciente ou respostas_calculadas_globais ausentes
+(anonymous) @ index-e8McQD_k.js:1247
+useMemo @ index-e8McQD_k.js:38
+or.useMemo @ index-e8McQD_k.js:9
+$ge @ index-e8McQD_k.js:1247
+Ay @ index-e8McQD_k.js:38
+YP @ index-e8McQD_k.js:40
+HP @ index-e8McQD_k.js:40
+cH @ index-e8McQD_k.js:40
+H0 @ index-e8McQD_k.js:40
+BP @ index-e8McQD_k.js:40
+R @ index-e8McQD_k.js:25
+re @ index-e8McQD_k.js:25
+index-e8McQD_k.js:1247 presencaData: Nenhum agendamento disponível
+(anonymous) @ index-e8McQD_k.js:1247
+useMemo @ index-e8McQD_k.js:38
+or.useMemo @ index-e8McQD_k.js:9
+$ge @ index-e8McQD_k.js:1247
+Ay @ index-e8McQD_k.js:38
+YP @ index-e8McQD_k.js:40
+HP @ index-e8McQD_k.js:40
+cH @ index-e8McQD_k.js:40
+H0 @ index-e8McQD_k.js:40
+BP @ index-e8McQD_k.js:40
+R @ index-e8McQD_k.js:25
+re @ index-e8McQD_k.js:25
+index-e8McQD_k.js:1247 === PacienteRelatorio Debug ===
+index-e8McQD_k.js:1247 relatorioPaciente completo: null
+index-e8McQD_k.js:1247 === Fim Debug ===
+index-e8McQD_k.js:368 `DialogContent` requires a `DialogTitle` for the component to be accessible for screen reader users.
 
 If you want to hide the `DialogTitle`, you can wrap it with our VisuallyHidden component.
 
 For more information, see https://radix-ui.com/primitives/docs/components/dialog
-(anonymous) @ index-7WdBM06D.js:373
-F0 @ index-7WdBM06D.js:40
-Ou @ index-7WdBM06D.js:40
-dH @ index-7WdBM06D.js:40
-uc @ index-7WdBM06D.js:40
-$P @ index-7WdBM06D.js:40
-hl @ index-7WdBM06D.js:38
-dH @ index-7WdBM06D.js:40
-uc @ index-7WdBM06D.js:40
-zP @ index-7WdBM06D.js:40
-I @ index-7WdBM06D.js:25
-re @ index-7WdBM06D.js:25
-index-7WdBM06D.js:373 Warning: Missing `Description` or `aria-describedby={undefined}` for {DialogContent}.
-(anonymous) @ index-7WdBM06D.js:373
-F0 @ index-7WdBM06D.js:40
-Ou @ index-7WdBM06D.js:40
-dH @ index-7WdBM06D.js:40
-uc @ index-7WdBM06D.js:40
-$P @ index-7WdBM06D.js:40
-hl @ index-7WdBM06D.js:38
-dH @ index-7WdBM06D.js:40
-uc @ index-7WdBM06D.js:40
-zP @ index-7WdBM06D.js:40
-I @ index-7WdBM06D.js:25
-re @ index-7WdBM06D.js:25
-index-7WdBM06D.js:306 API Response: Object
-index-7WdBM06D.js:1358 SyntaxError: Unexpected token '<', "<!DOCTYPE "... is not valid JSON
-O @ index-7WdBM06D.js:1358
+(anonymous) @ index-e8McQD_k.js:368
+M0 @ index-e8McQD_k.js:40
+Nu @ index-e8McQD_k.js:40
+fH @ index-e8McQD_k.js:40
+rc @ index-e8McQD_k.js:40
+zP @ index-e8McQD_k.js:40
+tl @ index-e8McQD_k.js:38
+fH @ index-e8McQD_k.js:40
+rc @ index-e8McQD_k.js:40
+BP @ index-e8McQD_k.js:40
+R @ index-e8McQD_k.js:25
+re @ index-e8McQD_k.js:25
+index-e8McQD_k.js:368 Warning: Missing `Description` or `aria-describedby={undefined}` for {DialogContent}.
+(anonymous) @ index-e8McQD_k.js:368
+M0 @ index-e8McQD_k.js:40
+Nu @ index-e8McQD_k.js:40
+fH @ index-e8McQD_k.js:40
+rc @ index-e8McQD_k.js:40
+zP @ index-e8McQD_k.js:40
+tl @ index-e8McQD_k.js:38
+fH @ index-e8McQD_k.js:40
+rc @ index-e8McQD_k.js:40
+BP @ index-e8McQD_k.js:40
+R @ index-e8McQD_k.js:25
+re @ index-e8McQD_k.js:25
+index-e8McQD_k.js:1247 Radar: relatorio ou respostas_calculadas_globais ausentes null
+Lge @ index-e8McQD_k.js:1247
+$ge @ index-e8McQD_k.js:1247
+Ay @ index-e8McQD_k.js:38
+Ry @ index-e8McQD_k.js:40
+YP @ index-e8McQD_k.js:40
+HP @ index-e8McQD_k.js:40
+cH @ index-e8McQD_k.js:40
+H0 @ index-e8McQD_k.js:40
+BP @ index-e8McQD_k.js:40
+R @ index-e8McQD_k.js:25
+re @ index-e8McQD_k.js:25
+index-e8McQD_k.js:1247 Aviso: relatorioPaciente ou respostas_calculadas_globais ausentes
+(anonymous) @ index-e8McQD_k.js:1247
+eP @ index-e8McQD_k.js:38
+or.useMemo @ index-e8McQD_k.js:9
+$ge @ index-e8McQD_k.js:1247
+Ay @ index-e8McQD_k.js:38
+Ry @ index-e8McQD_k.js:40
+YP @ index-e8McQD_k.js:40
+HP @ index-e8McQD_k.js:40
+cH @ index-e8McQD_k.js:40
+H0 @ index-e8McQD_k.js:40
+BP @ index-e8McQD_k.js:40
+R @ index-e8McQD_k.js:25
+re @ index-e8McQD_k.js:25
+index-e8McQD_k.js:1247 presencaData: Nenhum agendamento disponível
+(anonymous) @ index-e8McQD_k.js:1247
+eP @ index-e8McQD_k.js:38
+or.useMemo @ index-e8McQD_k.js:9
+$ge @ index-e8McQD_k.js:1247
+Ay @ index-e8McQD_k.js:38
+Ry @ index-e8McQD_k.js:40
+YP @ index-e8McQD_k.js:40
+HP @ index-e8McQD_k.js:40
+cH @ index-e8McQD_k.js:40
+H0 @ index-e8McQD_k.js:40
+BP @ index-e8McQD_k.js:40
+R @ index-e8McQD_k.js:25
+re @ index-e8McQD_k.js:25
+index-e8McQD_k.js:1247 Radar: relatorio ou respostas_calculadas_globais ausentes null
+Lge @ index-e8McQD_k.js:1247
+$ge @ index-e8McQD_k.js:1247
+Ay @ index-e8McQD_k.js:38
+Ry @ index-e8McQD_k.js:40
+YP @ index-e8McQD_k.js:40
+HP @ index-e8McQD_k.js:40
+cH @ index-e8McQD_k.js:40
+H0 @ index-e8McQD_k.js:40
+BP @ index-e8McQD_k.js:40
+R @ index-e8McQD_k.js:25
+re @ index-e8McQD_k.js:25
+index-e8McQD_k.js:1247 Aviso: relatorioPaciente ou respostas_calculadas_globais ausentes
+(anonymous) @ index-e8McQD_k.js:1247
+eP @ index-e8McQD_k.js:38
+or.useMemo @ index-e8McQD_k.js:9
+$ge @ index-e8McQD_k.js:1247
+Ay @ index-e8McQD_k.js:38
+Ry @ index-e8McQD_k.js:40
+YP @ index-e8McQD_k.js:40
+HP @ index-e8McQD_k.js:40
+cH @ index-e8McQD_k.js:40
+H0 @ index-e8McQD_k.js:40
+BP @ index-e8McQD_k.js:40
+R @ index-e8McQD_k.js:25
+re @ index-e8McQD_k.js:25
+index-e8McQD_k.js:1247 presencaData: Nenhum agendamento disponível
+(anonymous) @ index-e8McQD_k.js:1247
+eP @ index-e8McQD_k.js:38
+or.useMemo @ index-e8McQD_k.js:9
+$ge @ index-e8McQD_k.js:1247
+Ay @ index-e8McQD_k.js:38
+Ry @ index-e8McQD_k.js:40
+YP @ index-e8McQD_k.js:40
+HP @ index-e8McQD_k.js:40
+cH @ index-e8McQD_k.js:40
+H0 @ index-e8McQD_k.js:40
+BP @ index-e8McQD_k.js:40
+R @ index-e8McQD_k.js:25
+re @ index-e8McQD_k.js:25
