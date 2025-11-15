@@ -33,20 +33,20 @@ export default function Formularios() {
   }
 
   const handleDeleteFormulario = async (id) => {
-    if (!window.confirm('Tem certeza que deseja excluir este formulário?')) return
+    if (!window.confirm('Tem certeza que deseja excluir este Protocolo?')) return
     
     try {
       await ApiService.deleteFormulario(id)
       setFormularios(formularios.filter(f => f.id !== id))
       toast({
         title: 'Sucesso',
-        description: 'Formulário excluído com sucesso!'
+        description: 'Protocolo excluído com sucesso!'
       })
     } catch (err) {
-      console.error('Erro ao deletar formulário:', err)
+      console.error('Erro ao deletar Protocolo:', err)
       toast({
         title: 'Erro',
-        description: 'Erro ao excluir formulário: ' + err.message,
+        description: 'Erro ao excluir Protocolo: ' + err.message,
         variant: 'destructive'
       })
     }
@@ -68,7 +68,7 @@ export default function Formularios() {
             style={{ backgroundColor: '#0ea5e9', color: 'white' }}
           >
             <Plus className="mr-2 h-4 w-4" />
-            Novo Formulário
+            Novo Protocolo
           </Button>
         </div>
       </div>
@@ -90,15 +90,15 @@ export default function Formularios() {
           <div className="alert alert-info">
             <FileText size={18} />
             <div className="alert-content">
-              <p className="font-medium">Nenhum formulário criado ainda</p>
-              <p className="text-sm mt-1">Crie o primeiro formulário para começar a gerenciar checklists</p>
+              <p className="font-medium">Nenhum Protocolo criado ainda</p>
+              <p className="text-sm mt-1">Crie o primeiro Protocolo para começar a gerenciar checklists</p>
               <Button 
                 onClick={() => navigate("/protocolo/novo")}
                 className="mt-3"
                 style={{ backgroundColor: '#0ea5e9', color: 'white' }}
               >
                 <Plus className="mr-2 h-4 w-4" />
-                Criar Primeiro Formulário
+                Criar Primeiro Protocolo
               </Button>
             </div>
           </div>
@@ -183,7 +183,7 @@ export default function Formularios() {
                             size="sm" 
                             onClick={() => navigate(`/protocolo/${form.id}`)}
                             className="h-9 w-9 p-0"
-                            title="Editar formulário"
+                            title="Editar Protocolo"
                           >
                             <Edit size={16} />
                           </Button>
@@ -192,7 +192,7 @@ export default function Formularios() {
                             size="sm" 
                             onClick={() => handleDeleteFormulario(form.id)}
                             className="h-9 w-9 p-0"
-                            title="Excluir formulário"
+                            title="Excluir Protocolo"
                           >
                             <Trash2 size={16} />
                           </Button>

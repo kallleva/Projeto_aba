@@ -15,6 +15,7 @@ import MetasTerapeuticas from '@/components/pages/MetasTerapeuticas'
 import RegistroDiario from '@/components/pages/RegistroDiario'
 import RegistroDiarioGrid from '@/components/pages/RegistroDiarioGrid'
 import RegistroDiarioEdit from '@/components/pages/RegistroDiarioEdit'
+import RegistroDiarioDescritivo from '@/components/pages/RegistroDiarioDescritivo'
 import RegistroDiarioExportImport from '@/components/pages/RegistroDiarioExportImport'
 import Relatorios from '@/components/pages/Relatorios'
 import Formulario from '@/components/pages/Formulario'
@@ -85,6 +86,11 @@ function App() {
                     <Route path="/registro-diario/edit/:id" element={
                       <ProtectedRoute requireRole={['PROFISSIONAL', 'ADMIN']}>
                         <RegistroDiarioEdit />
+                      </ProtectedRoute>
+                    } />
+                    <Route path="/registro-diario/descritivo/:id" element={
+                      <ProtectedRoute requireRole={['PROFISSIONAL', 'ADMIN']}>
+                        <RegistroDiarioDescritivo />
                       </ProtectedRoute>
                     } />
                     <Route path="/registro-diario/export-import" element={

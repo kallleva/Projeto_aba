@@ -89,13 +89,13 @@ export default function FormularioEditor() {
       setLoading(true)
       try {
         const data = await ApiService.getFormulario(id)
-        console.log('Formulário carregado:', data)
+        console.log('Protocolo carregado:', data)
         setFormData(data)
       } catch (err) {
-        console.error("Erro ao carregar formulário:", err)
+        console.error("Erro ao carregar Protocolo:", err)
         toast({
           title: 'Erro',
-          description: 'Erro ao carregar formulário: ' + err.message,
+          description: 'Erro ao carregar Protocolo: ' + err.message,
           variant: 'destructive'
         })
       } finally {
@@ -154,7 +154,7 @@ export default function FormularioEditor() {
       if (!formData.nome || formData.nome.trim() === '') {
         toast({
           title: 'Erro de validação',
-          description: 'O nome do formulário é obrigatório',
+          description: 'O nome do Protocolo é obrigatório',
           variant: 'destructive'
         })
         setSaving(false)
@@ -164,7 +164,7 @@ export default function FormularioEditor() {
       if (!formData.perguntas || formData.perguntas.length === 0) {
         toast({
           title: 'Erro de validação',
-          description: 'Adicione pelo menos uma pergunta ao formulário',
+          description: 'Adicione pelo menos uma pergunta ao Protocolo',
           variant: 'destructive'
         })
         setSaving(false)
@@ -265,23 +265,23 @@ export default function FormularioEditor() {
         resultado = await ApiService.updateFormulario(id, payload)
         toast({
           title: 'Sucesso',
-          description: 'Formulário atualizado com sucesso!'
+          description: 'Protocolo atualizado com sucesso!'
         })
       } else {
         resultado = await ApiService.createFormulario(payload)
         toast({
           title: 'Sucesso',
-          description: 'Formulário criado com sucesso!'
+          description: 'Protocolo criado com sucesso!'
         })
       }
 
       console.log('Resultado da API:', resultado)
       navigate(-1) // volta para a lista
     } catch (err) {
-      console.error("Erro ao salvar formulário:", err)
+      console.error("Erro ao salvar Protocolo:", err)
       toast({
         title: 'Erro ao salvar',
-        description: 'Erro ao salvar formulário: ' + err.message,
+        description: 'Erro ao salvar Protocolo: ' + err.message,
         variant: 'destructive'
       })
     } finally {
@@ -293,7 +293,7 @@ export default function FormularioEditor() {
     <div className="p-6 flex items-center justify-center">
       <div className="text-center">
         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto"></div>
-        <p className="mt-2 text-muted-foreground">Carregando formulário...</p>
+        <p className="mt-2 text-muted-foreground">Carregando Protocolo...</p>
       </div>
     </div>
   )
@@ -310,10 +310,10 @@ export default function FormularioEditor() {
       <div className="flex justify-between items-center">
         <div>
           <h2 className="text-3xl font-bold tracking-tight">
-            {id ? "Editar Formulário" : "Novo Formulário"}
+            {id ? "Editar Protocolo" : "Novo Protocolo"}
           </h2>
           <p className="text-muted-foreground">
-            {id ? "Atualize as informações do formulário" : "Crie um novo formulário para checklists diários"}
+            {id ? "Atualize as informações do Protocolo" : "Crie um novo Protocolo para checklists diários"}
           </p>
         </div>
         <Button variant="outline" size="sm" onClick={() => navigate(-1)}>
@@ -325,7 +325,7 @@ export default function FormularioEditor() {
       {/* Nome, Categoria e Descrição */}
       <div className="grid gap-4 grid-cols-1 sm:grid-cols-2">
         <div>
-          <Label htmlFor="nome">Nome do Formulário *</Label>
+          <Label htmlFor="nome">Nome do Protocolo *</Label>
           <Input
             id="nome"
             value={formData.nome}
@@ -358,7 +358,7 @@ export default function FormularioEditor() {
             value={formData.descricao}
             onChange={(e) => setFormData({ ...formData, descricao: e.target.value })}
             rows={4}
-            placeholder="Descreva o objetivo e contexto deste formulário..."
+            placeholder="Descreva o objetivo e contexto deste Protocolo..."
           />
         </div>
       </div>
@@ -367,10 +367,10 @@ export default function FormularioEditor() {
       <div className="space-y-3">
         <div className="flex justify-between items-center">
           <div>
-            <h4 className="font-semibold">Perguntas do Formulário</h4>
+            <h4 className="font-semibold">Perguntas do Protocolo</h4>
             <p className="text-sm text-muted-foreground">
               {formData.perguntas.length === 0 
-                ? "Adicione perguntas para criar o formulário"
+                ? "Adicione perguntas para criar o Protocolo"
                 : `${formData.perguntas.length} pergunta${formData.perguntas.length > 1 ? 's' : ''} adicionada${formData.perguntas.length > 1 ? 's' : ''}`
               }
             </p>
@@ -387,7 +387,7 @@ export default function FormularioEditor() {
               <AlertCircle className="h-12 w-12 mx-auto text-gray-400 mb-4" />
               <h3 className="text-lg font-medium text-gray-900 mb-2">Nenhuma pergunta adicionada</h3>
               <p className="text-gray-500 mb-4">
-                Adicione perguntas para criar seu formulário de checklist diário.
+                Adicione perguntas para criar seu Protocolo de checklist diário.
               </p>
               <Button onClick={addPergunta} variant="outline">
                 <Plus className="mr-2 h-4 w-4" />
@@ -632,7 +632,7 @@ export default function FormularioEditor() {
             </>
           ) : (
             <>
-              {id ? "Atualizar Formulário" : "Criar Formulário"}
+              {id ? "Atualizar Protocolo" : "Criar Protocolo"}
             </>
           )}
         </Button>

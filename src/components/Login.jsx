@@ -28,8 +28,8 @@ export default function Login() {
     setError('')
 
     console.log('='.repeat(50))
-    console.log('🎯 [LOGIN FORM] Formulário submetido')
-    console.log('📝 Dados do formulário:', formData)
+    console.log('🎯 [LOGIN FORM] Protocolo submetido')
+    console.log('📝 Dados do protocolo:', formData)
     console.log('🌍 Variáveis de ambiente:', {
       VITE_API_BASE_URL: import.meta.env.VITE_API_BASE_URL,
       NODE_ENV: import.meta.env.NODE_ENV
@@ -144,7 +144,7 @@ export default function Login() {
             <p className="text-sm font-light text-purple-200">Do amanhecer ao dia perfeito</p>
           </div>
 
-          {/* Formulário Mobile - Sem card branco */}
+          {/* Protocolo Mobile - Sem card branco */}
           <div className="w-full max-w-sm mx-auto space-y-5">
             <div className="text-center mb-5">
               <h2 className="text-2xl font-bold text-white mb-0.5">Bem-vindo(a)</h2>
@@ -426,9 +426,9 @@ export default function Login() {
 
       </div>
 
-      {/* LADO DIREITO - Formulário de Login Desktop Apenas */}
+      {/* LADO DIREITO - Protocolo de Login Desktop Apenas */}
       <div className="hidden lg:flex lg:w-1/2 flex-col justify-center px-6 sm:px-12 lg:px-16 bg-white">
-                {/* Formulário Desktop */}
+                {/* Protocolo Desktop */}
         <div className="max-w-sm w-full mx-auto">
           <div className="text-center mb-8">
             <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">Bem-vindo(a)</h2>

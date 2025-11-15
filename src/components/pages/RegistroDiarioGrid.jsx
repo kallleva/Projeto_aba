@@ -21,6 +21,8 @@ export default function RegistroDiarioGrid() {
     nota_max: ''
   });
   const [registrosFiltrados, setRegistrosFiltrados] = useState([]);
+  const [paginaAtual, setPaginaAtual] = useState(1);
+  const registrosPorPagina = 10;
   const { toast } = useToast();
   const navigate = useNavigate();
 
@@ -36,7 +38,7 @@ export default function RegistroDiarioGrid() {
     try {
       setLoading(true);
       const [registrosData, metasData] = await Promise.all([
-        ApiService.getChecklistsDiarios(),
+        ApiService.getChecklistsDiariosResumo(), // Endpoint otimizado - sem respostas
         ApiService.getMetasTerapeuticas()
       ]);
       setRegistros(registrosData);
@@ -70,7 +72,14 @@ export default function RegistroDiarioGrid() {
       filtrados = filtrados.filter(r => r.nota <= Number(filtros.nota_max));
     }
     setRegistrosFiltrados(filtrados);
+    setPaginaAtual(1); // Volta para primeira página ao filtrar
   };
+
+  // Calcular registros da página atual
+  const indiceInicio = (paginaAtual - 1) * registrosPorPagina;
+  const indiceFim = indiceInicio + registrosPorPagina;
+  const registrosPaginados = registrosFiltrados.slice(indiceInicio, indiceFim);
+  const totalPaginas = Math.ceil(registrosFiltrados.length / registrosPorPagina);
 
   const limparFiltros = () => {
     setFiltros({
@@ -84,7 +93,12 @@ export default function RegistroDiarioGrid() {
 
   const handleEdit = (registro) => {
     if (registro && registro.id) {
-      navigate(`/registro-diario/edit/${registro.id}`);
+      // Se tem formulario_id, vai para tela de protocolo, senão vai para descritivo
+      if (registro.formulario_id) {
+        navigate(`/registro-diario/edit/${registro.id}`);
+      } else {
+        navigate(`/registro-diario/descritivo/${registro.id}`);
+      }
     } else {
       navigate('/registro-diario/edit/novo');
     }
@@ -131,10 +145,19 @@ export default function RegistroDiarioGrid() {
             </Button>
             <Button 
               onClick={() => navigate('/registro-diario/edit/novo')}
-              style={{ backgroundColor: '#0ea5e9', color: 'white' }}
+              style={{ backgroundColor: '#10b981', color: 'white' }}
+              className="flex items-center gap-2"
             >
-              <Plus className="mr-2 h-4 w-4" />
-              Novo Registro
+              <Plus className="h-4 w-4" />
+              📋 Novo Protocolo
+            </Button>
+            <Button 
+              onClick={() => navigate('/registro-diario/descritivo/novo')}
+              style={{ backgroundColor: '#0ea5e9', color: 'white' }}
+              className="flex items-center gap-2"
+            >
+              <Plus className="h-4 w-4" />
+              📝 Nova Descrição
             </Button>
           </div>
         </div>
@@ -327,6 +350,7 @@ export default function RegistroDiarioGrid() {
             <table className="table">
               <thead>
                 <tr>
+                  <th>Tipo</th>
                   <th>Paciente</th>
                   <th>Data</th>
                   <th>Meta</th>
@@ -335,8 +359,19 @@ export default function RegistroDiarioGrid() {
                 </tr>
               </thead>
               <tbody>
-                {registrosFiltrados.map(r => (
+                {registrosPaginados.map(r => (
                   <tr key={r.id}>
+                    <td>
+                      {r.formulario_id ? (
+                        <span className="badge" style={{backgroundColor: 'var(--color-success-100)', color: 'var(--color-success-800)', fontSize: '11px', padding: '4px 8px'}}>
+                          Protocolo
+                        </span>
+                      ) : (
+                        <span className="badge" style={{backgroundColor: 'var(--color-info-100)', color: 'var(--color-info-800)', fontSize: '11px', padding: '4px 8px'}}>
+                          Descritivo
+                        </span>
+                      )}
+                    </td>
                     <td className="font-semibold">{r.paciente_nome || 'N/A'}</td>
                     <td>
                       <span className="text-sm" style={{color: 'var(--color-neutral-700)'}}>
@@ -379,6 +414,47 @@ export default function RegistroDiarioGrid() {
                 ))}
               </tbody>
             </table>
+
+            {/* Paginação */}
+            {totalPaginas > 1 && (
+              <div className="flex items-center justify-between mt-6 pt-6 border-t" style={{borderTopColor: 'var(--color-neutral-200)'}}>
+                <p className="text-sm" style={{color: 'var(--color-neutral-600)'}}>
+                  Mostrando {indiceInicio + 1} a {Math.min(indiceFim, registrosFiltrados.length)} de {registrosFiltrados.length} registros
+                </p>
+                <div className="flex gap-2">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setPaginaAtual(p => Math.max(1, p - 1))}
+                    disabled={paginaAtual === 1}
+                  >
+                    ← Anterior
+                  </Button>
+                  <div className="flex gap-1">
+                    {Array.from({ length: totalPaginas }, (_, i) => i + 1).map(pagina => (
+                      <Button
+                        key={pagina}
+                        variant={paginaAtual === pagina ? "default" : "outline"}
+                        size="sm"
+                        onClick={() => setPaginaAtual(pagina)}
+                        style={paginaAtual === pagina ? { backgroundColor: 'var(--color-info-500)', color: 'white' } : {}}
+                        className="h-9 w-9 p-0"
+                      >
+                        {pagina}
+                      </Button>
+                    ))}
+                  </div>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setPaginaAtual(p => Math.min(totalPaginas, p + 1))}
+                    disabled={paginaAtual === totalPaginas}
+                  >
+                    Próxima →
+                  </Button>
+                </div>
+              </div>
+            )}
           </div>
         )}
       </div>

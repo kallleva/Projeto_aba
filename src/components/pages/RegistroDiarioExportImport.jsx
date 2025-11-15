@@ -52,7 +52,7 @@ export default function RegistroDiarioExportImport() {
     } catch (error) {
       toast({
         title: 'Erro',
-        description: 'Erro ao carregar metas e formulários: ' + error.message,
+        description: 'Erro ao carregar metas e Protocolos: ' + error.message,
         variant: 'destructive',
       });
     } finally {
@@ -81,7 +81,7 @@ export default function RegistroDiarioExportImport() {
     if (!formularioSelecionado || !perguntas.length) {
       toast({
         title: 'Atenção',
-        description: 'Selecione um formulário com perguntas para exportar',
+        description: 'Selecione um Protocolo com perguntas para exportar',
         variant: 'destructive',
       });
       return;
@@ -180,7 +180,7 @@ export default function RegistroDiarioExportImport() {
     if (!formularioSelecionado || !metaSelecionada) {
       toast({
         title: 'Atenção',
-        description: 'Selecione meta e formulário',
+        description: 'Selecione meta e Protocolo',
         variant: 'destructive',
       });
       return;
@@ -210,7 +210,7 @@ export default function RegistroDiarioExportImport() {
         description: 'Respostas salvas com sucesso!',
       });
 
-      // Limpar formulário
+      // Limpar Protocolo
       setPacienteSelecionado(null);
       setMetaSelecionada(null);
       setFormularioSelecionado(null);
@@ -231,7 +231,7 @@ export default function RegistroDiarioExportImport() {
 
   return (
     <div className="page-section">
-      <div className="page-title">Exportar/Importar Formulário</div>
+      <div className="page-title">Exportar/Importar Protocolo</div>
       <div className="page-subtitle">
         Exporte perguntas para o cliente preencher em Excel, ou importe as respostas preenchidas
       </div>
@@ -263,7 +263,7 @@ export default function RegistroDiarioExportImport() {
           </button>
         </div>
 
-        {/* Seleção de Paciente, Meta, Formulário e Data */}
+        {/* Seleção de Paciente, Meta, Protocolo e Data */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="form-group">
             <Label className="text-sm font-semibold text-gray-700 mb-2 block">Paciente *</Label>
@@ -305,14 +305,14 @@ export default function RegistroDiarioExportImport() {
           </div>
 
           <div className="form-group">
-            <Label className="text-sm font-semibold text-gray-700 mb-2 block">Formulário *</Label>
+            <Label className="text-sm font-semibold text-gray-700 mb-2 block">Protocolo *</Label>
             <Select
               value={formularioSelecionado ? formularioSelecionado.id.toString() : ''}
               onValueChange={v => carregarPerguntas(v)}
               disabled={!pacienteSelecionado}
             >
               <SelectTrigger className="h-10 bg-white border border-gray-300 rounded-lg hover:border-gray-400 focus:border-[#0ea5e9] disabled:bg-gray-100 disabled:cursor-not-allowed">
-                <SelectValue placeholder="Selecione o formulário" />
+                <SelectValue placeholder="Selecione o Protocolo" />
               </SelectTrigger>
               <SelectContent>
                 {formularios.map(f => (
@@ -340,12 +340,12 @@ export default function RegistroDiarioExportImport() {
           <div className="bg-blue-50 border border-blue-200 rounded-lg p-6 space-y-4">
             <div className="flex items-center gap-2">
               <Download className="w-5 h-5 text-blue-600" />
-              <h3 className="font-semibold text-gray-800">Exportar Formulário</h3>
+              <h3 className="font-semibold text-gray-800">Exportar Protocolo</h3>
             </div>
             <p className="text-sm text-gray-600">
               {perguntas.length > 0
                 ? `Pronto para exportar ${perguntas.filter(p => p.tipo !== 'PERCENTUAL' && p.tipo !== 'FORMULA').length} perguntas`
-                : 'Selecione um formulário acima para exportar'}
+                : 'Selecione um Protocolo acima para exportar'}
             </p>
             <button
               onClick={exportarParaExcel}

@@ -8,14 +8,26 @@ class ApiService {
     const url = `${API_BASE_URL}/${cleanEndpoint}`
     const token = localStorage.getItem('token')
     console.log('🔐 Token obtido:', token ? '✓ Presente' : '✗ Ausente')
+    
+    // Se for FormData, não definir Content-Type (browser define automaticamente)
+    const headers = options.isFormData 
+      ? {
+          ...(token && { 'Authorization': `Bearer ${token}` }),
+          ...options.headers,
+        }
+      : {
+          'Content-Type': 'application/json',
+          ...(token && { 'Authorization': `Bearer ${token}` }),
+          ...options.headers,
+        }
+    
     const config = {
-      headers: {
-        'Content-Type': 'application/json',
-        ...(token && { 'Authorization': `Bearer ${token}` }),
-        ...options.headers,
-      },
+      headers,
       ...options,
     }
+    
+    // Remover a flag isFormData do config
+    delete config.isFormData
 
     try {
       console.log('🔗 [API] Requisição:', { url, endpoint, cleanEndpoint })
@@ -282,6 +294,11 @@ class ApiService {
     return this.request('/checklists-diarios')
   }
 
+  // Endpoint otimizado para grid - sem respostas, mais rápido
+  async getChecklistsDiariosResumo() {
+    return this.request('/checklists-diarios/resumo')
+  }
+
   async getChecklistDiario(id) {
     return this.request(`/checklists-diarios/${id}`)
   }
@@ -308,6 +325,40 @@ class ApiService {
     return this.request(`/checklists-diarios/${id}`, {
       method: 'DELETE',
     })
+  }
+
+  // ========================
+  // Anexos de Checklist
+  // ========================
+  async uploadAnexoChecklist(checklistId, arquivo, descricao = '') {
+    const formData = new FormData()
+    formData.append('arquivo', arquivo)
+    formData.append('checklist_id', checklistId)
+    if (descricao) formData.append('descricao', descricao)
+    
+    return this.request('/anexos-checklist', {
+      method: 'POST',
+      body: formData,
+      // Não enviar Content-Type, o browser define automaticamente para multipart/form-data
+      headers: {
+        'Authorization': `Bearer ${localStorage.getItem('token')}`
+      },
+      isFormData: true
+    })
+  }
+
+  async getAnexosChecklist(checklistId) {
+    return this.request(`/checklists-diarios/${checklistId}/anexos`)
+  }
+
+  async deleteAnexoChecklist(anexoId) {
+    return this.request(`/anexos-checklist/${anexoId}`, {
+      method: 'DELETE',
+    })
+  }
+
+  getAnexoDownloadUrl(anexoId) {
+    return `${this.baseURL}/anexos-checklist/${anexoId}/download`
   }
 
   // Métodos para fórmulas de checklist

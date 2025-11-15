@@ -56,7 +56,7 @@ function getApexRadarData(relatorio) {
           break;
         }
       }
-      return formularioId ? `${item.data} (Formulário ${formularioId})` : item.data;
+      return formularioId ? `${item.data} (Protocolo ${formularioId})` : item.data;
     });
     
     const series = globaisFiltrados.map((item) => {
@@ -84,7 +84,7 @@ function getApexRadarData(relatorio) {
         return 0;
       });
       return {
-        name: formularioId ? `${item.data} (Formulário ${formularioId})` : item.data,
+        name: formularioId ? `${item.data} (Protocolo ${formularioId})` : item.data,
         data: serieData
       };
     });
@@ -246,28 +246,41 @@ export default function PacienteRelatorio({ paciente, relatorioPaciente, agendam
 
     const datas = relatorioPaciente.respostas_calculadas_globais
       .filter(item => {
+        // Filtrar por data
         const dataItem = new Date(item.data);
         const passaDataInicial = !dataInicialObj || dataItem >= dataInicialObj;
         const passaDataFinal = !dataFinalObj || dataItem <= dataFinalObj;
-        return passaDataInicial && passaDataFinal;
-      })
-      .map((item, idx) => {
-        let nomeFormulario = null;
+        
+        // Verificar se tem formulário vinculado (pelo menos um índice com formulario_id)
+        let temFormulario = false;
         for (const v of Object.values(item.indices)) {
-          if (v && typeof v === 'object' && v.formulario_nome && v.valor !== undefined && v.valor !== null) {
-            nomeFormulario = v.formulario_nome;
+          if (v && typeof v === 'object' && v.formulario_id) {
+            temFormulario = true;
             break;
           }
         }
-        const label = nomeFormulario ? `${formatDate(item.data)} - ${nomeFormulario}` : formatDate(item.data);
-        console.log(`Data ${idx}:`, { value: item.data, label });
+        
+        return passaDataInicial && passaDataFinal && temFormulario;
+      })
+      .map((item, idx) => {
+        let nomeFormulario = null;
+        let formularioId = null;
+        for (const v of Object.values(item.indices)) {
+          if (v && typeof v === 'object' && v.formulario_nome && v.valor !== undefined && v.valor !== null) {
+            nomeFormulario = v.formulario_nome;
+            formularioId = v.formulario_id;
+            break;
+          }
+        }
+        const label = nomeFormulario ? `${formatDate(item.data)} - ${nomeFormulario}` : `${formatDate(item.data)} - Protocolo ${formularioId}`;
+        console.log(`Data ${idx}:`, { value: item.data, label, temFormulario: !!formularioId });
         return {
           value: item.data,
           label
         };
       });
 
-    console.log('todasDatas montadas:', datas);
+    console.log('todasDatas montadas (apenas com formulário):', datas);
     return datas;
   }, [relatorioPaciente, formatDate, dataInicial, dataFinal]);
 

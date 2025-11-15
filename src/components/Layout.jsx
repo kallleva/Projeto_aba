@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
-import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet'
+import { Sheet, SheetContent, SheetTrigger, SheetTitle } from '@/components/ui/sheet'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
 import { useAuth } from '@/contexts/AuthContext'
 import { 
@@ -35,7 +35,7 @@ const navigation = [
 ]
 
 export default function Layout({ children }) {
-  const [sidebarOpen, setSidebarOpen] = useState(true)
+  const [sidebarOpen, setSidebarOpen] = useState(false)
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false)
   const location = useLocation()
   const { user, logout } = useAuth()
@@ -142,6 +142,7 @@ export default function Layout({ children }) {
                   </Button>
                 </SheetTrigger>
                 <SheetContent side="left" className="w-64 p-0">
+                  <SheetTitle className="sr-only">Menu de navegação</SheetTitle>
                   <div className="flex flex-col h-full">
                     {/* Mobile Sidebar Header */}
                     <div className="flex items-center gap-3 h-20 px-4 border-b border-gray-100">

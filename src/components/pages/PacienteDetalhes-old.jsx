@@ -251,7 +251,7 @@ export default function PacienteDetalhes() {
         })
       }
 
-      // Recarregar agendamentos e resetar formulário
+      // Recarregar agendamentos e resetar protocolo
       await loadAgendamentos()
       resetAgendamentoForm()
     } catch (error) {
@@ -302,7 +302,7 @@ export default function PacienteDetalhes() {
         })
       }
 
-      // Recarregar vínculos e resetar formulário
+      // Recarregar vínculos e resetar protocolo
       await loadVinculos()
       resetVinculoForm()
     } catch (error) {
@@ -813,7 +813,7 @@ export default function PacienteDetalhes() {
               </Button>
             </div>
 
-            {/* Formulário de Vínculo */}
+            {/* Protocolo de Vínculo */}
             {showVinculoForm && (
               <Card>
                 <CardHeader>
@@ -1071,7 +1071,7 @@ export default function PacienteDetalhes() {
               </Button>
             </div>
 
-            {/* Formulário de Agendamento */}
+            {/* Protocolo de Agendamento */}
             {showAgendamentoForm && (
               <Card>
                 <CardHeader>

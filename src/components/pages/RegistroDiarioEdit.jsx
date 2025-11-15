@@ -26,7 +26,7 @@ export default function RegistroDiarioEdit() {
   const [formularioSelecionado, setFormularioSelecionado] = useState(null);
   const [loading, setLoading] = useState(true);
   const [errosObrigatorios, setErrosObrigatorios] = useState({});
-  const { toast } = useToast();
+  const { toast} = useToast();
   const { id } = useParams();
   const navigate = useNavigate();
 
@@ -439,6 +439,23 @@ export default function RegistroDiarioEdit() {
       });
   };
 
+  if (loading) {
+    return (
+      <div className="w-full max-w-7xl mx-auto px-4 py-8 flex items-center justify-center min-h-screen">
+        <div className="bg-white rounded-2xl p-10 flex flex-col items-center gap-6 shadow-2xl border border-gray-100">
+          <div className="relative">
+            <div className="animate-spin rounded-full h-20 w-20 border-4 border-blue-100"></div>
+            <div className="animate-spin rounded-full h-20 w-20 border-4 border-t-blue-500 border-r-blue-400 absolute top-0 left-0"></div>
+          </div>
+          <div className="text-center">
+            <p className="text-xl font-bold text-gray-800 mb-1">Carregando registro</p>
+            <p className="text-sm text-gray-500">Aguarde um momento...</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="w-full max-w-7xl mx-auto px-4 py-8">
       {/* Header */}
@@ -463,7 +480,7 @@ export default function RegistroDiarioEdit() {
       <div className="card-spacing">
         <form onSubmit={handleSubmit} className="space-y-8">
           
-          {/* Seção 1: Seleções Principais */}
+          {/* Seção 1: Seleções Principais (sempre visível) */}
           <div>
             <div className="section-header mb-6">
               <AlertCircle size={18} className="color-info-icon" />
@@ -570,7 +587,7 @@ export default function RegistroDiarioEdit() {
             </div>
           </div>
 
-          {/* Seção 2: Perguntas do Formulário */}
+          {/* Seção de Perguntas do Formulário */}
           {perguntas.length > 0 && (
             <div className="border-t pt-8" style={{borderTopColor: 'var(--color-neutral-200)'}}>
               <div className="section-header mb-6">
