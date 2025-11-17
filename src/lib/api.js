@@ -6,22 +6,20 @@ class ApiService {
     // Remove barra inicial e final para evitar duplas barras
     const cleanEndpoint = endpoint.replace(/^\/+|\/+$/g, '')
     const url = `${API_BASE_URL}/${cleanEndpoint}`
-    const token = localStorage.getItem('token')
-    console.log('🔐 Token obtido:', token ? '✓ Presente' : '✗ Ausente')
+    console.log('🔐 Token: HttpOnly Cookie (enviado automaticamente)')
     
     // Se for FormData, não definir Content-Type (browser define automaticamente)
     const headers = options.isFormData 
       ? {
-          ...(token && { 'Authorization': `Bearer ${token}` }),
           ...options.headers,
         }
       : {
           'Content-Type': 'application/json',
-          ...(token && { 'Authorization': `Bearer ${token}` }),
           ...options.headers,
         }
     
     const config = {
+      credentials: 'include',  // Envia cookies automaticamente (HttpOnly)
       headers,
       ...options,
     }
@@ -40,7 +38,7 @@ class ApiService {
       
       // Log de headers importantes
       console.log('🔐 [API] Headers:', {
-        authorization: config.headers.Authorization ? '✓ Presente' : '✗ Ausente',
+        credentials: 'include (HttpOnly Cookie)',
         contentType: contentType,
         statusCode: response.status
       })
@@ -51,7 +49,7 @@ class ApiService {
         
         // Log especial para erro 401
         if (response.status === 401) {
-          console.error('❌ [401 UNAUTHORIZED] Token inválido ou ausente. Verifique o localStorage "token".')
+          console.error('❌ [401 UNAUTHORIZED] Cookie de autenticação inválido ou expirado. Faça login novamente.')
         }
         
         // Criar erro com código de status

@@ -14,26 +14,23 @@ export const useAuth = () => {
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null)
   const [loading, setLoading] = useState(true)
-  const [token, setToken] = useState(localStorage.getItem('token'))
   
   // Debug: Mostrar variáveis de ambiente
   console.log('🔵 [AuthContext] VITE_API_BASE_URL:', import.meta.env.VITE_API_BASE_URL)
   const API_BASE_URL = (import.meta.env.VITE_API_BASE_URL || 'https://auroraclin.com.br/api').replace(/\/$/, '')
   console.log('🔵 [AuthContext] API_BASE_URL Final:', API_BASE_URL)
+  
+  // Verificar autenticação ao montar o componente
   useEffect(() => {
-    if (token) {
-      verifyToken()
-    } else {
-      setLoading(false)
-    }
-  }, [token])
+    verifyToken()
+  }, [])
 
   const verifyToken = async () => {
     try {
       const response = await fetch(`${API_BASE_URL}/auth/verify-token`, {
         method: 'POST',
+        credentials: 'include',  // Envia cookie automaticamente
         headers: {
-          'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json'
         }
       })
@@ -42,12 +39,12 @@ export const AuthProvider = ({ children }) => {
         const data = await response.json()
         setUser(data.usuario)
       } else {
-        // Token inválido, remover
-        logout()
+        // Cookie inválido/expirado, usuário não autenticado
+        setUser(null)
       }
     } catch (error) {
       console.error('Erro ao verificar token:', error)
-      logout()
+      setUser(null)
     } finally {
       setLoading(false)
     }
@@ -65,6 +62,7 @@ export const AuthProvider = ({ children }) => {
       
       const response = await fetch(loginUrl, {
         method: 'POST',
+        credentials: 'include',  // Recebe e armazena cookie HttpOnly
         headers: {
           'Content-Type': 'application/json'
         },
@@ -79,9 +77,8 @@ export const AuthProvider = ({ children }) => {
 
       if (response.ok) {
         console.log('✨ [LOGIN] Login bem-sucedido!')
-        setToken(data.token)
+        console.log('🍪 [LOGIN] Cookie HttpOnly armazenado automaticamente')
         setUser(data.usuario)
-        localStorage.setItem('token', data.token)
         return { success: true }
       } else {
         console.log('❌ [LOGIN] Erro na resposta:', data.erro)
@@ -98,6 +95,7 @@ export const AuthProvider = ({ children }) => {
     try {
       const response = await fetch(`${API_BASE_URL}/auth/register`, {
         method: 'POST',
+        credentials: 'include',  // Recebe cookie se auto-login após registro
         headers: {
           'Content-Type': 'application/json'
         },
@@ -116,18 +114,29 @@ export const AuthProvider = ({ children }) => {
     }
   }
 
-  const logout = () => {
-    setUser(null)
-    setToken(null)
-    localStorage.removeItem('token')
+  const logout = async () => {
+    try {
+      // Chamar endpoint de logout para limpar cookie no servidor
+      await fetch(`${API_BASE_URL}/auth/logout`, {
+        method: 'POST',
+        credentials: 'include',  // Envia cookie para ser limpado
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+    } catch (error) {
+      console.error('Erro ao fazer logout:', error)
+    } finally {
+      setUser(null)
+    }
   }
 
   const changePassword = async (senhaAtual, novaSenha) => {
     try {
       const response = await fetch(`${API_BASE_URL}/auth/change-password`, {
         method: 'PUT',
+        credentials: 'include',  // Envia cookie automaticamente
         headers: {
-          'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
@@ -181,7 +190,6 @@ export const AuthProvider = ({ children }) => {
 
   const value = {
     user,
-    token,
     loading,
     login,
     register,

@@ -111,9 +111,8 @@ export default function RegistroPublico({ onClose }) {
         throw new Error(data.erro || 'Erro ao criar conta');
       }
 
-      // Salvar token no localStorage
-      localStorage.setItem('token', data.token);
-      localStorage.setItem('usuario', JSON.stringify(data.usuario));
+      // Cookie HttpOnly é armazenado automaticamente
+      // Não é necessário salvar manualmente no localStorage
 
       setEtapa(3);
       

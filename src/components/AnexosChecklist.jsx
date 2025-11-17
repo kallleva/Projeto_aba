@@ -93,24 +93,18 @@ export default function AnexosChecklist({ checklistId }) {
   };
 
   const handleDownload = (anexo) => {
-    const token = localStorage.getItem('token');
     const url = `${ApiService.getAnexoDownloadUrl(anexo.id)}`;
     
-    // Criar link temporário com token
-    const link = document.createElement('a');
-    link.href = url;
-    link.setAttribute('download', anexo.nome_arquivo);
-    
-    // Adicionar token ao header via fetch
+    // Com HttpOnly cookies, o cookie é enviado automaticamente
     fetch(url, {
-      headers: {
-        'Authorization': `Bearer ${token}`
-      }
+      credentials: 'include',  // Envia cookie HttpOnly automaticamente
     })
       .then(response => response.blob())
       .then(blob => {
+        const link = document.createElement('a');
         const blobUrl = window.URL.createObjectURL(blob);
         link.href = blobUrl;
+        link.setAttribute('download', anexo.nome_arquivo);
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
