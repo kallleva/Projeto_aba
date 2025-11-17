@@ -239,18 +239,25 @@ export default function RegistroDiarioDescritivo() {
           </div>
 
           {/* Anexos */}
-          {id !== 'novo' && (
-            <div className="border-t pt-8" style={{borderTopColor: 'var(--color-neutral-200)'}}>
-              <div className="section-header mb-6">
-                <Paperclip size={18} className="color-info-icon" />
-                <h2 className="section-header-title">Anexos</h2>
-              </div>
-              <p className="card-text mb-6">
-                Adicione fotos, vídeos, documentos ou outros arquivos relacionados a esta sessão.
-              </p>
-              <AnexosChecklist checklistId={id} />
+          <div className="border-t pt-8" style={{borderTopColor: 'var(--color-neutral-200)'}}>
+            <div className="section-header mb-6">
+              <Paperclip size={18} className="color-info-icon" />
+              <h2 className="section-header-title">Anexos</h2>
             </div>
-          )}
+            <p className="card-text mb-6">
+              {id === 'novo' 
+                ? 'Você poderá adicionar anexos após salvar a descrição da sessão.'
+                : 'Adicione fotos, vídeos, documentos ou outros arquivos relacionados a esta sessão.'
+              }
+            </p>
+            {id !== 'novo' && <AnexosChecklist checklistId={id} />}
+            {id === 'novo' && (
+              <div className="alert alert-info">
+                <AlertCircle className="alert-icon" />
+                <p className="alert-content">Salve a descrição primeiro para poder adicionar anexos.</p>
+              </div>
+            )}
+          </div>
 
           {/* Descrição da Sessão */}
           <div className="border-t pt-8" style={{borderTopColor: 'var(--color-neutral-200)'}}>
