@@ -174,20 +174,20 @@ export default function LandingPage() {
           {/* Stats */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 max-w-5xl mx-auto">
             <div className="bg-gradient-to-br from-blue-50 to-blue-100 p-6 rounded-2xl border-2 border-blue-200">
-              <div className="text-5xl md:text-6xl font-black text-blue-600 mb-3">95<span className="text-3xl">%</span></div>
-              <div className="text-gray-700 font-semibold text-lg">Satisfação dos Pais</div>
+              <div className="text-5xl md:text-6xl font-black text-blue-600 mb-3">2<span className="text-3xl">+</span></div>
+              <div className="text-gray-700 font-semibold text-lg">Anos em Desenvolvimento</div>
             </div>
             <div className="bg-gradient-to-br from-green-50 to-green-100 p-6 rounded-2xl border-2 border-green-200">
-              <div className="text-5xl md:text-6xl font-black text-green-600 mb-3">70<span className="text-3xl">%</span></div>
-              <div className="text-gray-700 font-semibold text-lg">Economia de Tempo</div>
+              <div className="text-5xl md:text-6xl font-black text-green-600 mb-3">100<span className="text-3xl">%</span></div>
+              <div className="text-gray-700 font-semibold text-lg">Customizável</div>
             </div>
             <div className="bg-gradient-to-br from-purple-50 to-purple-100 p-6 rounded-2xl border-2 border-purple-200">
-              <div className="text-5xl md:text-6xl font-black text-purple-600 mb-3">500<span className="text-3xl">+</span></div>
-              <div className="text-gray-700 font-semibold text-lg">Clínicas Ativas</div>
+              <div className="text-5xl md:text-6xl font-black text-purple-600 mb-3">0<span className="text-3xl">$</span></div>
+              <div className="text-gray-700 font-semibold text-lg">Implementação</div>
             </div>
             <div className="bg-gradient-to-br from-orange-50 to-orange-100 p-6 rounded-2xl border-2 border-orange-200">
-              <div className="text-5xl md:text-6xl font-black text-orange-600 mb-3">10k<span className="text-3xl">+</span></div>
-              <div className="text-gray-700 font-semibold text-lg">Pacientes Atendidos</div>
+              <div className="text-5xl md:text-6xl font-black text-orange-600 mb-3">24h<span className="text-3xl">*</span></div>
+              <div className="text-gray-700 font-semibold text-lg">Suporte em Português</div>
             </div>
           </div>
         </div>
