@@ -23,6 +23,7 @@ import FormularioEditor from '@/components/pages/FormularioEditor'
 import Pergunta from '@/components/pages/Pergunta'
 import Resposta from '@/components/pages/Resposta'
 import Empresas from '@/components/pages/Empresas'
+import LandingPage from '@/components/pages/LandingPage'
 import './App.css'
 
 function App() {
@@ -31,6 +32,7 @@ function App() {
       <Router>
         <div className="min-h-screen bg-background">
           <Routes>
+            <Route path="/sobre" element={<LandingPage />} />
             <Route path="/login" element={<Login />} />
             <Route path="/*" element={
               <ProtectedRoute>
@@ -128,9 +130,9 @@ function App() {
                       </ProtectedRoute>
                     } />
                     
-                    {/* PROFISSIONAL + ADMIN + RESPONSAVEL - Relatórios */}
+                    {/* SUPERADMIN - Relatórios */}
                     <Route path="/relatorios" element={
-                      <ProtectedRoute requireRole={['PROFISSIONAL', 'RESPONSAVEL', 'ADMIN']}>
+                      <ProtectedRoute requireRole={['SUPERADMIN']}>
                         <Relatorios />
                       </ProtectedRoute>
                     } />

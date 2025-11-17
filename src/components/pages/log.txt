@@ -1,21 +1,62 @@
-:5000/api/anexos-checklist:1  Failed to load resource: the server responded with a status of 405 (METHOD NOT ALLOWED)
-api.js:50 API Error: Object
+api.js:34  PUT http://localhost:5000/api/metas-terapeuticas/7 500 (INTERNAL SERVER ERROR)
+request @ api.js:34
+updateMetaTerapeutica @ api.js:271
+handleSubmit @ MetasTerapeuticas.jsx:90
+callCallback2 @ chunk-NXESFFTV.js?v=b7a91d68:3680
+invokeGuardedCallbackDev @ chunk-NXESFFTV.js?v=b7a91d68:3705
+invokeGuardedCallback @ chunk-NXESFFTV.js?v=b7a91d68:3739
+invokeGuardedCallbackAndCatchFirstError @ chunk-NXESFFTV.js?v=b7a91d68:3742
+executeDispatch @ chunk-NXESFFTV.js?v=b7a91d68:7046
+processDispatchQueueItemsInOrder @ chunk-NXESFFTV.js?v=b7a91d68:7066
+processDispatchQueue @ chunk-NXESFFTV.js?v=b7a91d68:7075
+dispatchEventsForPlugins @ chunk-NXESFFTV.js?v=b7a91d68:7083
+(anonymous) @ chunk-NXESFFTV.js?v=b7a91d68:7206
+batchedUpdates$1 @ chunk-NXESFFTV.js?v=b7a91d68:18966
+batchedUpdates @ chunk-NXESFFTV.js?v=b7a91d68:3585
+dispatchEventForPluginEventSystem @ chunk-NXESFFTV.js?v=b7a91d68:7205
+dispatchEventWithEnableCapturePhaseSelectiveHydrationWithoutDiscreteEventReplay @ chunk-NXESFFTV.js?v=b7a91d68:5484
+dispatchEvent @ chunk-NXESFFTV.js?v=b7a91d68:5478
+dispatchDiscreteEvent @ chunk-NXESFFTV.js?v=b7a91d68:5455
+api.js:50 API Error: {erro: "'MetaTerapeutica' object has no attribute 'plano_terapeutico'"}
 request @ api.js:50
-api.js:76 API Request Failed: Error: HTTP error! status: 405
+await in request
+updateMetaTerapeutica @ api.js:271
+handleSubmit @ MetasTerapeuticas.jsx:90
+callCallback2 @ chunk-NXESFFTV.js?v=b7a91d68:3680
+invokeGuardedCallbackDev @ chunk-NXESFFTV.js?v=b7a91d68:3705
+invokeGuardedCallback @ chunk-NXESFFTV.js?v=b7a91d68:3739
+invokeGuardedCallbackAndCatchFirstError @ chunk-NXESFFTV.js?v=b7a91d68:3742
+executeDispatch @ chunk-NXESFFTV.js?v=b7a91d68:7046
+processDispatchQueueItemsInOrder @ chunk-NXESFFTV.js?v=b7a91d68:7066
+processDispatchQueue @ chunk-NXESFFTV.js?v=b7a91d68:7075
+dispatchEventsForPlugins @ chunk-NXESFFTV.js?v=b7a91d68:7083
+(anonymous) @ chunk-NXESFFTV.js?v=b7a91d68:7206
+batchedUpdates$1 @ chunk-NXESFFTV.js?v=b7a91d68:18966
+batchedUpdates @ chunk-NXESFFTV.js?v=b7a91d68:3585
+dispatchEventForPluginEventSystem @ chunk-NXESFFTV.js?v=b7a91d68:7205
+dispatchEventWithEnableCapturePhaseSelectiveHydrationWithoutDiscreteEventReplay @ chunk-NXESFFTV.js?v=b7a91d68:5484
+dispatchEvent @ chunk-NXESFFTV.js?v=b7a91d68:5478
+dispatchDiscreteEvent @ chunk-NXESFFTV.js?v=b7a91d68:5455
+api.js:76 API Request Failed: Error: 'MetaTerapeutica' object has no attribute 'plano_terapeutico'
     at ApiService.request (api.js:58:23)
-    at async handleFileSelect (AnexosChecklist.jsx:55:7)
+    at async handleSubmit (MetasTerapeuticas.jsx:90:9)
 request @ api.js:76
-:5000/api/anexos-checklist:1  Failed to load resource: the server responded with a status of 405 (METHOD NOT ALLOWED)
-api.js:50 API Error: Object
-request @ api.js:50
-api.js:76 API Request Failed: Error: HTTP error! status: 405
-    at ApiService.request (api.js:58:23)
-    at async handleFileSelect (AnexosChecklist.jsx:55:7)
-request @ api.js:76
-
-
-s/1/metas-e-formularios HTTP/1.1" 200 -
-INFO:werkzeug:127.0.0.1 - - [15/Nov/2025 17:00:48] "GET /api/checklists-diarios/5/anexos HTTP/1.1" 200 -
-INFO:werkzeug:127.0.0.1 - - [15/Nov/2025 17:00:48] "GET /api/checklists-diarios/5/anexos HTTP/1.1" 200 -
-INFO:werkzeug:127.0.0.1 - - [15/Nov/2025 17:00:48] "GET /api/pacientes/1/metas-e-formularios HTTP/1.1" 200 -
-INFO:werkzeug:127.0.0.1 - - [15/Nov/2025 17:00:53] "POST /api/anexos-checklist HTTP/1.1" 405 -
+await in request
+updateMetaTerapeutica @ api.js:271
+handleSubmit @ MetasTerapeuticas.jsx:90
+callCallback2 @ chunk-NXESFFTV.js?v=b7a91d68:3680
+invokeGuardedCallbackDev @ chunk-NXESFFTV.js?v=b7a91d68:3705
+invokeGuardedCallback @ chunk-NXESFFTV.js?v=b7a91d68:3739
+invokeGuardedCallbackAndCatchFirstError @ chunk-NXESFFTV.js?v=b7a91d68:3742
+executeDispatch @ chunk-NXESFFTV.js?v=b7a91d68:7046
+processDispatchQueueItemsInOrder @ chunk-NXESFFTV.js?v=b7a91d68:7066
+processDispatchQueue @ chunk-NXESFFTV.js?v=b7a91d68:7075
+dispatchEventsForPlugins @ chunk-NXESFFTV.js?v=b7a91d68:7083
+(anonymous) @ chunk-NXESFFTV.js?v=b7a91d68:7206
+batchedUpdates$1 @ chunk-NXESFFTV.js?v=b7a91d68:18966
+batchedUpdates @ chunk-NXESFFTV.js?v=b7a91d68:3585
+dispatchEventForPluginEventSystem @ chunk-NXESFFTV.js?v=b7a91d68:7205
+dispatchEventWithEnableCapturePhaseSelectiveHydrationWithoutDiscreteEventReplay @ chunk-NXESFFTV.js?v=b7a91d68:5484
+dispatchEvent @ chunk-NXESFFTV.js?v=b7a91d68:5478
+dispatchDiscreteEvent @ chunk-NXESFFTV.js?v=b7a91d68:5455
+ 

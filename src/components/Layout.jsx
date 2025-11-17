@@ -29,7 +29,7 @@ const navigation = [
   { name: 'Planos Terapêuticos', href: '/planos-terapeuticos', icon: FileText, allowedFor: ['PROFISSIONAL', 'ADMIN'] },
   { name: 'Metas Terapêuticas', href: '/metas-terapeuticas', icon: Target, allowedFor: ['PROFISSIONAL', 'ADMIN'] },
   { name: 'Registro Diário', href: '/registro-diario', icon: Calendar, allowedFor: ['PROFISSIONAL', 'ADMIN'] },
-  { name: 'Relatórios', href: '/relatorios', icon: BarChart3, allowedFor: ['PROFISSIONAL', 'RESPONSAVEL', 'ADMIN'] },
+  { name: 'Relatórios', href: '/relatorios', icon: BarChart3, allowedFor: ['SUPERADMIN'] },
   { name: 'Protocolo', href: '/protocolo', icon: FileText, allowedFor: ['PROFISSIONAL', 'ADMIN'] },
   { name: 'Empresas', href: '/empresas', icon: Building2, allowedFor: ['ADMIN'] },
 ]
