@@ -7,6 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import { Building2, User, Mail, Lock, Phone, MapPin, X, CheckCircle2, AlertCircle, Loader2 } from 'lucide-react';
 
 export default function RegistroPublico({ onClose }) {
+  const API_BASE_URL = (import.meta.env.VITE_API_BASE_URL || 'https://auroraclin.com.br/api').replace(/\/$/, '');
   const [etapa, setEtapa] = useState(1); // 1: dados empresa, 2: dados admin, 3: sucesso
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
@@ -97,7 +98,7 @@ export default function RegistroPublico({ onClose }) {
     try {
       setLoading(true);
       
-      const response = await fetch('http://localhost:5000/api/registro-publico', {
+      const response = await fetch(`${API_BASE_URL}/registro-publico`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
