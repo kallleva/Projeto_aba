@@ -379,9 +379,23 @@ export default function RegistroPublico({ onClose }) {
                 <CheckCircle2 className="w-12 h-12 text-green-600" />
               </div>
               <h3 className="text-3xl font-bold text-gray-900 mb-3">Conta Criada com Sucesso!</h3>
-              <p className="text-lg text-gray-600 mb-6">
+              <p className="text-lg text-gray-600 mb-4">
                 Sua empresa <strong>{formData.nome_empresa}</strong> foi cadastrada.
               </p>
+              
+              {/* Info sobre templates */}
+              <div className="bg-purple-50 border-2 border-purple-200 rounded-xl p-4 mb-6">
+                <div className="flex items-start gap-3">
+                  <CheckCircle2 className="w-6 h-6 text-purple-600 flex-shrink-0 mt-0.5" />
+                  <div className="text-left">
+                    <p className="text-purple-900 font-semibold">Protocolos Configurados</p>
+                    <p className="text-sm text-purple-700 mt-1">
+                      Formulários de avaliação (Denver, Socially Savvy e outros) foram importados automaticamente e estão prontos para uso!
+                    </p>
+                  </div>
+                </div>
+              </div>
+              
               <div className="bg-blue-50 border-2 border-blue-200 rounded-xl p-6 mb-6">
                 <p className="text-blue-900 font-semibold mb-2">Redirecionando para o sistema...</p>
                 <Loader2 className="w-8 h-8 text-blue-600 animate-spin mx-auto" />
