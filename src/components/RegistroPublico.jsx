@@ -139,10 +139,10 @@ export default function RegistroPublico({ onClose }) {
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4 overflow-y-auto">
       <div className="bg-white rounded-3xl shadow-2xl max-w-2xl w-full my-8">
         {/* Header */}
-        <div className="bg-gradient-to-r from-blue-600 to-purple-600 p-6 rounded-t-3xl text-white relative">
+        <div className="bg-gradient-to-r from-cyan-600 to-teal-600 p-6 rounded-t-3xl text-white relative">
           <button
             onClick={onClose}
-            className="absolute top-4 right-4 text-white hover:bg-white/20 rounded-full p-2 transition-colors"
+            className="absolute top-4 right-4 text-white hover:bg-white/20 rounded-full p-2 transition-colors z-10 bg-white/10"
           >
             <X size={24} />
           </button>
@@ -164,8 +164,8 @@ export default function RegistroPublico({ onClose }) {
           {etapa === 1 && (
             <div className="space-y-6">
               <div className="text-center mb-6">
-                <div className="inline-flex items-center justify-center w-16 h-16 bg-blue-100 rounded-full mb-3">
-                  <Building2 className="w-8 h-8 text-blue-600" />
+                <div className="inline-flex items-center justify-center w-16 h-16 bg-cyan-100 rounded-full mb-3">
+                  <Building2 className="w-8 h-8 text-cyan-600" />
                 </div>
                 <h3 className="text-2xl font-bold text-gray-900">Dados da Empresa</h3>
                 <p className="text-gray-600">Informações sobre sua clínica ou consultório</p>
@@ -255,7 +255,7 @@ export default function RegistroPublico({ onClose }) {
 
               <Button
                 onClick={avancarEtapa}
-                className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-lg py-6"
+                className="w-full bg-gradient-to-r from-cyan-600 to-teal-600 hover:from-cyan-700 hover:to-teal-700 text-lg py-6"
               >
                 Continuar
               </Button>
@@ -266,8 +266,8 @@ export default function RegistroPublico({ onClose }) {
           {etapa === 2 && (
             <div className="space-y-6">
               <div className="text-center mb-6">
-                <div className="inline-flex items-center justify-center w-16 h-16 bg-green-100 rounded-full mb-3">
-                  <User className="w-8 h-8 text-green-600" />
+                <div className="inline-flex items-center justify-center w-16 h-16 bg-teal-100 rounded-full mb-3">
+                  <User className="w-8 h-8 text-teal-600" />
                 </div>
                 <h3 className="text-2xl font-bold text-gray-900">Dados do Administrador</h3>
                 <p className="text-gray-600">Quem será o responsável pela conta</p>
@@ -357,7 +357,7 @@ export default function RegistroPublico({ onClose }) {
                 </Button>
                 <Button
                   onClick={finalizarRegistro}
-                  className="flex-1 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700"
+                  className="flex-1 bg-gradient-to-r from-cyan-600 to-teal-600 hover:from-cyan-700 hover:to-teal-700"
                   disabled={loading}
                 >
                   {loading ? (
@@ -376,8 +376,8 @@ export default function RegistroPublico({ onClose }) {
           {/* Etapa 3: Sucesso */}
           {etapa === 3 && (
             <div className="text-center py-8">
-              <div className="inline-flex items-center justify-center w-20 h-20 bg-green-100 rounded-full mb-6">
-                <CheckCircle2 className="w-12 h-12 text-green-600" />
+              <div className="inline-flex items-center justify-center w-20 h-20 bg-cyan-100 rounded-full mb-6">
+                <CheckCircle2 className="w-12 h-12 text-cyan-600" />
               </div>
               <h3 className="text-3xl font-bold text-gray-900 mb-3">Conta Criada com Sucesso!</h3>
               <p className="text-lg text-gray-600 mb-4">
@@ -385,21 +385,21 @@ export default function RegistroPublico({ onClose }) {
               </p>
               
               {/* Info sobre templates */}
-              <div className="bg-purple-50 border-2 border-purple-200 rounded-xl p-4 mb-6">
+              <div className="bg-teal-50 border-2 border-teal-200 rounded-xl p-4 mb-6">
                 <div className="flex items-start gap-3">
-                  <CheckCircle2 className="w-6 h-6 text-purple-600 flex-shrink-0 mt-0.5" />
+                  <CheckCircle2 className="w-6 h-6 text-teal-600 flex-shrink-0 mt-0.5" />
                   <div className="text-left">
-                    <p className="text-purple-900 font-semibold">Protocolos Configurados</p>
-                    <p className="text-sm text-purple-700 mt-1">
+                    <p className="text-teal-900 font-semibold">Protocolos Configurados</p>
+                    <p className="text-sm text-teal-700 mt-1">
                       Formulários de avaliação (Denver, Socially Savvy e outros) foram importados automaticamente e estão prontos para uso!
                     </p>
                   </div>
                 </div>
               </div>
               
-              <div className="bg-blue-50 border-2 border-blue-200 rounded-xl p-6 mb-6">
-                <p className="text-blue-900 font-semibold mb-2">Redirecionando para o sistema...</p>
-                <Loader2 className="w-8 h-8 text-blue-600 animate-spin mx-auto" />
+              <div className="bg-cyan-50 border-2 border-cyan-200 rounded-xl p-6 mb-6">
+                <p className="text-cyan-900 font-semibold mb-2">Redirecionando para o sistema...</p>
+                <Loader2 className="w-8 h-8 text-cyan-600 animate-spin mx-auto" />
               </div>
               <p className="text-sm text-gray-500">
                 Você será automaticamente logado em instantes.
