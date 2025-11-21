@@ -26,32 +26,32 @@ export default function LandingPage() {
 
   const features = [
     {
-      icon: <Users className="w-12 h-12 text-blue-600" />,
+      icon: <Users className="w-12 h-12 text-cyan-600" />,
       title: "Gestão de Equipe",
       description: "Controle completo de profissionais, agendas, vínculos terapêuticos e distribuição de pacientes. Saiba exatamente quem está atendendo quem e quando."
     },
     {
-      icon: <Brain className="w-12 h-12 text-green-600" />,
+      icon: <Brain className="w-12 h-12 text-teal-600" />,
       title: "Múltiplos Protocolos ABA",
       description: "DTT, NET, ESDM, PRT, VB e protocolos personalizados. Trabalhe com a metodologia que você domina, adaptada às necessidades de cada criança."
     },
     {
-      icon: <FileText className="w-12 h-12 text-purple-600" />,
+      icon: <FileText className="w-12 h-12 text-sky-600" />,
       title: "Documentação Completa",
       description: "Registros de sessões com texto livre ou estruturado, anexos de fotos/vídeos, evolução diária documentada. Tudo organizado e acessível."
     },
     {
-      icon: <BarChart3 className="w-12 h-12 text-orange-600" />,
+      icon: <BarChart3 className="w-12 h-12 text-cyan-500" />,
       title: "Análise Quantitativa Automática",
       description: "Sistema calcula automaticamente percentuais de acerto, taxa de independência, evolução temporal e gera todos os gráficos sem trabalho manual."
     },
     {
-      icon: <Target className="w-12 h-12 text-pink-600" />,
+      icon: <Target className="w-12 h-12 text-teal-500" />,
       title: "Metas e Planos Terapêuticos",
       description: "Defina objetivos mensuráveis, acompanhe status de cada meta, vincule atividades aos objetivos e demonstre progresso com dados concretos."
     },
     {
-      icon: <Shield className="w-12 h-12 text-indigo-600" />,
+      icon: <Shield className="w-12 h-12 text-sky-500" />,
       title: "Controle Empresarial",
       description: "Multitenancy para clínicas com múltiplas unidades, controle de acesso por perfil, segurança de dados e conformidade com privacidade médica."
     }
@@ -59,25 +59,25 @@ export default function LandingPage() {
 
   const benefits = [
     {
-      icon: <Clock className="w-8 h-8 text-blue-500" />,
+      icon: <Clock className="w-8 h-8 text-cyan-600" />,
       title: "70% Menos Tempo",
       number: "70%",
       text: "Reduza drasticamente o tempo gasto com relatórios e documentação. O que levava horas, agora leva minutos."
     },
     {
-      icon: <TrendingUp className="w-8 h-8 text-green-500" />,
+      icon: <TrendingUp className="w-8 h-8 text-teal-600" />,
       title: "100% Mensurável",
       number: "100%",
       text: "Todas as intervenções convertidas em dados quantitativos. Progresso visível em números e gráficos."
     },
     {
-      icon: <Heart className="w-8 h-8 text-red-500" />,
+      icon: <Heart className="w-8 h-8 text-sky-600" />,
       title: "95% de Satisfação",
       number: "95%",
       text: "Pais e responsáveis mais satisfeitos ao visualizarem claramente a evolução dos seus filhos."
     },
     {
-      icon: <Zap className="w-8 h-8 text-yellow-500" />,
+      icon: <Zap className="w-8 h-8 text-cyan-500" />,
       title: "3x Mais Rápido",
       number: "3x",
       text: "Decisões clínicas mais rápidas e assertivas com dados organizados e acessíveis instantaneamente."
@@ -118,14 +118,14 @@ export default function LandingPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center gap-2">
-              <Sun className="w-8 h-8 text-orange-500" />
-              <span className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+              <Sun className="w-8 h-8 text-cyan-500" />
+              <span className="text-2xl font-bold text-cyan-700">
                 AuroraClin
               </span>
             </div>
             <Button 
               onClick={() => navigate('/login')}
-              className="bg-blue-600 hover:bg-blue-700"
+              className="bg-cyan-600 hover:bg-cyan-700"
             >
               Acessar Sistema
             </Button>
@@ -136,14 +136,14 @@ export default function LandingPage() {
       {/* Hero Section */}
       <section className="pt-20 pb-32 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto text-center">
-          <div className="inline-flex items-center gap-2 px-4 py-2 bg-blue-50 rounded-full mb-8">
-            <Sparkles className="w-4 h-4 text-blue-600" />
-            <span className="text-sm font-medium text-blue-700">Sistema de Gestão Terapêutica ABA</span>
+          <div className="inline-flex items-center gap-2 px-4 py-2 bg-cyan-50 rounded-full mb-8">
+            <Sparkles className="w-4 h-4 text-cyan-600" />
+            <span className="text-sm font-medium text-cyan-700">Sistema de Gestão Terapêutica ABA</span>
           </div>
           
           <h1 className="text-5xl md:text-7xl font-bold text-gray-900 mb-6 leading-tight">
             Transforme Dados em
-            <span className="bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent"> Evolução Visível </span>
+            <span className="text-cyan-600"> Evolução Visível </span>
             e Mensurável
           </h1>
           
@@ -157,7 +157,7 @@ export default function LandingPage() {
             <Button 
               size="lg" 
               onClick={() => setMostrarRegistro(true)}
-              className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-lg px-8 py-6 h-auto"
+              className="bg-cyan-600 hover:bg-cyan-700 text-lg px-8 py-6 h-auto"
             >
               Começar Agora Grátis
               <ArrowRight className="ml-2" />
@@ -165,7 +165,7 @@ export default function LandingPage() {
             <Button 
               size="lg" 
               variant="outline"
-              className="text-lg px-8 py-6 h-auto border-2"
+              className="text-lg px-8 py-6 h-auto border-2 border-cyan-300 hover:bg-cyan-50 text-cyan-700"
             >
               Ver Demonstração
             </Button>
@@ -173,20 +173,20 @@ export default function LandingPage() {
 
           {/* Stats */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 max-w-5xl mx-auto">
-            <div className="bg-gradient-to-br from-blue-50 to-blue-100 p-6 rounded-2xl border-2 border-blue-200">
-              <div className="text-5xl md:text-6xl font-black text-blue-600 mb-3">2<span className="text-3xl">+</span></div>
+            <div className="bg-white p-6 rounded-2xl border-2 border-cyan-200 shadow-sm">
+              <div className="text-5xl md:text-6xl font-black text-cyan-600 mb-3">2<span className="text-3xl">+</span></div>
               <div className="text-gray-700 font-semibold text-lg">Anos em Desenvolvimento</div>
             </div>
-            <div className="bg-gradient-to-br from-green-50 to-green-100 p-6 rounded-2xl border-2 border-green-200">
-              <div className="text-5xl md:text-6xl font-black text-green-600 mb-3">100<span className="text-3xl">%</span></div>
+            <div className="bg-white p-6 rounded-2xl border-2 border-teal-200 shadow-sm">
+              <div className="text-5xl md:text-6xl font-black text-teal-600 mb-3">100<span className="text-3xl">%</span></div>
               <div className="text-gray-700 font-semibold text-lg">Customizável</div>
             </div>
-            <div className="bg-gradient-to-br from-purple-50 to-purple-100 p-6 rounded-2xl border-2 border-purple-200">
-              <div className="text-5xl md:text-6xl font-black text-purple-600 mb-3">0<span className="text-3xl">$</span></div>
+            <div className="bg-white p-6 rounded-2xl border-2 border-sky-200 shadow-sm">
+              <div className="text-5xl md:text-6xl font-black text-sky-600 mb-3">0<span className="text-3xl">$</span></div>
               <div className="text-gray-700 font-semibold text-lg">Implementação</div>
             </div>
-            <div className="bg-gradient-to-br from-orange-50 to-orange-100 p-6 rounded-2xl border-2 border-orange-200">
-              <div className="text-5xl md:text-6xl font-black text-orange-600 mb-3">24h<span className="text-3xl">*</span></div>
+            <div className="bg-white p-6 rounded-2xl border-2 border-cyan-200 shadow-sm">
+              <div className="text-5xl md:text-6xl font-black text-cyan-500 mb-3">24h<span className="text-3xl">*</span></div>
               <div className="text-gray-700 font-semibold text-lg">Suporte em Português</div>
             </div>
           </div>
@@ -194,7 +194,7 @@ export default function LandingPage() {
       </section>
 
       {/* Pain Points Section */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-red-50 to-orange-50">
+      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-cyan-50 to-teal-50">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-16">
             <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
@@ -209,7 +209,7 @@ export default function LandingPage() {
             {painPoints.map((point, index) => (
               <div 
                 key={index}
-                className="bg-white p-6 rounded-xl shadow-md border-l-4 border-red-500 hover:shadow-lg transition-shadow"
+                className="bg-white p-6 rounded-xl shadow-md border-l-4 border-gray-400 hover:shadow-lg transition-shadow"
               >
                 <p className="text-lg text-gray-700">{point}</p>
               </div>
@@ -217,7 +217,7 @@ export default function LandingPage() {
           </div>
 
           <div className="text-center">
-            <div className="inline-flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-green-500 to-emerald-500 rounded-full text-white text-xl font-semibold">
+            <div className="inline-flex items-center gap-3 px-8 py-4 bg-teal-600 rounded-full text-white text-xl font-semibold">
               <CheckCircle2 className="w-6 h-6" />
               O AuroraClin Resolve Todos Esses Problemas!
             </div>
@@ -226,7 +226,7 @@ export default function LandingPage() {
       </section>
 
       {/* Data Visualization Section */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50">
+      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-white">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
             <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
@@ -319,10 +319,10 @@ export default function LandingPage() {
           </div>
 
           <div className="grid md:grid-cols-3 gap-8">
-            <div className="bg-white p-6 rounded-2xl shadow-lg">
+            <div className="bg-white p-6 rounded-2xl shadow-lg border border-cyan-200">
               <div className="text-center mb-4">
-                <div className="inline-flex items-center justify-center w-16 h-16 bg-blue-100 rounded-full mb-3">
-                  <BarChart3 className="w-8 h-8 text-blue-600" />
+                <div className="inline-flex items-center justify-center w-16 h-16 bg-cyan-50 rounded-full mb-3">
+                  <BarChart3 className="w-8 h-8 text-cyan-600" />
                 </div>
                 <h4 className="font-bold text-lg text-gray-900">Gráficos de Barras</h4>
               </div>
@@ -331,10 +331,10 @@ export default function LandingPage() {
               </p>
             </div>
 
-            <div className="bg-white p-6 rounded-2xl shadow-lg">
+            <div className="bg-white p-6 rounded-2xl shadow-lg border border-teal-200">
               <div className="text-center mb-4">
-                <div className="inline-flex items-center justify-center w-16 h-16 bg-green-100 rounded-full mb-3">
-                  <LineChart className="w-8 h-8 text-green-600" />
+                <div className="inline-flex items-center justify-center w-16 h-16 bg-teal-50 rounded-full mb-3">
+                  <LineChart className="w-8 h-8 text-teal-600" />
                 </div>
                 <h4 className="font-bold text-lg text-gray-900">Linhas de Evolução</h4>
               </div>
@@ -343,10 +343,10 @@ export default function LandingPage() {
               </p>
             </div>
 
-            <div className="bg-white p-6 rounded-2xl shadow-lg">
+            <div className="bg-white p-6 rounded-2xl shadow-lg border border-sky-200">
               <div className="text-center mb-4">
-                <div className="inline-flex items-center justify-center w-16 h-16 bg-purple-100 rounded-full mb-3">
-                  <TrendingUp className="w-8 h-8 text-purple-600" />
+                <div className="inline-flex items-center justify-center w-16 h-16 bg-sky-50 rounded-full mb-3">
+                  <TrendingUp className="w-8 h-8 text-sky-600" />
                 </div>
                 <h4 className="font-bold text-lg text-gray-900">Percentuais de Acerto</h4>
               </div>
@@ -371,9 +371,9 @@ export default function LandingPage() {
           </div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
-            <div className="bg-gradient-to-br from-blue-50 to-blue-100 p-8 rounded-2xl border-2 border-blue-200 hover:shadow-xl transition-shadow">
+            <div className="bg-white p-8 rounded-2xl border-2 border-cyan-200 hover:shadow-xl transition-shadow">
               <div className="flex items-center gap-3 mb-4">
-                <div className="w-12 h-12 bg-blue-600 rounded-lg flex items-center justify-center text-white font-bold text-xl">
+                <div className="w-12 h-12 bg-cyan-600 rounded-lg flex items-center justify-center text-white font-bold text-xl">
                   DTT
                 </div>
                 <h3 className="text-xl font-bold text-gray-900">Discrete Trial Training</h3>
@@ -384,9 +384,9 @@ export default function LandingPage() {
               </p>
             </div>
 
-            <div className="bg-gradient-to-br from-green-50 to-green-100 p-8 rounded-2xl border-2 border-green-200 hover:shadow-xl transition-shadow">
+            <div className="bg-white p-8 rounded-2xl border-2 border-teal-200 hover:shadow-xl transition-shadow">
               <div className="flex items-center gap-3 mb-4">
-                <div className="w-12 h-12 bg-green-600 rounded-lg flex items-center justify-center text-white font-bold text-xl">
+                <div className="w-12 h-12 bg-teal-600 rounded-lg flex items-center justify-center text-white font-bold text-xl">
                   NET
                 </div>
                 <h3 className="text-xl font-bold text-gray-900">Natural Environment Teaching</h3>
@@ -397,9 +397,9 @@ export default function LandingPage() {
               </p>
             </div>
 
-            <div className="bg-gradient-to-br from-purple-50 to-purple-100 p-8 rounded-2xl border-2 border-purple-200 hover:shadow-xl transition-shadow">
+            <div className="bg-white p-8 rounded-2xl border-2 border-sky-200 hover:shadow-xl transition-shadow">
               <div className="flex items-center gap-3 mb-4">
-                <div className="w-12 h-12 bg-purple-600 rounded-lg flex items-center justify-center text-white font-bold text-sm">
+                <div className="w-12 h-12 bg-sky-600 rounded-lg flex items-center justify-center text-white font-bold text-sm">
                   ESDM
                 </div>
                 <h3 className="text-xl font-bold text-gray-900">Early Start Denver Model</h3>
@@ -410,9 +410,9 @@ export default function LandingPage() {
               </p>
             </div>
 
-            <div className="bg-gradient-to-br from-orange-50 to-orange-100 p-8 rounded-2xl border-2 border-orange-200 hover:shadow-xl transition-shadow">
+            <div className="bg-white p-8 rounded-2xl border-2 border-cyan-200 hover:shadow-xl transition-shadow">
               <div className="flex items-center gap-3 mb-4">
-                <div className="w-12 h-12 bg-orange-600 rounded-lg flex items-center justify-center text-white font-bold text-xl">
+                <div className="w-12 h-12 bg-cyan-500 rounded-lg flex items-center justify-center text-white font-bold text-xl">
                   PRT
                 </div>
                 <h3 className="text-xl font-bold text-gray-900">Pivotal Response Treatment</h3>
@@ -423,9 +423,9 @@ export default function LandingPage() {
               </p>
             </div>
 
-            <div className="bg-gradient-to-br from-pink-50 to-pink-100 p-8 rounded-2xl border-2 border-pink-200 hover:shadow-xl transition-shadow">
+            <div className="bg-white p-8 rounded-2xl border-2 border-teal-200 hover:shadow-xl transition-shadow">
               <div className="flex items-center gap-3 mb-4">
-                <div className="w-12 h-12 bg-pink-600 rounded-lg flex items-center justify-center text-white font-bold text-xl">
+                <div className="w-12 h-12 bg-teal-500 rounded-lg flex items-center justify-center text-white font-bold text-xl">
                   VB
                 </div>
                 <h3 className="text-xl font-bold text-gray-900">Verbal Behavior</h3>
@@ -436,9 +436,9 @@ export default function LandingPage() {
               </p>
             </div>
 
-            <div className="bg-gradient-to-br from-indigo-50 to-indigo-100 p-8 rounded-2xl border-2 border-indigo-200 hover:shadow-xl transition-shadow">
+            <div className="bg-white p-8 rounded-2xl border-2 border-sky-200 hover:shadow-xl transition-shadow">
               <div className="flex items-center gap-3 mb-4">
-                <div className="w-12 h-12 bg-indigo-600 rounded-lg flex items-center justify-center text-white font-bold text-sm">
+                <div className="w-12 h-12 bg-sky-500 rounded-lg flex items-center justify-center text-white font-bold text-sm">
                   Custom
                 </div>
                 <h3 className="text-xl font-bold text-gray-900">Protocolos Personalizados</h3>
@@ -450,7 +450,7 @@ export default function LandingPage() {
             </div>
           </div>
 
-          <div className="bg-gradient-to-r from-blue-600 to-purple-600 p-8 rounded-2xl text-white text-center">
+          <div className="bg-teal-600 p-8 rounded-2xl text-white text-center">
             <h3 className="text-2xl font-bold mb-3">📊 Todos com Análise de Dados Integrada</h3>
             <p className="text-lg opacity-90 max-w-3xl mx-auto">
               Independente do protocolo escolhido, todos os dados são automaticamente convertidos em 
@@ -488,7 +488,7 @@ export default function LandingPage() {
       </section>
 
       {/* Benefits Section */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-blue-50 to-indigo-50">
+      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-sky-50 to-cyan-50">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-16">
             <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
@@ -498,13 +498,13 @@ export default function LandingPage() {
 
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
             {benefits.map((benefit, index) => (
-              <div key={index} className="bg-white p-8 rounded-2xl shadow-xl hover:shadow-2xl transition-shadow">
+              <div key={index} className="bg-white p-8 rounded-2xl shadow-xl hover:shadow-2xl transition-shadow border border-cyan-200">
                 <div className="flex justify-center mb-4">
-                  <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-blue-50 to-blue-100 rounded-full">
+                  <div className="inline-flex items-center justify-center w-16 h-16 bg-cyan-50 rounded-full">
                     {benefit.icon}
                   </div>
                 </div>
-                <div className="text-5xl font-black text-center mb-3 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                <div className="text-5xl font-black text-center mb-3 text-cyan-600">
                   {benefit.number}
                 </div>
                 <h3 className="text-lg font-bold text-gray-900 mb-3 text-center">{benefit.title}</h3>
@@ -528,7 +528,7 @@ export default function LandingPage() {
             {useCases.map((useCase, index) => (
               <div 
                 key={index}
-                className={`bg-gradient-to-br from-${useCase.color}-50 to-${useCase.color}-100 p-8 rounded-2xl border-2 border-${useCase.color}-200`}
+                className="bg-white p-8 rounded-2xl border-2 border-teal-200 hover:shadow-xl transition-shadow"
               >
                 <h3 className="text-2xl font-bold text-gray-900 mb-4">{useCase.title}</h3>
                 <p className="text-gray-700 leading-relaxed">{useCase.description}</p>
@@ -539,7 +539,7 @@ export default function LandingPage() {
       </section>
 
       {/* How It Works */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-purple-50 to-pink-50">
+      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-white">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-16">
             <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
@@ -550,7 +550,7 @@ export default function LandingPage() {
 
           <div className="grid md:grid-cols-3 gap-8">
             <div className="text-center">
-              <div className="inline-flex items-center justify-center w-16 h-16 bg-blue-600 text-white rounded-full text-2xl font-bold mb-6">
+              <div className="inline-flex items-center justify-center w-16 h-16 bg-cyan-600 text-white rounded-full text-2xl font-bold mb-6">
                 1
               </div>
               <h3 className="text-xl font-bold text-gray-900 mb-3">Registre as Sessões</h3>
@@ -561,7 +561,7 @@ export default function LandingPage() {
             </div>
 
             <div className="text-center">
-              <div className="inline-flex items-center justify-center w-16 h-16 bg-purple-600 text-white rounded-full text-2xl font-bold mb-6">
+              <div className="inline-flex items-center justify-center w-16 h-16 bg-teal-600 text-white rounded-full text-2xl font-bold mb-6">
                 2
               </div>
               <h3 className="text-xl font-bold text-gray-900 mb-3">Sistema Analisa Automaticamente</h3>
@@ -572,7 +572,7 @@ export default function LandingPage() {
             </div>
 
             <div className="text-center">
-              <div className="inline-flex items-center justify-center w-16 h-16 bg-pink-600 text-white rounded-full text-2xl font-bold mb-6">
+              <div className="inline-flex items-center justify-center w-16 h-16 bg-sky-600 text-white rounded-full text-2xl font-bold mb-6">
                 3
               </div>
               <h3 className="text-xl font-bold text-gray-900 mb-3">Compartilhe com os Pais</h3>
@@ -590,12 +590,15 @@ export default function LandingPage() {
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-16">
             <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
-              O Que Nossos Clientes Dizem
+              Clínicas que Transformam Vidas com Nossa Tecnologia
             </h2>
+            <p className="text-xl text-gray-600">
+              Profissionais de todo o Brasil confiam no AuroraClin para potencializar seus atendimentos
+            </p>
           </div>
 
           <div className="grid md:grid-cols-3 gap-8">
-            <div className="bg-white p-8 rounded-2xl shadow-lg">
+            <div className="bg-white p-8 rounded-2xl shadow-lg border border-cyan-200">
               <div className="flex items-center gap-1 mb-4">
                 {[...Array(5)].map((_, i) => (
                   <span key={i} className="text-yellow-400 text-xl">⭐</span>
@@ -609,7 +612,7 @@ export default function LandingPage() {
               <p className="text-sm text-gray-600">Clínica Crescer - SP</p>
             </div>
 
-            <div className="bg-white p-8 rounded-2xl shadow-lg">
+            <div className="bg-white p-8 rounded-2xl shadow-lg border border-teal-200">
               <div className="flex items-center gap-1 mb-4">
                 {[...Array(5)].map((_, i) => (
                   <span key={i} className="text-yellow-400 text-xl">⭐</span>
@@ -623,7 +626,7 @@ export default function LandingPage() {
               <p className="text-sm text-gray-600">Terapeuta ABA - RJ</p>
             </div>
 
-            <div className="bg-white p-8 rounded-2xl shadow-lg">
+            <div className="bg-white p-8 rounded-2xl shadow-lg border border-sky-200">
               <div className="flex items-center gap-1 mb-4">
                 {[...Array(5)].map((_, i) => (
                   <span key={i} className="text-yellow-400 text-xl">⭐</span>
@@ -640,8 +643,84 @@ export default function LandingPage() {
         </div>
       </section>
 
+      {/* Pricing Section - Inspirado no NAVI TEA */}
+      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-cyan-50 to-teal-50">
+        <div className="max-w-6xl mx-auto">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
+              Conheça Nossos Planos
+            </h2>
+            <p className="text-xl text-gray-600">
+              Escolha o plano ideal para o tamanho da sua clínica
+            </p>
+          </div>
+
+          <div className="flex justify-center">
+            {/* Plano Único - Destaque */}
+            <div className="bg-gradient-to-br from-cyan-600 to-teal-600 p-10 md:p-12 rounded-3xl shadow-2xl border-4 border-cyan-400 max-w-md w-full relative">
+              <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
+                <span className="bg-yellow-400 text-gray-900 px-6 py-2 rounded-full text-sm font-bold">
+                  PLANO ESSENCIAL
+                </span>
+              </div>
+              <div className="text-center mb-8 text-white">
+                <h3 className="text-3xl font-bold mb-3">Plano Famílias</h3>
+                <p className="text-lg mb-6 opacity-90">Ideal para terapeutas e famílias</p>
+                <div className="mb-6">
+                  <span className="text-6xl font-black">R$ 49</span>
+                  <span className="text-xl opacity-90">,90/mês</span>
+                </div>
+              </div>
+              <ul className="space-y-4 mb-10 text-white">
+                <li className="flex items-start gap-3">
+                  <CheckCircle2 className="w-6 h-6 flex-shrink-0 mt-0.5" />
+                  <span className="text-lg">Prontuário digital completo</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <CheckCircle2 className="w-6 h-6 flex-shrink-0 mt-0.5" />
+                  <span className="text-lg">Planos terapêuticos ilimitados</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <CheckCircle2 className="w-6 h-6 flex-shrink-0 mt-0.5" />
+                  <span className="text-lg">Todos os protocolos ABA</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <CheckCircle2 className="w-6 h-6 flex-shrink-0 mt-0.5" />
+                  <span className="text-lg">Gráficos e relatórios automáticos</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <CheckCircle2 className="w-6 h-6 flex-shrink-0 mt-0.5" />
+                  <span className="text-lg">Agenda integrada</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <CheckCircle2 className="w-6 h-6 flex-shrink-0 mt-0.5" />
+                  <span className="text-lg">Coleta de dados facilitada</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <CheckCircle2 className="w-6 h-6 flex-shrink-0 mt-0.5" />
+                  <span className="text-lg">Suporte dedicado</span>
+                </li>
+              </ul>
+              <Button 
+                onClick={() => setMostrarRegistro(true)}
+                className="w-full bg-white text-cyan-700 hover:bg-gray-100 font-bold text-lg py-6"
+              >
+                Começar Agora
+                <ArrowRight className="ml-2" />
+              </Button>
+            </div>
+          </div>
+
+          <div className="text-center mt-12">
+            <p className="text-gray-600 mb-4">
+              <strong>Todos os planos incluem:</strong> 14 dias de teste grátis • Sem necessidade de cartão de crédito • Cancele quando quiser
+            </p>
+          </div>
+        </div>
+      </section>
+
       {/* CTA Final */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600">
+      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-r from-cyan-600 to-teal-600">
         <div className="max-w-4xl mx-auto text-center text-white">
           <h2 className="text-4xl md:text-5xl font-bold mb-6">
             Pronto Para Transformar Sua Clínica?
@@ -687,7 +766,7 @@ export default function LandingPage() {
       <footer className="bg-gray-900 text-white py-12 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto text-center">
           <div className="flex items-center justify-center gap-2 mb-4">
-            <Sun className="w-6 h-6 text-orange-400" />
+            <Sun className="w-6 h-6 text-cyan-400" />
             <span className="text-2xl font-bold">AuroraClin</span>
           </div>
           <p className="text-gray-400 mb-6">
