@@ -88,7 +88,17 @@ export default function FormularioEditor() {
             }
             
             // Parsear opções com função auxiliar
-            const opcoes = parseOpcoes(row['Opções'] || '');
+            const opcoes = parseOpcoes(row['Opções'] || row['Opcoes'] || '');
+            
+            // Detectar padrão automaticamente
+            const PADROES = {
+              ABA: ['Não Adquirido', 'Parcial', 'Adquirido'],
+              GMFM: ['Não Inicia', 'Inicia', 'Completa Parcialmente', 'Completa'],
+            };
+            
+            const padraoDetectado = Object.entries(PADROES).find(([nome, padrao]) => 
+              opcoes.length === padrao.length && padrao.every((v, i) => opcoes[i] === v)
+            );
             
             return {
               id: Date.now() + idx,
@@ -96,9 +106,11 @@ export default function FormularioEditor() {
               texto: row['Texto'] || '',
               sigla: (row['Sigla'] || '').toUpperCase().replace(/[^A-Z0-9_]/g, '').slice(0, 16),
               tipo: tipo,
-              obrigatoria: row['Obrigatoria'] === 'TRUE' || row['Obrigatoria'] === true,
+              obrigatoria: row['Obrigatoria'] === 'TRUE' || row['Obrigatoria'] === true || row['Obrigatoria'] === 'SIM',
               formula: finalFormula,
               opcoes: opcoes,
+              opcoes_padronizadas: !!padraoDetectado,
+              padrao_tipo: padraoDetectado ? padraoDetectado[0] : null,
             };
           });
           setFormData((prev) => ({ ...prev, perguntas }));
@@ -125,7 +137,17 @@ export default function FormularioEditor() {
             }
             
             // Parsear opções com função auxiliar
-            const opcoes = parseOpcoes(row['Opções'] || '');
+            const opcoes = parseOpcoes(row['Opções'] || row['Opcoes'] || '');
+            
+            // Detectar padrão automaticamente
+            const PADROES = {
+              ABA: ['Não Adquirido', 'Parcial', 'Adquirido'],
+              GMFM: ['Não Inicia', 'Inicia', 'Completa Parcialmente', 'Completa'],
+            };
+            
+            const padraoDetectado = Object.entries(PADROES).find(([nome, padrao]) => 
+              opcoes.length === padrao.length && padrao.every((v, i) => opcoes[i] === v)
+            );
             
             return {
               id: Date.now() + idx,
@@ -133,9 +155,11 @@ export default function FormularioEditor() {
               texto: row['Texto'] || '',
               sigla: row['Sigla'] || '',
               tipo: tipo,
-              obrigatoria: row['Obrigatoria'] === 'TRUE' || row['Obrigatoria'] === true,
+              obrigatoria: row['Obrigatoria'] === 'TRUE' || row['Obrigatoria'] === true || row['Obrigatoria'] === 'SIM',
               formula: finalFormula,
               opcoes: opcoes,
+              opcoes_padronizadas: !!padraoDetectado,
+              padrao_tipo: padraoDetectado ? padraoDetectado[0] : null,
             };
           });
           setFormData((prev) => ({ ...prev, perguntas }));
@@ -227,17 +251,28 @@ export default function FormularioEditor() {
         const data = await ApiService.getFormulario(id)
         console.log('Formulário carregado:', data)
 
-        const PADRAO = ['Não Adquirido', 'Parcial', 'Adquirido']
+        // Padrões conhecidos
+        const PADROES = {
+          ABA: ['Não Adquirido', 'Parcial', 'Adquirido'],
+          GMFM: ['Não Inicia', 'Inicia', 'Completa Parcialmente', 'Completa'],
+        }
+        
         const perguntasMapeadas = (Array.isArray(data.perguntas) ? data.perguntas : []).map((p, idx) => {
           const opcoesArr = Array.isArray(p.opcoes) ? p.opcoes : []
-          const ehPadrao = opcoesArr.length === PADRAO.length && PADRAO.every((v, i) => opcoesArr[i] === v)
+          
+          // Verificar se é algum padrão conhecido
+          const padraoEncontrado = Object.entries(PADROES).find(([nome, opcoes]) => 
+            opcoesArr.length === opcoes.length && opcoes.every((v, i) => opcoesArr[i] === v)
+          )
+          
           return {
             ...p,
             ordem: p.ordem ?? (idx + 1),
             tipo: (p.tipo || 'TEXTO').toUpperCase(),
             obrigatoria: !!p.obrigatoria,
             opcoes: opcoesArr,
-            opcoes_padronizadas: ehPadrao,
+            opcoes_padronizadas: !!padraoEncontrado,
+            padrao_tipo: padraoEncontrado ? padraoEncontrado[0] : null,
           }
         })
 
@@ -694,20 +729,38 @@ export default function FormularioEditor() {
                     <Button 
                       type="button" 
                       onClick={() => {
-                        // Aplicar padrão (Não Adquirido, Parcial, Adquirido) a todas as MULTIPLA
+                        // Aplicar padrão ABA a todas as MULTIPLA
                         const atualizado = formData.perguntas.map(p => 
                           p.tipo === 'MULTIPLA' 
-                            ? { ...p, opcoes: ['Não Adquirido', 'Parcial', 'Adquirido'], opcoes_padronizadas: true }
+                            ? { ...p, opcoes: ['Não Adquirido', 'Parcial', 'Adquirido'], opcoes_padronizadas: true, padrao_tipo: 'ABA' }
                             : p
                         );
                         setFormData({ ...formData, perguntas: atualizado });
-                        toast({ title: '✓ Atualizadas', description: 'Padrão aplicado a todas as MULTIPLA' });
+                        toast({ title: '✓ Padrão ABA', description: 'Aplicado a todas as MULTIPLA' });
                       }}
                       variant="outline"
                       className="flex items-center gap-2 h-9 font-medium whitespace-nowrap text-xs sm:text-sm"
                       style={{borderColor: '#10b981', color: '#10b981'}}
                     >
-                      Padrão
+                      Padrão ABA
+                    </Button>
+                    <Button 
+                      type="button" 
+                      onClick={() => {
+                        // Aplicar padrão GMFM a todas as MULTIPLA
+                        const atualizado = formData.perguntas.map(p => 
+                          p.tipo === 'MULTIPLA' 
+                            ? { ...p, opcoes: ['Não Inicia', 'Inicia', 'Completa Parcialmente', 'Completa'], opcoes_padronizadas: true, padrao_tipo: 'GMFM' }
+                            : p
+                        );
+                        setFormData({ ...formData, perguntas: atualizado });
+                        toast({ title: '✓ Padrão GMFM', description: 'Aplicado a todas as MULTIPLA' });
+                      }}
+                      variant="outline"
+                      className="flex items-center gap-2 h-9 font-medium whitespace-nowrap text-xs sm:text-sm"
+                      style={{borderColor: '#8b5cf6', color: '#8b5cf6'}}
+                    >
+                      Padrão GMFM
                     </Button>
                     <Button 
                       type="button" 
@@ -868,16 +921,41 @@ export default function FormularioEditor() {
                                   const novas = [...formData.perguntas]
                                   novas[index].opcoes_padronizadas = !!e
                                   if (e) {
+                                    // Usar padrão ABA por padrão
                                     novas[index].opcoes = ['Não Adquirido', 'Parcial', 'Adquirido']
+                                    novas[index].padrao_tipo = 'ABA'
                                   } else {
                                     novas[index].opcoes = []
+                                    novas[index].padrao_tipo = null
                                   }
                                   setFormData({ ...formData, perguntas: novas })
                                 }}
                               />
-                              <label htmlFor={`padronizado-${index}`} className="text-xs">Padrão</label>
+                              <label htmlFor={`padronizado-${index}`} className="text-xs">Usar Padrão</label>
                             </div>
-                            {!p.opcoes_padronizadas && (
+                            {p.opcoes_padronizadas ? (
+                              <Select
+                                value={p.padrao_tipo || 'ABA'}
+                                onValueChange={(value) => {
+                                  const novas = [...formData.perguntas]
+                                  novas[index].padrao_tipo = value
+                                  if (value === 'ABA') {
+                                    novas[index].opcoes = ['Não Adquirido', 'Parcial', 'Adquirido']
+                                  } else if (value === 'GMFM') {
+                                    novas[index].opcoes = ['Não Inicia', 'Inicia', 'Completa Parcialmente', 'Completa']
+                                  }
+                                  setFormData({ ...formData, perguntas: novas })
+                                }}
+                              >
+                                <SelectTrigger className="text-sm h-8">
+                                  <SelectValue />
+                                </SelectTrigger>
+                                <SelectContent>
+                                  <SelectItem value="ABA">ABA (Não Adquirido, Parcial, Adquirido)</SelectItem>
+                                  <SelectItem value="GMFM">GMFM (Não Inicia, Inicia, Completa Parcialmente, Completa)</SelectItem>
+                                </SelectContent>
+                              </Select>
+                            ) : (
                               <Input
                                 placeholder="Op1, Op2, Op3"
                                 value={p.opcoes ? p.opcoes.join(', ') : ''}
