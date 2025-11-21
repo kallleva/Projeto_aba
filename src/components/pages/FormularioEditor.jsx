@@ -77,41 +77,38 @@ export default function FormularioEditor() {
           const csvText = e.target.result;
           const worksheet = XLSX.read(csvText, { type: 'string', codepage: 65001 }).Sheets.Sheet1 || XLSX.read(csvText, { type: 'string', codepage: 65001 }).Sheets[XLSX.read(csvText, { type: 'string', codepage: 65001 }).SheetNames[0]];
           const json = XLSX.utils.sheet_to_json(worksheet, { defval: '' });
-          const perguntas = json.map((row, idx) => {
+          const perguntas = [];
+          json.forEach((row, idx) => {
             const tipo = (row['Tipo'] || 'TEXTO').toUpperCase();
-            const formula = row['Formula'] || '';
-            
-            // Auto-preencher fórmula para PERCENTUAL vazio
-            let finalFormula = formula;
-            if (tipo === 'PERCENTUAL' && (!formula || formula.trim() === '')) {
-              finalFormula = `PERCENTUAL(P1:P${idx + 1})`;
+            const rawFormula = row['Formula'] || row['Fórmula'] || row['Fórmula'] || '';
+            let formulaNormalizada = rawFormula;
+            if (tipo === 'PERCENTUAL' && rawFormula) formulaNormalizada = rawFormula.replace(/\s+/g, '').toUpperCase();
+            const siglaNormalizada = (row['Sigla'] || '').toUpperCase().replace(/[^A-Z0-9_]/g, '').slice(0, 16);
+            let finalFormula = formulaNormalizada;
+            const regexPercentual = /^PERCENTUAL\(P\d+:P\d+\)$/;
+            if (tipo === 'PERCENTUAL' && (!finalFormula || !regexPercentual.test(finalFormula))) {
+              const numerosSiglas = perguntas.map(p => p.sigla).filter(s => /^P\d+$/.test(s)).map(s => parseInt(s.substring(1), 10));
+              const maior = numerosSiglas.length ? Math.max(...numerosSiglas) : (idx + 1);
+              finalFormula = `PERCENTUAL(P1:P${maior})`;
             }
-            
-            // Parsear opções com função auxiliar
             const opcoes = parseOpcoes(row['Opções'] || row['Opcoes'] || '');
-            
-            // Detectar padrão automaticamente
             const PADROES = {
               ABA: ['Não Adquirido', 'Parcial', 'Adquirido'],
               GMFM: ['Não Inicia', 'Inicia', 'Completa Parcialmente', 'Completa'],
             };
-            
-            const padraoDetectado = Object.entries(PADROES).find(([nome, padrao]) => 
-              opcoes.length === padrao.length && padrao.every((v, i) => opcoes[i] === v)
-            );
-            
-            return {
+            const padraoDetectado = Object.entries(PADROES).find(([_, padrao]) => opcoes.length === padrao.length && padrao.every((v, i) => opcoes[i] === v));
+            perguntas.push({
               id: Date.now() + idx,
               ordem: row['Ordem'] || idx + 1,
               texto: row['Texto'] || '',
-              sigla: (row['Sigla'] || '').toUpperCase().replace(/[^A-Z0-9_]/g, '').slice(0, 16),
-              tipo: tipo,
+              sigla: siglaNormalizada,
+              tipo,
               obrigatoria: row['Obrigatoria'] === 'TRUE' || row['Obrigatoria'] === true || row['Obrigatoria'] === 'SIM',
               formula: finalFormula,
-              opcoes: opcoes,
+              opcoes,
               opcoes_padronizadas: !!padraoDetectado,
               padrao_tipo: padraoDetectado ? padraoDetectado[0] : null,
-            };
+            });
           });
           setFormData((prev) => ({ ...prev, perguntas }));
           toast({ title: '✓ Importação concluída', description: `${perguntas.length} pergunta${perguntas.length > 1 ? 's' : ''} importada${perguntas.length > 1 ? 's' : ''} do CSV.` });
@@ -126,41 +123,38 @@ export default function FormularioEditor() {
           const sheetName = workbook.SheetNames[0];
           const worksheet = workbook.Sheets[sheetName];
           const json = XLSX.utils.sheet_to_json(worksheet, { defval: '' });
-          const perguntas = json.map((row, idx) => {
+          const perguntas = [];
+          json.forEach((row, idx) => {
             const tipo = (row['Tipo'] || 'TEXTO').toUpperCase();
-            const formula = row['Formula'] || '';
-            
-            // Auto-preencher fórmula para PERCENTUAL vazio
-            let finalFormula = formula;
-            if (tipo === 'PERCENTUAL' && (!formula || formula.trim() === '')) {
-              finalFormula = `PERCENTUAL(P1:P${idx + 1})`;
+            const rawFormula = row['Formula'] || row['Fórmula'] || row['Fórmula'] || '';
+            let formulaNormalizada = rawFormula;
+            if (tipo === 'PERCENTUAL' && rawFormula) formulaNormalizada = rawFormula.replace(/\s+/g, '').toUpperCase();
+            const siglaNormalizada = (row['Sigla'] || '').toUpperCase().replace(/[^A-Z0-9_]/g, '').slice(0, 16);
+            let finalFormula = formulaNormalizada;
+            const regexPercentual = /^PERCENTUAL\(P\d+:P\d+\)$/;
+            if (tipo === 'PERCENTUAL' && (!finalFormula || !regexPercentual.test(finalFormula))) {
+              const numerosSiglas = perguntas.map(p => p.sigla).filter(s => /^P\d+$/.test(s)).map(s => parseInt(s.substring(1), 10));
+              const maior = numerosSiglas.length ? Math.max(...numerosSiglas) : (idx + 1);
+              finalFormula = `PERCENTUAL(P1:P${maior})`;
             }
-            
-            // Parsear opções com função auxiliar
             const opcoes = parseOpcoes(row['Opções'] || row['Opcoes'] || '');
-            
-            // Detectar padrão automaticamente
             const PADROES = {
               ABA: ['Não Adquirido', 'Parcial', 'Adquirido'],
               GMFM: ['Não Inicia', 'Inicia', 'Completa Parcialmente', 'Completa'],
             };
-            
-            const padraoDetectado = Object.entries(PADROES).find(([nome, padrao]) => 
-              opcoes.length === padrao.length && padrao.every((v, i) => opcoes[i] === v)
-            );
-            
-            return {
+            const padraoDetectado = Object.entries(PADROES).find(([_, padrao]) => opcoes.length === padrao.length && padrao.every((v, i) => opcoes[i] === v));
+            perguntas.push({
               id: Date.now() + idx,
               ordem: row['Ordem'] || idx + 1,
               texto: row['Texto'] || '',
-              sigla: row['Sigla'] || '',
-              tipo: tipo,
+              sigla: siglaNormalizada,
+              tipo,
               obrigatoria: row['Obrigatoria'] === 'TRUE' || row['Obrigatoria'] === true || row['Obrigatoria'] === 'SIM',
               formula: finalFormula,
-              opcoes: opcoes,
+              opcoes,
               opcoes_padronizadas: !!padraoDetectado,
               padrao_tipo: padraoDetectado ? padraoDetectado[0] : null,
-            };
+            });
           });
           setFormData((prev) => ({ ...prev, perguntas }));
           toast({ title: '✓ Importação concluída', description: `${perguntas.length} pergunta${perguntas.length > 1 ? 's' : ''} importada${perguntas.length > 1 ? 's' : ''} do Excel.` });
