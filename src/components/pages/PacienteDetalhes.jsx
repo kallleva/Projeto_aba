@@ -450,15 +450,29 @@ export default function PacienteDetalhes() {
   const handleUpdateStatus = async (agendamentoId, newStatus) => {
     try {
       setUpdatingAgendamento(agendamentoId)
-      console.log('Atualizando status:', { agendamentoId, newStatus })
-      await ApiService.updateStatusAgendamento(agendamentoId, newStatus)
+      console.log('📊 Atualizando status:', { agendamentoId, newStatus, tipo: typeof newStatus })
+      
+      const resultado = await ApiService.updateStatusAgendamento(agendamentoId, newStatus)
+      console.log('✅ Status atualizado com sucesso:', resultado)
+      
+      const statusLabel = {
+        'AGENDADO': 'Agendado',
+        'CONFIRMADO': 'Confirmado', 
+        'REALIZADO': 'Realizado',
+        'CANCELADO': 'Cancelado',
+        'FALTOU': 'Faltou'
+      }[newStatus] || newStatus
+      
       toast({
         title: 'Sucesso',
-        description: 'Status do agendamento atualizado!'
+        description: `Status atualizado para: ${statusLabel}`
       })
+      
+      // Recarregar agendamentos para atualizar a UI
       await loadAgendamentos()
+      console.log('📊 Agendamentos recarregados')
     } catch (error) {
-      console.error('Erro ao atualizar status:', error)
+      console.error('❌ Erro ao atualizar status:', error)
       toast({
         title: 'Erro',
         description: `Erro ao atualizar status: ${error.message}`,
@@ -472,15 +486,21 @@ export default function PacienteDetalhes() {
   const handleUpdatePresenca = async (agendamentoId, presente) => {
     try {
       setUpdatingAgendamento(agendamentoId)
-      console.log('Atualizando presença:', { agendamentoId, presente })
-      await ApiService.updatePresencaAgendamento(agendamentoId, presente)
+      console.log('📋 Atualizando presença:', { agendamentoId, presente, tipo: typeof presente })
+      
+      const resultado = await ApiService.updatePresencaAgendamento(agendamentoId, presente)
+      console.log('✅ Presença atualizada com sucesso:', resultado)
+      
       toast({
         title: 'Sucesso',
-        description: 'Presença atualizada!'
+        description: `Presença atualizada para: ${presente === true ? 'Presente' : presente === false ? 'Ausente' : 'Não informado'}`
       })
+      
+      // Recarregar agendamentos para atualizar a UI
       await loadAgendamentos()
+      console.log('📊 Agendamentos recarregados')
     } catch (error) {
-      console.error('Erro ao atualizar presença:', error)
+      console.error('❌ Erro ao atualizar presença:', error)
       toast({
         title: 'Erro',
         description: `Erro ao atualizar presença: ${error.message}`,
@@ -1456,12 +1476,17 @@ export default function PacienteDetalhes() {
                         </div>
                         <div className="flex items-center gap-2 flex-wrap">
                           <Select 
-                            value={agendamento.status} 
-                            onValueChange={(value) => handleUpdateStatus(agendamento.id, value)}
+                            key={`status-${agendamento.id}-${agendamento.status}`}
+                            value={agendamento.status || 'AGENDADO'}
+                            defaultValue={agendamento.status || 'AGENDADO'}
+                            onValueChange={(value) => {
+                              console.log('📝 Mudando status de', agendamento.status, 'para', value)
+                              handleUpdateStatus(agendamento.id, value)
+                            }}
                             disabled={updatingAgendamento === agendamento.id}
                           >
                             <SelectTrigger className="w-32 h-9 text-xs">
-                              <SelectValue />
+                              <SelectValue placeholder="Status" />
                             </SelectTrigger>
                             <SelectContent>
                               <SelectItem value="AGENDADO">Agendado</SelectItem>
@@ -1472,15 +1497,18 @@ export default function PacienteDetalhes() {
                             </SelectContent>
                           </Select>
                           <Select 
-                            value={agendamento.presente === null ? 'null' : agendamento.presente.toString()} 
+                            key={`presenca-${agendamento.id}-${agendamento.presente}`}
+                            value={agendamento.presente === null ? 'null' : agendamento.presente.toString()}
+                            defaultValue={agendamento.presente === null ? 'null' : agendamento.presente.toString()}
                             onValueChange={(value) => {
+                              console.log('📝 Mudando presença de', agendamento.presente, 'para', value)
                               const presenteValue = value === 'null' ? null : value === 'true'
                               handleUpdatePresenca(agendamento.id, presenteValue)
                             }}
                             disabled={updatingAgendamento === agendamento.id}
                           >
                             <SelectTrigger className="w-32 h-9 text-xs">
-                              <SelectValue />
+                              <SelectValue placeholder="Presença" />
                             </SelectTrigger>
                             <SelectContent>
                               <SelectItem value="null">Não informado</SelectItem>
