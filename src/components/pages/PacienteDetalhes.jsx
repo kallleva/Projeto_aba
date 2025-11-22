@@ -551,7 +551,9 @@ export default function PacienteDetalhes() {
   }
 
   const getStatusLabel = (status) => {
-    switch (status) {
+    if (!status) return 'Não definido'
+    const statusUpper = status.toUpperCase()
+    switch (statusUpper) {
       case 'AGENDADO': return 'Agendado'
       case 'CONFIRMADO': return 'Confirmado'
       case 'REALIZADO': return 'Realizado'
@@ -1447,10 +1449,10 @@ export default function PacienteDetalhes() {
                               {formatDateTime(agendamento.data_hora)}
                             </h4>
                             <span className={`badge badge-sm ${
-                              agendamento.status === 'REALIZADO' ? 'badge-success' :
-                              agendamento.status === 'CANCELADO' ? 'badge-error' :
-                              agendamento.status === 'CONFIRMADO' ? 'badge-info' :
-                              agendamento.status === 'FALTOU' ? 'badge-warning' :
+                              (agendamento.status || '').toUpperCase() === 'REALIZADO' ? 'badge-success' :
+                              (agendamento.status || '').toUpperCase() === 'CANCELADO' ? 'badge-error' :
+                              (agendamento.status || '').toUpperCase() === 'CONFIRMADO' ? 'badge-info' :
+                              (agendamento.status || '').toUpperCase() === 'FALTOU' ? 'badge-warning' :
                               'badge-neutral'
                             }`}>
                               {getStatusLabel(agendamento.status)}
@@ -1477,8 +1479,8 @@ export default function PacienteDetalhes() {
                         <div className="flex items-center gap-2 flex-wrap">
                           <Select 
                             key={`status-${agendamento.id}-${agendamento.status}`}
-                            value={agendamento.status || 'AGENDADO'}
-                            defaultValue={agendamento.status || 'AGENDADO'}
+                            value={(agendamento.status || 'AGENDADO').toUpperCase()}
+                            defaultValue={(agendamento.status || 'AGENDADO').toUpperCase()}
                             onValueChange={(value) => {
                               console.log('📝 Mudando status de', agendamento.status, 'para', value)
                               handleUpdateStatus(agendamento.id, value)
