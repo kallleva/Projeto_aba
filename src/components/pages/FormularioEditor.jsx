@@ -26,37 +26,16 @@ export default function FormularioEditor() {
   // Função auxiliar para parsear opções (suporta vírgula, ponto-e-vírgula, quebra de linha)
   const parseOpcoes = (opcoesStr) => {
     if (!opcoesStr || typeof opcoesStr !== 'string') return [];
-    
-    // Tentar diferentes separadores
-    let opcoes = [];
-    
-    // Primeiro tenta separar por ponto seguido de espaço (". ")
-    if (opcoesStr.includes('. ')) {
-      opcoes = opcoesStr.split('. ').map(o => o.trim()).filter(o => o.length > 0);
-      // Se encontrou muitos itens com ponto, retorna
-      if (opcoes.length > 1) return opcoes;
-    }
-    
-    // Tenta quebra de linha
-    if (opcoesStr.includes('\n')) {
-      opcoes = opcoesStr.split('\n').map(o => o.trim()).filter(o => o.length > 0);
-      if (opcoes.length > 1) return opcoes;
-    }
-    
-    // Tenta ponto-e-vírgula
-    if (opcoesStr.includes(';')) {
-      opcoes = opcoesStr.split(';').map(o => o.trim()).filter(o => o.length > 0);
-      if (opcoes.length > 1) return opcoes;
-    }
-    
-    // Tenta vírgula
-    if (opcoesStr.includes(',')) {
-      opcoes = opcoesStr.split(',').map(o => o.trim()).filter(o => o.length > 0);
-      if (opcoes.length > 1) return opcoes;
-    }
-    
-    // Se tudo falhar, retorna como uma única opção
-    return [opcoesStr.trim()];
+    const limparEnumeracao = (s) => s.replace(/^\d+\s*[).:-]?\s*/, '').trim();
+    let bruto = opcoesStr.replace(/\r\n?/g, '\n').trim();
+    let separador = null;
+    if (bruto.includes('\n')) separador = '\n';
+    else if (bruto.includes(';')) separador = ';';
+    else if (bruto.includes(',')) separador = ',';
+    else if (bruto.match(/\d+\.\s/)) separador = '. ';
+    let tokens = separador ? bruto.split(separador) : [bruto];
+    tokens = tokens.map(t => limparEnumeracao(t)).filter(t => t.length > 0 && !/^\d+$/.test(t));
+    return tokens;
   };
 
   // Importação de Excel
@@ -78,6 +57,7 @@ export default function FormularioEditor() {
           const worksheet = XLSX.read(csvText, { type: 'string', codepage: 65001 }).Sheets.Sheet1 || XLSX.read(csvText, { type: 'string', codepage: 65001 }).Sheets[XLSX.read(csvText, { type: 'string', codepage: 65001 }).SheetNames[0]];
           const json = XLSX.utils.sheet_to_json(worksheet, { defval: '' });
           const perguntas = [];
+          const normalize = (s) => (s || '').toString().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').trim();
           json.forEach((row, idx) => {
             const tipo = (row['Tipo'] || 'TEXTO').toUpperCase();
             const rawFormula = row['Formula'] || row['Fórmula'] || row['Fórmula'] || '';
@@ -96,7 +76,9 @@ export default function FormularioEditor() {
               ABA: ['Não Adquirido', 'Parcial', 'Adquirido'],
               GMFM: ['Não Inicia', 'Inicia', 'Completa Parcialmente', 'Completa'],
             };
-            const padraoDetectado = Object.entries(PADROES).find(([_, padrao]) => opcoes.length === padrao.length && padrao.every((v, i) => opcoes[i] === v));
+            const padraoDetectado = Object.entries(PADROES).find(([chave, padrao]) =>
+              opcoes.length === padrao.length && padrao.every((v, i) => normalize(opcoes[i]) === normalize(v))
+            );
             perguntas.push({
               id: Date.now() + idx,
               ordem: row['Ordem'] || idx + 1,
@@ -124,6 +106,7 @@ export default function FormularioEditor() {
           const worksheet = workbook.Sheets[sheetName];
           const json = XLSX.utils.sheet_to_json(worksheet, { defval: '' });
           const perguntas = [];
+          const normalize = (s) => (s || '').toString().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').trim();
           json.forEach((row, idx) => {
             const tipo = (row['Tipo'] || 'TEXTO').toUpperCase();
             const rawFormula = row['Formula'] || row['Fórmula'] || row['Fórmula'] || '';
@@ -142,7 +125,9 @@ export default function FormularioEditor() {
               ABA: ['Não Adquirido', 'Parcial', 'Adquirido'],
               GMFM: ['Não Inicia', 'Inicia', 'Completa Parcialmente', 'Completa'],
             };
-            const padraoDetectado = Object.entries(PADROES).find(([_, padrao]) => opcoes.length === padrao.length && padrao.every((v, i) => opcoes[i] === v));
+            const padraoDetectado = Object.entries(PADROES).find(([chave, padrao]) =>
+              opcoes.length === padrao.length && padrao.every((v, i) => normalize(opcoes[i]) === normalize(v))
+            );
             perguntas.push({
               id: Date.now() + idx,
               ordem: row['Ordem'] || idx + 1,
@@ -452,7 +437,12 @@ export default function FormularioEditor() {
           if (p.tipo === 'MULTIPLA') {
             pergunta.opcoes = p.opcoes || []
             if (p.opcoes_padronizadas) {
-              pergunta.opcoes = ['Não Adquirido', 'Parcial', 'Adquirido']
+              if (p.padrao_tipo === 'GMFM') {
+                pergunta.opcoes = ['Não Inicia', 'Inicia', 'Completa Parcialmente', 'Completa']
+              } else {
+                pergunta.opcoes = ['Não Adquirido', 'Parcial', 'Adquirido']
+              }
+              pergunta.padrao_tipo = p.padrao_tipo || 'ABA'
             }
           }
           if (p.id && !p.id.toString().startsWith('temp_')) {
