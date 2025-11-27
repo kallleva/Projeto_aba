@@ -680,10 +680,10 @@ export default function LandingPage() {
                   <CheckCircle2 className="w-6 h-6 flex-shrink-0 mt-0.5" />
                   <span className="text-lg">Planos terapêuticos ilimitados</span>
                 </li>
-                <li className="flex items-start gap-3">
+                {/* <li className="flex items-start gap-3">
                   <CheckCircle2 className="w-6 h-6 flex-shrink-0 mt-0.5" />
                   <span className="text-lg">Todos os protocolos ABA</span>
-                </li>
+                </li> */}
                 <li className="flex items-start gap-3">
                   <CheckCircle2 className="w-6 h-6 flex-shrink-0 mt-0.5" />
                   <span className="text-lg">Gráficos e relatórios automáticos</span>
