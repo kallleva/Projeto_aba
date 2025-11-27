@@ -1,4 +1,5 @@
 import PacienteRelatorio from './PacienteRelatorio';
+import AssistenteIA from '@/components/ai/AssistenteIA'
 import { useState, useEffect } from 'react'
 import { useParams, useNavigate, useSearchParams } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
@@ -1603,6 +1604,14 @@ export default function PacienteDetalhes() {
             formatDate={formatDate}
             calcularIdade={calcularIdade}
           />
+          <div className="mt-6">
+            <AssistenteIA 
+              pacienteId={paciente?.id} 
+              relatorioPaciente={relatorioPaciente}
+              agendamentos={agendamentos}
+              formatDate={formatDate}
+            />
+          </div>
         </TabsContent>
       </Tabs>
 

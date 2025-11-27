@@ -718,6 +718,19 @@ class ApiService {
   async getEstatisticasEmpresa(empresaId) {
     return this.request(`/empresas/${empresaId}/estatisticas`)
   }
+
+  // ========================
+  // Assistente IA
+  // ========================
+  async askAI(question, pacienteId = null, contextoAdicional = null) {
+    const body = { question }
+    if (pacienteId) body.paciente_id = pacienteId
+    if (contextoAdicional) body.contexto_adicional = contextoAdicional
+    return this.request('/ai/ask', {
+      method: 'POST',
+      body: JSON.stringify(body),
+    })
+  }
 }
 
 export default new ApiService()
