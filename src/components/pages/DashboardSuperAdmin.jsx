@@ -53,36 +53,36 @@ export default function DashboardSuperAdmin() {
     try {
       setLoading(true);
       
-      console.log('[DashboardSuperAdmin] Iniciando carregamento de dados...');
+      // console.log('[DashboardSuperAdmin] Iniciando carregamento de dados...');
       
       // Carregar estatísticas gerais
-      console.log('[DashboardSuperAdmin] Carregando estatísticas...');
+      // console.log('[DashboardSuperAdmin] Carregando estatísticas...');
       const statsData = await ApiService.request(`/superadmin/stats?days=${timeRange}`);
-      console.log('[DashboardSuperAdmin] Stats carregadas:', statsData);
+      // console.log('[DashboardSuperAdmin] Stats carregadas:', statsData);
       setStats(statsData);
 
       // Carregar lista de empresas com detalhes
-      console.log('[DashboardSuperAdmin] Carregando empresas...');
+      // console.log('[DashboardSuperAdmin] Carregando empresas...');
       const empresasData = await ApiService.request('/superadmin/empresas');
-      console.log('[DashboardSuperAdmin] Empresas carregadas:', empresasData.length);
+      // console.log('[DashboardSuperAdmin] Empresas carregadas:', empresasData.length);
       setEmpresas(empresasData);
 
       // Carregar evolução de empresas
-      console.log('[DashboardSuperAdmin] Carregando evolução de empresas...');
+      // console.log('[DashboardSuperAdmin] Carregando evolução de empresas...');
       const evolucaoEmpresasData = await ApiService.request(`/superadmin/evolucao-empresas?days=${timeRange}`);
-      console.log('[DashboardSuperAdmin] Evolução empresas:', evolucaoEmpresasData.length, 'pontos');
+      // console.log('[DashboardSuperAdmin] Evolução empresas:', evolucaoEmpresasData.length, 'pontos');
       setEvolucaoEmpresas(evolucaoEmpresasData);
 
       // Carregar evolução de usuários
-      console.log('[DashboardSuperAdmin] Carregando evolução de usuários...');
+      // console.log('[DashboardSuperAdmin] Carregando evolução de usuários...');
       const evolucaoUsuariosData = await ApiService.request(`/superadmin/evolucao-usuarios?days=${timeRange}`);
-      console.log('[DashboardSuperAdmin] Evolução usuários:', evolucaoUsuariosData.length, 'pontos');
+      // console.log('[DashboardSuperAdmin] Evolução usuários:', evolucaoUsuariosData.length, 'pontos');
       setEvolucaoUsuarios(evolucaoUsuariosData);
 
-      console.log('[DashboardSuperAdmin] ✓ Todos os dados carregados com sucesso!');
+      // console.log('[DashboardSuperAdmin] ✓ Todos os dados carregados com sucesso!');
 
     } catch (error) {
-      console.error('[DashboardSuperAdmin] ✗ Erro ao carregar dados:', error);
+      // console.error('[DashboardSuperAdmin] ✗ Erro ao carregar dados:', error);
       alert(`Erro ao carregar dados do Super Admin Dashboard:\n\n${error.message}\n\nVerifique se:\n1. O backend está rodando\n2. Você está logado como SUPERADMIN`);
     } finally {
       setLoading(false);

@@ -1,0 +1,76 @@
+{
+  "common": {
+    "loading": "Loading...",
+    "error": "Error",
+    "success": "Success",
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "add": "Add",
+    "search": "Search",
+    "noData": "No data",
+    "back": "Back",
+    "next": "Next",
+    "previous": "Previous"
+  },
+  "nav": {
+    "dashboard": "Dashboard",
+    "pacientes": "Patients",
+    "profissionais": "Professionals",
+    "relatorios": "Reports",
+    "configuracoes": "Settings",
+    "logout": "Logout",
+    "login": "Login",
+    "idioma": "Language"
+  },
+  "paciente": {
+    "nome": "Name",
+    "dataNascimento": "Date of Birth",
+    "responsavel": "Guardian",
+    "contato": "Contact",
+    "diagnostico": "Diagnosis",
+    "criarPaciente": "Create Patient",
+    "editarPaciente": "Edit Patient",
+    "metas": "Therapeutic Goals",
+    "agendamentos": "Appointments",
+    "vinculos": "Professional Links",
+    "relatorio": "Report",
+    "graficos": "Charts",
+    "semDados": "No patient data"
+  },
+  "relatorio": {
+    "titulo": "Report",
+    "filtro": "Period Filter",
+    "dataInicial": "Start Date",
+    "dataFinal": "End Date",
+    "indicadores": "Indicators",
+    "evolucao": "Evolution",
+    "kpis": "KPIs",
+    "atendimentos": "Appointments",
+    "comparecimento": "Attendance vs Absences",
+    "presente": "Present",
+    "ausente": "Absent",
+    "pendente": "Pending"
+  },
+  "ia": {
+    "titulo": "AI Assistant",
+    "pergunta": "Ask a question...",
+    "perguntar": "Ask",
+    "enviando": "Sending...",
+    "resposta": "Response",
+    "voce": "You",
+    "assistente": "AI Assistant",
+    "filtro": "Filter by period",
+    "de": "From",
+    "ate": "To",
+    "baseadoPeriodo": "Responses based on the selected period"
+  },
+  "erros": {
+    "acesoDenegado": "Access denied",
+    "naoAutenticado": "Not authenticated",
+    "pacienteNaoEncontrado": "Patient not found",
+    "erroAoCarregar": "Error loading data",
+    "erroAoSalvar": "Error saving data"
+  }
+}

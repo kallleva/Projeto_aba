@@ -62,7 +62,7 @@ export default function RegistroDiarioDescritivo() {
         });
       }
     } catch (error) {
-      console.error('Erro ao carregar dados:', error);
+      // console.error('Erro ao carregar dados:', error);
       toast({
         title: 'Erro',
         description: 'Erro ao carregar registro: ' + error.message,
@@ -82,7 +82,7 @@ export default function RegistroDiarioDescritivo() {
       setMetas(dados.metas || []);
       setFormData(prev => ({ ...prev, meta_id: '' }));
     } catch (error) {
-      console.error('Erro ao carregar metas:', error);
+      // console.error('Erro ao carregar metas:', error);
       toast({
         title: 'Erro',
         description: 'Erro ao carregar metas: ' + error.message,

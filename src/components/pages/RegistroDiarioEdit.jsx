@@ -61,11 +61,11 @@ export default function RegistroDiarioEdit() {
           ApiService.getChecklistDiario(id),
           ApiService.getPacientes()
         ]);
-        console.log('📋 Registro carregado:', registro);
-        console.log('📋 Paciente ID do registro:', registro.paciente_id);
-        console.log('📋 Meta ID do registro:', registro.meta_id);
-        console.log('📋 Formulario ID do registro:', registro.formulario_id);
-        console.log('📋 Formulario Nome do registro:', registro.formulario_nome);
+        // console.log('📋 Registro carregado:', registro);
+        // console.log('📋 Paciente ID do registro:', registro.paciente_id);
+        // console.log('📋 Meta ID do registro:', registro.meta_id);
+        // console.log('📋 Formulario ID do registro:', registro.formulario_id);
+        // console.log('📋 Formulario Nome do registro:', registro.formulario_nome);
         
         setPacientes(pacientesData);
         
@@ -88,7 +88,7 @@ export default function RegistroDiarioEdit() {
         // Montar respostas preenchidas
         let respostasPreenchidas = {};
         if (registro.perguntas && Array.isArray(registro.perguntas)) {
-          console.log('🔄 Carregando respostas do registro...');
+          // console.log('🔄 Carregando respostas do registro...');
           registro.perguntas.forEach((pr, idx) => {
             const pergunta = pr.pergunta;
             const perguntaId = pergunta?.id;
@@ -104,11 +104,11 @@ export default function RegistroDiarioEdit() {
             if (key) {
               respostasPreenchidas[key] = respostaValor;
               if (idx < 3) {
-                console.log(`  → Pergunta ID: ${key}, Resposta: ${respostaValor}, Sigla: ${pergunta?.sigla}`);
+                // console.log(`  → Pergunta ID: ${key}, Resposta: ${respostaValor}, Sigla: ${pergunta?.sigla}`);
               }
             }
           });
-          console.log('✅ Total de respostas carregadas:', Object.keys(respostasPreenchidas).length);
+          // console.log('✅ Total de respostas carregadas:', Object.keys(respostasPreenchidas).length);
           registroPerguntasArray = registro.perguntas;
         }
         
@@ -127,7 +127,7 @@ export default function RegistroDiarioEdit() {
         
         if (registro.formulario_id && formulariosCarregados.length > 0) {
           formSel = formulariosCarregados.find(f => f.id === registro.formulario_id);
-          console.log('📋 Formulário selecionado:', formSel?.nome);
+          // console.log('📋 Formulário selecionado:', formSel?.nome);
           perguntasSel = (formSel && formSel.perguntas) ? formSel.perguntas : [];
         }
         
@@ -136,7 +136,7 @@ export default function RegistroDiarioEdit() {
         window.__registroPerguntasArray = registroPerguntasArray;
       }
     } catch (error) {
-      console.error('Erro ao carregar dados:', error);
+      // console.error('Erro ao carregar dados:', error);
       toast({
         title: 'Erro',
         description: 'Erro ao carregar registro: ' + error.message,
@@ -149,17 +149,17 @@ export default function RegistroDiarioEdit() {
 
   const carregarPerguntas = (formularioId) => {
     if (!formularioId) {
-      console.warn('⚠️ formularioId vazio');
+      // console.warn('⚠️ formularioId vazio');
       return;
     }
     
     const formulario = formularios.find(f => f.id === parseInt(formularioId));
     if (!formulario) {
-      console.warn('⚠️ Formulário não encontrado:', formularioId);
+      // console.warn('⚠️ Formulário não encontrado:', formularioId);
       return;
     }
     
-    console.log('📋 Carregando perguntas do formulário:', formulario.nome, 'Total:', formulario.perguntas?.length);
+    // console.log('📋 Carregando perguntas do formulário:', formulario.nome, 'Total:', formulario.perguntas?.length);
     setFormularioSelecionado(formulario);
     setPerguntas(formulario.perguntas || []);
     
@@ -178,14 +178,14 @@ export default function RegistroDiarioEdit() {
 
   const carregarMetasEFormularios = async (pacienteId) => {
     try {
-      console.log('🔄 Carregando metas e formulários para paciente:', pacienteId);
+      // console.log('🔄 Carregando metas e formulários para paciente:', pacienteId);
       if (!pacienteId) {
-        console.warn('⚠️ pacienteId vazio, abortando carregamento');
+        // console.warn('⚠️ pacienteId vazio, abortando carregamento');
         return;
       }
       
       const dados = await ApiService.getMetasEFormulariosPaciente(pacienteId);
-      console.log('✅ Dados carregados:', { paciente: dados.paciente?.nome, metas: dados.metas?.length, formularios: dados.formularios?.length });
+      // console.log('✅ Dados carregados:', { paciente: dados.paciente?.nome, metas: dados.metas?.length, formularios: dados.formularios?.length });
       
       setPacienteSelecionado(dados.paciente);
       setMetas(dados.metas || []);
@@ -194,7 +194,7 @@ export default function RegistroDiarioEdit() {
       setFormularioSelecionado(null);
       setPerguntas([]);
     } catch (error) {
-      console.error('❌ Erro ao carregar metas e formulários:', error);
+      // console.error('❌ Erro ao carregar metas e formulários:', error);
       toast({
         title: 'Erro',
         description: 'Erro ao carregar metas e formulários: ' + error.message,
@@ -282,7 +282,7 @@ export default function RegistroDiarioEdit() {
         respostas: respostasPorId,
         formulario_id: formularioSelecionado?.id
       };
-      console.log('Payload enviado para o backend:', payload);
+      // console.log('Payload enviado para o backend:', payload);
       if (id === 'novo') {
         await ApiService.createChecklistDiario(payload);
         toast({ title: 'Sucesso', description: 'Registro criado com sucesso!' });
@@ -312,7 +312,7 @@ export default function RegistroDiarioEdit() {
         const perguntaKey = p.id.toString();
         const respostaCarregada = formData.respostas[perguntaKey];
         if (id !== 'novo' && p.sigla) {
-          console.log(`🔍 Pergunta: ${p.sigla} (ID: ${p.id}), Chave: ${perguntaKey}, Resposta: ${respostaCarregada}`);
+          // console.log(`🔍 Pergunta: ${p.sigla} (ID: ${p.id}), Chave: ${perguntaKey}, Resposta: ${respostaCarregada}`);
         }
         return (
           <div key={p.id} id={`pergunta-${p.id}`} className="card-spacing border-l-4" style={{borderLeftColor: errosObrigatorios[perguntaKey] ? 'var(--color-danger-500, #ef4444)' : 'var(--color-info-500)'}}>
@@ -343,7 +343,7 @@ export default function RegistroDiarioEdit() {
               <Input
                 value={formData.respostas[perguntaKey] || ''}
                 onChange={e => {
-                  console.log(`✏️ Alterando TEXTO ${perguntaKey} para: ${e.target.value}`);
+                  // console.log(`✏️ Alterando TEXTO ${perguntaKey} para: ${e.target.value}`);
                   handleRespostaChange(perguntaKey, e.target.value);
                 }}
                 required={p.obrigatoria}
@@ -357,7 +357,7 @@ export default function RegistroDiarioEdit() {
                 type="number"
                 value={formData.respostas[perguntaKey] || ''}
                 onChange={e => {
-                  console.log(`✏️ Alterando NUMERO ${perguntaKey} para: ${e.target.value}`);
+                  // console.log(`✏️ Alterando NUMERO ${perguntaKey} para: ${e.target.value}`);
                   handleRespostaChange(perguntaKey, e.target.value);
                 }}
                 required={p.obrigatoria}

@@ -1,4 +1,5 @@
 import { useState, useMemo } from 'react'
+import { useTranslation } from 'react-i18next'
 import { Button } from '@/components/ui/button'
 import { Textarea } from '@/components/ui/textarea'
 import { Input } from '@/components/ui/input'
@@ -24,6 +25,7 @@ export default function AssistenteIA({
   agendamentos = [],
   formatDate = null
 }) {
+  const { t } = useTranslation()
   const [question, setQuestion] = useState('')
   const [loading, setLoading] = useState(false)
   const [history, setHistory] = useState([])
@@ -153,7 +155,7 @@ export default function AssistenteIA({
       setHistory(prev => [...prev, { role: 'user', content: q }, { role: 'assistant', content: ans }])
       setQuestion('')
     } catch (e) {
-      toast({ title: 'Erro', description: e.message, variant: 'destructive' })
+      toast({ title: t('common.error'), description: e.message, variant: 'destructive' })
     } finally {
       setLoading(false)
     }
@@ -162,17 +164,17 @@ export default function AssistenteIA({
   return (
     <div className="card-spacing">
       <div className="section-header">
-        <h3 className="section-header-title">Assistente IA</h3>
+        <h3 className="section-header-title">{t('ia.titulo')}</h3>
       </div>
-      <p className="card-text mb-4">Faça perguntas e receba sugestões com base nos registros do período selecionado.</p>
+      <p className="card-text mb-4">{t('ia.baseadoPeriodo')}</p>
 
       {/* Filtro de período se temos dados para filtrar */}
       {relatorioPaciente && (
         <div className="mb-4 p-3 bg-blue-50 border border-blue-200 rounded-lg space-y-2">
-          <div className="text-sm font-semibold text-gray-700">Filtrar por período:</div>
+          <div className="text-sm font-semibold text-gray-700">{t('ia.filtro')}</div>
           <div className="grid grid-cols-2 gap-2">
             <div>
-              <label className="text-xs text-gray-600">De:</label>
+              <label className="text-xs text-gray-600">{t('ia.de')}:</label>
               <Input 
                 type="date" 
                 value={dataInicial} 
@@ -181,7 +183,7 @@ export default function AssistenteIA({
               />
             </div>
             <div>
-              <label className="text-xs text-gray-600">Até:</label>
+              <label className="text-xs text-gray-600">{t('ia.ate')}:</label>
               <Input 
                 type="date" 
                 value={dataFinal} 
@@ -199,7 +201,7 @@ export default function AssistenteIA({
             {history.map((m, idx) => (
               <div key={idx} className={`rounded-lg p-3 ${m.role === 'user' ? 'bg-blue-100 ml-8' : 'bg-green-100 mr-8'}`}>
                 <div className={`text-xs font-semibold mb-1 ${m.role === 'user' ? 'text-blue-700' : 'text-green-700'}`}>
-                  {m.role === 'user' ? '👤 Você' : '🤖 Assistente IA'}
+                  {m.role === 'user' ? `👤 ${t('ia.voce')}` : `🤖 ${t('ia.assistente')}`}
                 </div>
                 <div className={`text-sm whitespace-pre-wrap ${m.role === 'user' ? 'text-blue-900' : 'text-green-900'}`}>
                   {m.role === 'user' ? m.content : <div dangerouslySetInnerHTML={{ __html: m.content }} />}
@@ -212,7 +214,7 @@ export default function AssistenteIA({
         <Textarea
           value={question}
           onChange={(e) => setQuestion(e.target.value)}
-          placeholder={pacienteId ? 'Pergunte sobre este paciente...' : 'Digite sua pergunta...'}
+          placeholder={pacienteId ? t('ia.pergunta') : t('ia.pergunta')}
           rows={compact ? 2 : 4}
           className="border-2 border-gray-300 rounded-lg p-3"
         />
@@ -223,7 +225,7 @@ export default function AssistenteIA({
             style={{ backgroundColor: '#0ea5e9', color: 'white' }}
             className="hover:opacity-90 transition-opacity"
           >
-            {loading ? '⏳ Enviando...' : '💬 Perguntar'}
+            {loading ? `⏳ ${t('ia.enviando')}` : `💬 ${t('ia.perguntar')}`}
           </Button>
         </div>
       </div>

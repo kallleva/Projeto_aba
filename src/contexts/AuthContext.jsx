@@ -17,9 +17,7 @@ export const AuthProvider = ({ children }) => {
   const [token, setToken] = useState(localStorage.getItem('token'))
   
   // Debug: Mostrar variáveis de ambiente
-  console.log('🔵 [AuthContext] VITE_API_BASE_URL:', import.meta.env.VITE_API_BASE_URL)
   const API_BASE_URL = (import.meta.env.VITE_API_BASE_URL || 'https://auroraclin.com.br/api').replace(/\/$/, '')
-  console.log('🔵 [AuthContext] API_BASE_URL Final:', API_BASE_URL)
   useEffect(() => {
     if (token) {
       verifyToken()
@@ -46,7 +44,7 @@ export const AuthProvider = ({ children }) => {
         logout()
       }
     } catch (error) {
-      console.error('Erro ao verificar token:', error)
+      // console.error('Erro ao verificar token:', error)
       logout()
     } finally {
       setLoading(false)
@@ -55,13 +53,13 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (email, senha) => {
     try {
-      console.log('🟢 [LOGIN] Iniciando login...')
-      console.log('📧 [LOGIN] Email:', email)
-      console.log('🔗 [LOGIN] URL da API:', API_BASE_URL)
-      console.log('📍 [LOGIN] Endpoint completo:', `${API_BASE_URL}/auth/login`)
+      // console.log('🟢 [LOGIN] Iniciando login...')
+      // console.log('📧 [LOGIN] Email:', email)
+      // console.log('🔗 [LOGIN] URL da API:', API_BASE_URL)
+      // console.log('📍 [LOGIN] Endpoint completo:', `${API_BASE_URL}/auth/login`)
       
       const loginUrl = `${API_BASE_URL}/auth/login`
-      console.log('🚀 [LOGIN] Fazendo requisição POST para:', loginUrl)
+      // console.log('🚀 [LOGIN] Fazendo requisição POST para:', loginUrl)
       
       const response = await fetch(loginUrl, {
         method: 'POST',
@@ -71,25 +69,25 @@ export const AuthProvider = ({ children }) => {
         body: JSON.stringify({ email, senha })
       })
 
-      console.log('✅ [LOGIN] Resposta recebida com status:', response.status)
-      console.log('📄 [LOGIN] Content-Type:', response.headers.get('content-type'))
+      // console.log('✅ [LOGIN] Resposta recebida com status:', response.status)
+      // console.log('📄 [LOGIN] Content-Type:', response.headers.get('content-type'))
 
       const data = await response.json()
-      console.log('📦 [LOGIN] Dados da resposta:', data)
+      // console.log('📦 [LOGIN] Dados da resposta:', data)
 
       if (response.ok) {
-        console.log('✨ [LOGIN] Login bem-sucedido!')
+        // console.log('✨ [LOGIN] Login bem-sucedido!')
         setToken(data.token)
         setUser(data.usuario)
         localStorage.setItem('token', data.token)
         return { success: true }
       } else {
-        console.log('❌ [LOGIN] Erro na resposta:', data.erro)
+        // console.log('❌ [LOGIN] Erro na resposta:', data.erro)
         return { success: false, error: data.erro }
       }
     } catch (error) {
-      console.error('💥 [LOGIN] Erro de conexão:', error)
-      console.error('❌ [LOGIN] Mensagem:', error.message)
+      // console.error('💥 [LOGIN] Erro de conexão:', error)
+      // console.error('❌ [LOGIN] Mensagem:', error.message)
       return { success: false, error: 'Erro de conexão' }
     }
   }

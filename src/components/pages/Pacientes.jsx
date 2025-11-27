@@ -46,7 +46,7 @@ export default function Pacientes() {
           const vinculos = await ApiService.getProfissionaisPaciente(paciente.id, true)
           vinculosMap[paciente.id] = vinculos
         } catch (error) {
-          console.warn(`Erro ao carregar vínculos do paciente ${paciente.id}:`, error)
+          // console.warn(`Erro ao carregar vínculos do paciente ${paciente.id}:`, error)
           vinculosMap[paciente.id] = []
         }
       }

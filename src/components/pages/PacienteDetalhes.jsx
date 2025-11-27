@@ -212,7 +212,7 @@ export default function PacienteDetalhes() {
     } catch (error) {
       // Se for 403 (Acesso negado), apenas silencie para perfis sem permissão
       if (error?.status === 403 || /acesso negado/i.test(error?.message || '')) {
-        console.warn('🔒 Sem permissão para listar profissionais. Ignorando no cliente.')
+        // console.warn('🔒 Sem permissão para listar profissionais. Ignorando no cliente.')
         setProfissionais([])
         return
       }
@@ -467,10 +467,10 @@ export default function PacienteDetalhes() {
   const handleUpdateStatus = async (agendamentoId, newStatus) => {
     try {
       setUpdatingAgendamento(agendamentoId)
-      console.log('📊 Atualizando status:', { agendamentoId, newStatus, tipo: typeof newStatus })
+      // console.log('📊 Atualizando status:', { agendamentoId, newStatus, tipo: typeof newStatus })
       
       const resultado = await ApiService.updateStatusAgendamento(agendamentoId, newStatus)
-      console.log('✅ Status atualizado com sucesso:', resultado)
+      // console.log('✅ Status atualizado com sucesso:', resultado)
       
       const statusLabel = {
         'AGENDADO': 'Agendado',
@@ -487,9 +487,9 @@ export default function PacienteDetalhes() {
       
       // Recarregar agendamentos para atualizar a UI
       await loadAgendamentos()
-      console.log('📊 Agendamentos recarregados')
+      // console.log('📊 Agendamentos recarregados')
     } catch (error) {
-      console.error('❌ Erro ao atualizar status:', error)
+      // console.error('❌ Erro ao atualizar status:', error)
       toast({
         title: 'Erro',
         description: `Erro ao atualizar status: ${error.message}`,
@@ -503,10 +503,10 @@ export default function PacienteDetalhes() {
   const handleUpdatePresenca = async (agendamentoId, presente) => {
     try {
       setUpdatingAgendamento(agendamentoId)
-      console.log('📋 Atualizando presença:', { agendamentoId, presente, tipo: typeof presente })
+      // console.log('📋 Atualizando presença:', { agendamentoId, presente, tipo: typeof presente })
       
       const resultado = await ApiService.updatePresencaAgendamento(agendamentoId, presente)
-      console.log('✅ Presença atualizada com sucesso:', resultado)
+      // console.log('✅ Presença atualizada com sucesso:', resultado)
       
       toast({
         title: 'Sucesso',
@@ -515,9 +515,9 @@ export default function PacienteDetalhes() {
       
       // Recarregar agendamentos para atualizar a UI
       await loadAgendamentos()
-      console.log('📊 Agendamentos recarregados')
+      // console.log('📊 Agendamentos recarregados')
     } catch (error) {
-      console.error('❌ Erro ao atualizar presença:', error)
+      // console.error('❌ Erro ao atualizar presença:', error)
       toast({
         title: 'Erro',
         description: `Erro ao atualizar presença: ${error.message}`,
@@ -1509,7 +1509,7 @@ export default function PacienteDetalhes() {
                             value={(agendamento.status || 'AGENDADO').toUpperCase()}
                             defaultValue={(agendamento.status || 'AGENDADO').toUpperCase()}
                             onValueChange={(value) => {
-                              console.log('📝 Mudando status de', agendamento.status, 'para', value)
+                              // console.log('📝 Mudando status de', agendamento.status, 'para', value)
                               handleUpdateStatus(agendamento.id, value)
                             }}
                             disabled={!canModifyAgenda || updatingAgendamento === agendamento.id}
@@ -1530,7 +1530,7 @@ export default function PacienteDetalhes() {
                             value={agendamento.presente === null ? 'null' : agendamento.presente.toString()}
                             defaultValue={agendamento.presente === null ? 'null' : agendamento.presente.toString()}
                             onValueChange={(value) => {
-                              console.log('📝 Mudando presença de', agendamento.presente, 'para', value)
+                              // console.log('📝 Mudando presença de', agendamento.presente, 'para', value)
                               const presenteValue = value === 'null' ? null : value === 'true'
                               handleUpdatePresenca(agendamento.id, presenteValue)
                             }}

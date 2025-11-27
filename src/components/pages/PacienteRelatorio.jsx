@@ -10,16 +10,16 @@ import GraficoFaltas from './PacienteDetalhes/GraficoFaltas';
 // Monta dados para o radar ApexCharts a partir de respostas_calculadas_globais do backend
 function getApexRadarData(relatorio) {
   if (!relatorio || !relatorio.respostas_calculadas_globais) {
-    console.warn('Radar: relatorio ou respostas_calculadas_globais ausentes', relatorio);
+    // console.warn('Radar: relatorio ou respostas_calculadas_globais ausentes', relatorio);
     return function() {
       return { series: [], categorias: [], datas: [], perguntas: [] };
     };
   }
   
   return function(datasSelecionadas) {
-    console.log('Radar: datasSelecionadas', datasSelecionadas);
+    // console.log('Radar: datasSelecionadas', datasSelecionadas);
     const globaisFiltrados = relatorio.respostas_calculadas_globais.filter(item => datasSelecionadas.includes(item.data));
-    console.log('Radar: globaisFiltrados', globaisFiltrados);
+    // console.log('Radar: globaisFiltrados', globaisFiltrados);
     
     const indicadoresInfo = {};
     const indicadoresSet = new Set();
@@ -44,7 +44,7 @@ function getApexRadarData(relatorio) {
     
     const perguntas = Array.from(indicadoresSet).map(id => indicadoresInfo[id]);
     perguntas.sort((a, b) => (a.id > b.id ? 1 : -1));
-    console.log('Radar: perguntas (indicadores)', perguntas);
+    // console.log('Radar: perguntas (indicadores)', perguntas);
     
     const categorias = perguntas.map(p => p.sigla || p.texto);
     
@@ -89,7 +89,7 @@ function getApexRadarData(relatorio) {
       };
     });
     
-    console.log('Radar: series montadas', series);
+    // console.log('Radar: series montadas', series);
     return { series, categorias, datas, perguntas };
   };
 }
@@ -207,18 +207,18 @@ export default function PacienteRelatorio({ paciente, relatorioPaciente, agendam
 
   // Debug: verificar estrutura do relatorioPaciente
   React.useEffect(() => {
-    console.log('=== PacienteRelatorio Debug ===');
-    console.log('relatorioPaciente completo:', JSON.stringify(relatorioPaciente, null, 2));
+    // console.log('=== PacienteRelatorio Debug ===');
+    // console.log('relatorioPaciente completo:', JSON.stringify(relatorioPaciente, null, 2));
     if (relatorioPaciente) {
-      console.log('Keys do relatorioPaciente:', Object.keys(relatorioPaciente));
-      console.log('respostas_calculadas_globais:', relatorioPaciente.respostas_calculadas_globais);
-      console.log('Tipo de respostas_calculadas_globais:', Array.isArray(relatorioPaciente.respostas_calculadas_globais) ? 'array' : typeof relatorioPaciente.respostas_calculadas_globais);
+      // console.log('Keys do relatorioPaciente:', Object.keys(relatorioPaciente));
+      // console.log('respostas_calculadas_globais:', relatorioPaciente.respostas_calculadas_globais);
+      // console.log('Tipo de respostas_calculadas_globais:', Array.isArray(relatorioPaciente.respostas_calculadas_globais) ? 'array' : typeof relatorioPaciente.respostas_calculadas_globais);
       if (Array.isArray(relatorioPaciente.respostas_calculadas_globais)) {
-        console.log('Tamanho do array:', relatorioPaciente.respostas_calculadas_globais.length);
-        console.log('Primeiros elementos:', relatorioPaciente.respostas_calculadas_globais.slice(0, 2));
+        // console.log('Tamanho do array:', relatorioPaciente.respostas_calculadas_globais.length);
+        // console.log('Primeiros elementos:', relatorioPaciente.respostas_calculadas_globais.slice(0, 2));
       }
     }
-    console.log('=== Fim Debug ===');
+    // console.log('=== Fim Debug ===');
   }, [relatorioPaciente]);
 
   const getRadarData = getApexRadarData(relatorioPaciente);
@@ -226,7 +226,7 @@ export default function PacienteRelatorio({ paciente, relatorioPaciente, agendam
   // Construir lista de datas com melhor debug
   const todasDatas = React.useMemo(() => {
     if (!relatorioPaciente || !relatorioPaciente.respostas_calculadas_globais) {
-      console.warn('Aviso: relatorioPaciente ou respostas_calculadas_globais ausentes');
+      // console.warn('Aviso: relatorioPaciente ou respostas_calculadas_globais ausentes');
       return [];
     }
 

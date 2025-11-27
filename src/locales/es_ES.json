@@ -1,0 +1,76 @@
+{
+  "common": {
+    "loading": "Cargando...",
+    "error": "Error",
+    "success": "Éxito",
+    "save": "Guardar",
+    "cancel": "Cancelar",
+    "delete": "Eliminar",
+    "edit": "Editar",
+    "add": "Añadir",
+    "search": "Buscar",
+    "noData": "Sin datos",
+    "back": "Atrás",
+    "next": "Siguiente",
+    "previous": "Anterior"
+  },
+  "nav": {
+    "dashboard": "Panel de Control",
+    "pacientes": "Pacientes",
+    "profissionais": "Profesionales",
+    "relatorios": "Reportes",
+    "configuracoes": "Configuración",
+    "logout": "Salir",
+    "login": "Iniciar Sesión",
+    "idioma": "Idioma"
+  },
+  "paciente": {
+    "nome": "Nombre",
+    "dataNascimento": "Fecha de Nacimiento",
+    "responsavel": "Responsable",
+    "contato": "Contacto",
+    "diagnostico": "Diagnóstico",
+    "criarPaciente": "Crear Paciente",
+    "editarPaciente": "Editar Paciente",
+    "metas": "Metas Terapéuticas",
+    "agendamentos": "Citas",
+    "vinculos": "Vínculos Profesionales",
+    "relatorio": "Reporte",
+    "graficos": "Gráficos",
+    "semDados": "Sin datos del paciente"
+  },
+  "relatorio": {
+    "titulo": "Reporte",
+    "filtro": "Filtro de Período",
+    "dataInicial": "Fecha Inicial",
+    "dataFinal": "Fecha Final",
+    "indicadores": "Indicadores",
+    "evolucao": "Evolución",
+    "kpis": "KPIs",
+    "atendimentos": "Citas",
+    "comparecimento": "Asistencia vs Ausencias",
+    "presente": "Asistió",
+    "ausente": "Ausente",
+    "pendente": "Pendiente"
+  },
+  "ia": {
+    "titulo": "Asistente IA",
+    "pergunta": "Haz una pregunta...",
+    "perguntar": "Preguntar",
+    "enviando": "Enviando...",
+    "respuesta": "Respuesta",
+    "voce": "Tú",
+    "assistente": "Asistente IA",
+    "filtro": "Filtro por período",
+    "de": "De",
+    "ate": "Hasta",
+    "baseadoPeriodo": "Respuestas basadas en el período seleccionado"
+  },
+  "erros": {
+    "acesoDenegado": "Acceso denegado",
+    "naoAutenticado": "No autenticado",
+    "pacienteNaoEncontrado": "Paciente no encontrado",
+    "erroAoCarregar": "Error al cargar datos",
+    "erroAoSalvar": "Error al guardar"
+  }
+}

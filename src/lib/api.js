@@ -1,13 +1,12 @@
 const API_BASE_URL = (import.meta.env.VITE_API_BASE_URL || 'https://auroraclin.com.br/api').replace(/\/$/, '')
-console.log('🔧 API_BASE_URL configurado:', API_BASE_URL)
-console.log('🔧 VITE_API_BASE_URL:', import.meta.env.VITE_API_BASE_URL)
+//const API_BASE_URL = (import.meta.env.VITE_API_BASE_URL || 'https://auroraclin.com.br/api').replace(/\/$/, '')
 class ApiService {
   async request(endpoint, options = {}) {
     // Remove barra inicial e final para evitar duplas barras
     const cleanEndpoint = endpoint.replace(/^\/+|\/+$/g, '')
     const url = `${API_BASE_URL}/${cleanEndpoint}`
     const token = localStorage.getItem('token')
-    console.log('🔐 Token obtido:', token ? '✓ Presente' : '✗ Ausente')
+    // console.log('🔐 Token obtido:', token ? '✓ Presente' : '✗ Ausente')
     
     // Se for FormData, não definir Content-Type (browser define automaticamente)
     const headers = options.isFormData 
@@ -30,28 +29,28 @@ class ApiService {
     delete config.isFormData
 
     try {
-      console.log('🔗 [API] Requisição:', { url, endpoint, cleanEndpoint })
+      // console.log('🔗 [API] Requisição:', { url, endpoint, cleanEndpoint })
       const response = await fetch(url, config)
-      console.log('📨 [API] Resposta recebida:', { status: response.status, ok: response.ok })
+      // console.log('📨 [API] Resposta recebida:', { status: response.status, ok: response.ok })
       
       // Log do Content-Type para debug
       const contentType = response.headers.get('content-type')
-      console.log('📄 [API] Content-Type:', contentType)
+      // console.log('📄 [API] Content-Type:', contentType)
       
       // Log de headers importantes
-      console.log('🔐 [API] Headers:', {
-        authorization: config.headers.Authorization ? '✓ Presente' : '✗ Ausente',
-        contentType: contentType,
-        statusCode: response.status
-      })
+      // console.log('🔐 [API] Headers:', {
+      //     authorization: config.headers.Authorization ? '✓ Presente' : '✗ Ausente',
+      //     contentType: contentType,
+      //     statusCode: response.status
+      // })
       
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}))
-        console.error('API Error:', errorData)
+        // console.error('API Error:', errorData)
         
         // Log especial para erro 401
         if (response.status === 401) {
-          console.error('❌ [401 UNAUTHORIZED] Token inválido ou ausente. Verifique o localStorage "token".')
+          // console.error('❌ [401 UNAUTHORIZED] Token inválido ou ausente. Verifique o localStorage "token".')
         }
         
         // Criar erro com código de status
@@ -63,17 +62,17 @@ class ApiService {
 
       // Log do body antes de fazer parse
       const text = await response.text()
-      console.log('API Response Body (first 500 chars):', text.substring(0, 500))
+      // console.log('API Response Body (first 500 chars):', text.substring(0, 500))
       
       try {
         return JSON.parse(text)
       } catch (parseError) {
-        console.error('JSON Parse Error:', parseError)
-        console.error('Raw response:', text)
+        // console.error('JSON Parse Error:', parseError)
+        // console.error('Raw response:', text)
         throw new Error(`Invalid JSON response: ${parseError.message}`)
       }
     } catch (error) {
-      console.error('API Request Failed:', error)
+      // console.error('API Request Failed:', error)
       
       // Verificar se é erro de conectividade
       if (error.name === 'TypeError' && error.message.includes('fetch')) {
@@ -542,7 +541,7 @@ class ApiService {
         body: JSON.stringify({ status }),
       })
     } catch (error) {
-      console.warn('Endpoint específico de status não encontrado, usando PUT completo:', error.message)
+        // console.warn('Endpoint específico de status não encontrado, usando PUT completo:', error.message)
       // Fallback: busca o agendamento atual e atualiza apenas o status
       try {
         const agendamento = await this.getAgendamento(id)
@@ -551,7 +550,7 @@ class ApiService {
         }
         return await this.updateAgendamento(id, { ...agendamento, status })
       } catch (fallbackError) {
-        console.error('Erro no fallback de atualização de status:', fallbackError)
+          // console.error('Erro no fallback de atualização de status:', fallbackError)
         throw new Error(`Erro ao atualizar status: ${fallbackError.message}`)
       }
     }
@@ -565,7 +564,7 @@ class ApiService {
         body: JSON.stringify({ presente }),
       })
     } catch (error) {
-      console.warn('Endpoint específico de presença não encontrado, usando PUT completo:', error.message)
+        // console.warn('Endpoint específico de presença não encontrado, usando PUT completo:', error.message)
       // Fallback: busca o agendamento atual e atualiza apenas a presença
       try {
         const agendamento = await this.getAgendamento(id)
@@ -574,7 +573,7 @@ class ApiService {
         }
         return await this.updateAgendamento(id, { ...agendamento, presente })
       } catch (fallbackError) {
-        console.error('Erro no fallback de atualização de presença:', fallbackError)
+          // console.error('Erro no fallback de atualização de presença:', fallbackError)
         throw new Error(`Erro ao atualizar presença: ${fallbackError.message}`)
       }
     }

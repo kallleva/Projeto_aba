@@ -25,7 +25,7 @@ export default function AnexosChecklist({ checklistId }) {
       const data = await ApiService.getAnexosChecklist(checklistId);
       setAnexos(data);
     } catch (error) {
-      console.error('Erro ao carregar anexos:', error);
+      // console.error('Erro ao carregar anexos:', error);
       toast({
         title: 'Erro',
         description: 'Erro ao carregar anexos: ' + error.message,

@@ -61,9 +61,9 @@ export default function RegistroDiario() {
         ApiService.getMetasTerapeuticas()
       ])
       
-      console.log('Registros carregados:', registrosData)
-      console.log('Formulários carregados:', formulariosData)
-      console.log('Metas carregadas:', metasData)
+      // console.log('Registros carregados:', registrosData)
+      // console.log('Formulários carregados:', formulariosData)
+      // console.log('Metas carregadas:', metasData)
       
       setRegistros(registrosData)
       setFormularios(formulariosData)
@@ -184,7 +184,7 @@ export default function RegistroDiario() {
           const resultado = eval(formula)
           respostasComCalculadas[pergunta.id.toString()] = resultado.toString()
         } catch (error) {
-          console.error('Erro ao calcular fórmula:', error)
+          // console.error('Erro ao calcular fórmula:', error)
           respostasComCalculadas[pergunta.id.toString()] = 'Erro no cálculo'
         }
       }
@@ -306,7 +306,7 @@ export default function RegistroDiario() {
         respostas: respostasParaEnviar
       }
 
-      console.log('Dados sendo enviados para API:', dataToSend)
+      // console.log('Dados sendo enviados para API:', dataToSend)
 
       if (editingRegistro) {
         await ApiService.updateChecklistDiario(editingRegistro.id, dataToSend)

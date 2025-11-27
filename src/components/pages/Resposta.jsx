@@ -20,7 +20,7 @@ const Resposta = ({ perguntaId }) => {
       setError('Este campo é obrigatório');
     } else {
       // Handle the submission logic here
-      console.log(`Resposta para a pergunta ${perguntaId}: ${valor}`);
+      // console.log(`Resposta para a pergunta ${perguntaId}: ${valor}`);
       setValor('');
     }
   };

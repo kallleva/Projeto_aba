@@ -1,0 +1,76 @@
+{
+  "common": {
+    "loading": "Carregando...",
+    "error": "Erro",
+    "success": "Sucesso",
+    "save": "Salvar",
+    "cancel": "Cancelar",
+    "delete": "Excluir",
+    "edit": "Editar",
+    "add": "Adicionar",
+    "search": "Buscar",
+    "noData": "Sem dados",
+    "back": "Voltar",
+    "next": "Próximo",
+    "previous": "Anterior"
+  },
+  "nav": {
+    "dashboard": "Dashboard",
+    "pacientes": "Pacientes",
+    "profissionais": "Profissionais",
+    "relatorios": "Relatórios",
+    "configuracoes": "Configurações",
+    "logout": "Sair",
+    "login": "Entrar",
+    "idioma": "Idioma"
+  },
+  "paciente": {
+    "nome": "Nome",
+    "dataNascimento": "Data de Nascimento",
+    "responsavel": "Responsável",
+    "contato": "Contato",
+    "diagnostico": "Diagnóstico",
+    "criarPaciente": "Criar Paciente",
+    "editarPaciente": "Editar Paciente",
+    "metas": "Metas Terapêuticas",
+    "agendamentos": "Agendamentos",
+    "vinculos": "Vículos Profissionais",
+    "relatorio": "Relatório",
+    "graficos": "Gráficos",
+    "semDados": "Sem dados de paciente"
+  },
+  "relatorio": {
+    "titulo": "Relatório",
+    "filtro": "Filtro de Período",
+    "dataInicial": "Data Inicial",
+    "dataFinal": "Data Final",
+    "indicadores": "Indicadores",
+    "evolucao": "Evolução",
+    "kpis": "KPIs",
+    "atendimentos": "Atendimentos",
+    "comparecimento": "Comparecimento vs Faltas",
+    "presente": "Presente",
+    "ausente": "Ausente",
+    "pendente": "Pendente"
+  },
+  "ia": {
+    "titulo": "Assistente IA",
+    "pergunta": "Faça uma pergunta...",
+    "perguntar": "Perguntar",
+    "enviando": "Enviando...",
+    "resposta": "Resposta",
+    "voce": "Você",
+    "assistente": "Assistente IA",
+    "filtro": "Filtro por período",
+    "de": "De",
+    "ate": "Até",
+    "baseadoPeriodo": "Respostas baseadas no período selecionado"
+  },
+  "erros": {
+    "acesoDenegado": "Acesso negado",
+    "naoAutenticado": "Não autenticado",
+    "pacienteNaoEncontrado": "Paciente não encontrado",
+    "erroAoCarregar": "Erro ao carregar dados",
+    "erroAoSalvar": "Erro ao salvar"
+  }
+}
