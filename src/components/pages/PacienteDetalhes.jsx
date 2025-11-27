@@ -37,12 +37,19 @@ import {
 } from 'recharts'
 import ApiService from '@/lib/api'
 import { Search } from 'lucide-react'
+import { useAuth } from '@/contexts/AuthContext'
 
 export default function PacienteDetalhes() {
   const { id } = useParams()
   const navigate = useNavigate()
   const [searchParams] = useSearchParams()
   const { toast } = useToast()
+  const { user } = useAuth()
+  const isAdmin = user?.tipo_usuario === 'ADMIN'
+  const isProfissional = user?.tipo_usuario === 'PROFISSIONAL'
+  const isResponsavel = user?.tipo_usuario === 'RESPONSAVEL'
+  const canManageVinculos = isAdmin
+  const canModifyAgenda = isAdmin || isProfissional
   
   const [paciente, setPaciente] = useState(null)
   const [relatorioPaciente, setRelatorioPaciente] = useState(null)
@@ -101,10 +108,13 @@ export default function PacienteDetalhes() {
       loadPaciente()
       loadRelatorioPaciente()
       loadAgendamentos()
-      loadProfissionais()
+      if (canManageVinculos || isProfissional) {
+        // Apenas ADMIN/PROFISSIONAL podem carregar lista completa de profissionais
+        loadProfissionais()
+      }
       loadVinculos()
     }
-  }, [id])
+  }, [id, canManageVinculos, isProfissional])
 
   const loadPaciente = async () => {
     try {
@@ -199,6 +209,12 @@ export default function PacienteDetalhes() {
       const data = await ApiService.getProfissionais()
       setProfissionais(data)
     } catch (error) {
+      // Se for 403 (Acesso negado), apenas silencie para perfis sem permissão
+      if (error?.status === 403 || /acesso negado/i.test(error?.message || '')) {
+        console.warn('🔒 Sem permissão para listar profissionais. Ignorando no cliente.')
+        setProfissionais([])
+        return
+      }
       toast({
         title: 'Erro',
         description: 'Erro ao carregar profissionais: ' + error.message,
@@ -857,17 +873,19 @@ export default function PacienteDetalhes() {
                 <h2 className="section-header-title">Profissionais Vinculados</h2>
                 <p className="card-text">Gerencie os vínculos terapêuticos de {paciente.nome}</p>
               </div>
-              <Button 
-                onClick={() => setShowVinculoForm(true)}
-                style={{ backgroundColor: '#0ea5e9', color: 'white' }}
-              >
-                <Plus className="mr-2 h-4 w-4" />
-                Novo Vínculo
-              </Button>
+              {canManageVinculos && (
+                <Button 
+                  onClick={() => setShowVinculoForm(true)}
+                  style={{ backgroundColor: '#0ea5e9', color: 'white' }}
+                >
+                  <Plus className="mr-2 h-4 w-4" />
+                  Novo Vínculo
+                </Button>
+              )}
             </div>
 
             {/* Formulário de Vínculo */}
-            {showVinculoForm && (
+            {showVinculoForm && canManageVinculos && (
               <div className="card-spacing animate-fade-in">
                 <div className="section-header mb-6">
                   <Edit size={18} className="color-info-icon" />
@@ -1042,49 +1060,51 @@ export default function PacienteDetalhes() {
                                     )}
                                   </div>
                                 </div>
-                                <div className="flex flex-col gap-2 ml-4">
-                                  <Button
-                                    variant="outline"
-                                    size="sm"
-                                    onClick={() => handleEditVinculo(vinculo)}
-                                  >
-                                    <Edit className="h-4 w-4" />
-                                  </Button>
-                                  {vinculo.status === 'ATIVO' && (
-                                    <>
-                                      <Button
-                                        variant="outline"
-                                        size="sm"
-                                        onClick={() => handleUpdateStatusVinculo(vinculo.id, 'suspender')}
-                                      >
-                                        Suspender
-                                      </Button>
-                                      <Button
-                                        variant="outline"
-                                        size="sm"
-                                        onClick={() => handleUpdateStatusVinculo(vinculo.id, 'inativar')}
-                                      >
-                                        Inativar
-                                      </Button>
-                                    </>
-                                  )}
-                                  {vinculo.status === 'SUSPENSO' && (
+                                {canManageVinculos && (
+                                  <div className="flex flex-col gap-2 ml-4">
                                     <Button
                                       variant="outline"
                                       size="sm"
-                                      onClick={() => handleUpdateStatusVinculo(vinculo.id, 'ativar')}
+                                      onClick={() => handleEditVinculo(vinculo)}
                                     >
-                                      Ativar
+                                      <Edit className="h-4 w-4" />
                                     </Button>
-                                  )}
-                                  <Button
-                                    variant="outline"
-                                    size="sm"
-                                    onClick={() => handleDeleteVinculo(vinculo.id)}
-                                  >
-                                    <Trash2 className="h-4 w-4" />
-                                  </Button>
-                                </div>
+                                    {vinculo.status === 'ATIVO' && (
+                                      <>
+                                        <Button
+                                          variant="outline"
+                                          size="sm"
+                                          onClick={() => handleUpdateStatusVinculo(vinculo.id, 'suspender')}
+                                        >
+                                          Suspender
+                                        </Button>
+                                        <Button
+                                          variant="outline"
+                                          size="sm"
+                                          onClick={() => handleUpdateStatusVinculo(vinculo.id, 'inativar')}
+                                        >
+                                          Inativar
+                                        </Button>
+                                      </>
+                                    )}
+                                    {vinculo.status === 'SUSPENSO' && (
+                                      <Button
+                                        variant="outline"
+                                        size="sm"
+                                        onClick={() => handleUpdateStatusVinculo(vinculo.id, 'ativar')}
+                                      >
+                                        Ativar
+                                      </Button>
+                                    )}
+                                    <Button
+                                      variant="outline"
+                                      size="sm"
+                                      onClick={() => handleDeleteVinculo(vinculo.id)}
+                                    >
+                                      <Trash2 className="h-4 w-4" />
+                                    </Button>
+                                  </div>
+                                )}
                               </div>
                             </div>
                           ))}
@@ -1133,22 +1153,24 @@ export default function PacienteDetalhes() {
                                     )}
                                   </div>
                                 </div>
-                                <div className="flex flex-col gap-2 ml-4">
-                                  <Button
-                                    variant="outline"
-                                    size="sm"
-                                    onClick={() => handleUpdateStatusVinculo(vinculo.id, 'ativar')}
-                                  >
-                                    Reativar
-                                  </Button>
-                                  <Button
-                                    variant="outline"
-                                    size="sm"
-                                    onClick={() => handleDeleteVinculo(vinculo.id)}
-                                  >
-                                    <Trash2 className="h-4 w-4" />
-                                  </Button>
-                                </div>
+                                {canManageVinculos && (
+                                  <div className="flex flex-col gap-2 ml-4">
+                                    <Button
+                                      variant="outline"
+                                      size="sm"
+                                      onClick={() => handleUpdateStatusVinculo(vinculo.id, 'ativar')}
+                                    >
+                                      Reativar
+                                    </Button>
+                                    <Button
+                                      variant="outline"
+                                      size="sm"
+                                      onClick={() => handleDeleteVinculo(vinculo.id)}
+                                    >
+                                      <Trash2 className="h-4 w-4" />
+                                    </Button>
+                                  </div>
+                                )}
                               </div>
                             </div>
                           ))}
@@ -1162,14 +1184,16 @@ export default function PacienteDetalhes() {
                         <Users className="alert-icon" />
                         <div className="alert-content">
                           <p>Nenhum vínculo encontrado para este paciente.</p>
-                          <Button 
-                            onClick={() => setShowVinculoForm(true)}
-                            className="mt-3"
-                            style={{ backgroundColor: '#0ea5e9', color: 'white' }}
-                          >
-                            <Plus className="mr-2 h-4 w-4" />
-                            Criar Primeiro Vínculo
-                          </Button>
+                          {canManageVinculos && (
+                            <Button 
+                              onClick={() => setShowVinculoForm(true)}
+                              className="mt-3"
+                              style={{ backgroundColor: '#0ea5e9', color: 'white' }}
+                            >
+                              <Plus className="mr-2 h-4 w-4" />
+                              Criar Primeiro Vínculo
+                            </Button>
+                          )}
                         </div>
                       </div>
                     )}
@@ -1189,17 +1213,19 @@ export default function PacienteDetalhes() {
                 <h2 className="section-header-title">Agenda do Paciente</h2>
                 <p className="card-text">Gerencie os agendamentos de {paciente.nome}</p>
               </div>
-              <Button 
-                onClick={() => setShowAgendamentoForm(true)}
-                style={{ backgroundColor: '#0ea5e9', color: 'white' }}
-              >
-                <Plus className="mr-2 h-4 w-4" />
-                Novo Agendamento
-              </Button>
+              {canModifyAgenda && (
+                <Button 
+                  onClick={() => setShowAgendamentoForm(true)}
+                  style={{ backgroundColor: '#0ea5e9', color: 'white' }}
+                >
+                  <Plus className="mr-2 h-4 w-4" />
+                  Novo Agendamento
+                </Button>
+              )}
             </div>
 
             {/* Formulário de Agendamento */}
-            {showAgendamentoForm && (
+            {showAgendamentoForm && canModifyAgenda && (
               <div className="card-spacing animate-fade-in">
                 <div className="section-header mb-6">
                   <Calendar size={18} className="color-info-icon" />
@@ -1241,7 +1267,7 @@ export default function PacienteDetalhes() {
                     </div>
                     <div className="form-group">
                       <Label htmlFor="profissional_id">Profissional</Label>
-                      <Select 
+                          <Select 
                         value={agendamentoForm.profissional_id} 
                         onValueChange={(value) => setAgendamentoForm({...agendamentoForm, profissional_id: value})}
                         required
@@ -1260,7 +1286,7 @@ export default function PacienteDetalhes() {
                     </div>
                     <div className="form-group">
                       <Label htmlFor="status">Status</Label>
-                      <Select 
+                          <Select 
                         value={agendamentoForm.status} 
                         onValueChange={(value) => setAgendamentoForm({...agendamentoForm, status: value})}
                         required
@@ -1485,7 +1511,7 @@ export default function PacienteDetalhes() {
                               console.log('📝 Mudando status de', agendamento.status, 'para', value)
                               handleUpdateStatus(agendamento.id, value)
                             }}
-                            disabled={updatingAgendamento === agendamento.id}
+                            disabled={!canModifyAgenda || updatingAgendamento === agendamento.id}
                           >
                             <SelectTrigger className="w-32 h-9 text-xs">
                               <SelectValue placeholder="Status" />
@@ -1507,7 +1533,7 @@ export default function PacienteDetalhes() {
                               const presenteValue = value === 'null' ? null : value === 'true'
                               handleUpdatePresenca(agendamento.id, presenteValue)
                             }}
-                            disabled={updatingAgendamento === agendamento.id}
+                            disabled={!canModifyAgenda || updatingAgendamento === agendamento.id}
                           >
                             <SelectTrigger className="w-32 h-9 text-xs">
                               <SelectValue placeholder="Presença" />
@@ -1518,6 +1544,7 @@ export default function PacienteDetalhes() {
                               <SelectItem value="false">Ausente</SelectItem>
                             </SelectContent>
                           </Select>
+                          {canModifyAgenda && (
                           <Button
                             variant="outline"
                             size="sm"
@@ -1526,6 +1553,8 @@ export default function PacienteDetalhes() {
                           >
                             <Edit size={16} />
                           </Button>
+                          )}
+                          {canModifyAgenda && (
                           <Button
                             variant="outline"
                             size="sm"
@@ -1534,6 +1563,7 @@ export default function PacienteDetalhes() {
                           >
                             <Trash2 size={16} />
                           </Button>
+                          )}
                         </div>
                       </div>
                     </div>
@@ -1545,14 +1575,16 @@ export default function PacienteDetalhes() {
                   <div className="alert-content">
                     <p className="font-medium mb-2">Nenhum agendamento encontrado</p>
                     <p className="text-sm mb-3">Nenhum agendamento registrado para {currentDate.toLocaleDateString('pt-BR', { month: 'long', year: 'numeric' })}.</p>
-                    <Button 
-                      onClick={() => setShowAgendamentoForm(true)}
-                      size="sm"
-                      style={{ backgroundColor: '#0ea5e9', color: 'white' }}
-                    >
-                      <Plus className="mr-2 h-4 w-4" />
-                      Criar Primeiro Agendamento
-                    </Button>
+                    {canModifyAgenda && (
+                      <Button 
+                        onClick={() => setShowAgendamentoForm(true)}
+                        size="sm"
+                        style={{ backgroundColor: '#0ea5e9', color: 'white' }}
+                      >
+                        <Plus className="mr-2 h-4 w-4" />
+                        Criar Primeiro Agendamento
+                      </Button>
+                    )}
                   </div>
                 </div>
               )

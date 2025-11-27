@@ -50,12 +50,12 @@ function App() {
                     
                     {/* PROFISSIONAL + ADMIN - Pacientes e relacionados */}
                     <Route path="/pacientes" element={
-                      <ProtectedRoute requireRole={['PROFISSIONAL', 'ADMIN']}>
+                      <ProtectedRoute requireRole={['PROFISSIONAL', 'ADMIN', 'RESPONSAVEL']}>
                         <Pacientes />
                       </ProtectedRoute>
                     } />
                     <Route path="/pacientes/:id" element={
-                      <ProtectedRoute requireRole={['PROFISSIONAL', 'ADMIN']}>
+                      <ProtectedRoute requireRole={['PROFISSIONAL', 'ADMIN', 'RESPONSAVEL']}>
                         <PacienteDetalhes />
                       </ProtectedRoute>
                     } />

@@ -37,11 +37,6 @@ export default function Pacientes() {
       setLoading(true)
       let data = await ApiService.getPacientes()
       
-      // Se for responsável, filtrar apenas seus pacientes
-      if (user?.tipo_usuario === 'RESPONSAVEL') {
-        data = data.filter(p => p.responsavel_usuario?.id === user.id)
-      }
-      
       setPacientes(data)
       
       // Carregar vínculos para cada paciente

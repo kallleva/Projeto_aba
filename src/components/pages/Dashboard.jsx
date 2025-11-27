@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { Users, UserCheck, Target, ClipboardList, AlertCircle, CheckCircle2, Clock, TrendingUp } from 'lucide-react'
+import { Users, UserCheck, Target, ClipboardList, AlertCircle, CheckCircle2, Clock, TrendingUp, Calendar, User } from 'lucide-react'
 import { useToast } from '@/hooks/use-toast'
 import { useAuth } from '@/contexts/AuthContext'
 import ApiService from '@/lib/api'
@@ -9,6 +9,8 @@ export default function Dashboard() {
   const [dashboardData, setDashboardData] = useState(null)
   const [metasData, setMetasData] = useState([])
   const [loading, setLoading] = useState(true)
+  const [pacientes, setPacientes] = useState([])
+  const [proximosAgendamentos, setProximosAgendamentos] = useState([])
   const { toast } = useToast()
 
   useEffect(() => {
@@ -29,20 +31,26 @@ export default function Dashboard() {
         setDashboardData(dashboard)
         setMetasData(metas)
       } else if (user?.tipo_usuario === 'RESPONSAVEL') {
-        // Para responsáveis, mostrar apenas seus pacientes
-        const pacientes = await ApiService.getPacientes()
-        // Filtrar apenas pacientes vinculados a este responsável
-        const meusPacientes = pacientes.filter(p => 
-          p.responsavel_usuario?.id === user.id
+        // Para responsáveis, backend já retorna apenas seus pacientes autorizados
+        const pacs = await ApiService.getPacientes()
+        setPacientes(pacs)
+
+        // Buscar agendamentos dos pacientes e calcular próximos compromissos
+        const listas = await Promise.all(
+          pacs.map(p => ApiService.getAgendamentos({ paciente_id: p.id }))
         )
-        setDashboardData({
-          resumo: {
-            total_pacientes: meusPacientes.length,
-            total_profissionais: 0,
-            total_metas_ativas: 0,
-            metas_em_atraso: 0
-          }
-        })
+        const todos = listas.flat()
+        const agora = new Date()
+        const proximos = todos
+          .filter(a => {
+            const d = new Date(a.data_hora)
+            return !isNaN(d) && d >= agora
+          })
+          .sort((a, b) => new Date(a.data_hora) - new Date(b.data_hora))
+          .slice(0, 5)
+        setProximosAgendamentos(proximos)
+        // Preenche estrutura mínima para compatibilidade, mas não será usada na UI do responsável
+        setDashboardData({ resumo: { total_pacientes: pacs.length } })
       }
     } catch (error) {
       toast({
@@ -72,6 +80,87 @@ export default function Dashboard() {
             <strong>Sem dados disponíveis</strong>
             <p>Nenhuma informação para exibir no dashboard</p>
           </div>
+        </div>
+      </div>
+    )
+  }
+
+  // Renderização específica para RESPONSAVEL (pais)
+  if (user?.tipo_usuario === 'RESPONSAVEL') {
+    return (
+      <div className="page-section">
+        {/* Header */}
+        <div className="mb-8">
+          <h1 className="page-title">Meu Painel</h1>
+          <p className="page-subtitle">Acompanhe seus(as) filhos(as), consultas e presença</p>
+        </div>
+
+        {/* Meus Pacientes */}
+        <div className="card-spacing mb-8">
+          <div className="section-header">
+            <Users size={18} className="color-info-icon" />
+            <h2 className="section-header-title">Meus Pacientes</h2>
+          </div>
+          {pacientes.length > 0 ? (
+            <div className="grid gap-4 md:grid-cols-2">
+              {pacientes.map(p => (
+                <div key={p.id} className="border rounded-lg p-4 bg-white">
+                  <div className="flex items-center gap-3 mb-2">
+                    <User size={16} className="text-gray-500" />
+                    <div className="font-semibold text-gray-900">{p.nome}</div>
+                  </div>
+                  <div className="text-sm text-gray-700">
+                    <div><strong>Diagnóstico:</strong> {p.diagnostico || '-'}</div>
+                    <div><strong>Nascimento:</strong> {new Date(p.data_nascimento).toLocaleDateString('pt-BR')}</div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="alert alert-info mt-4">
+              <AlertCircle className="alert-icon" />
+              <div className="alert-content">Nenhum paciente vinculado ao seu usuário.</div>
+            </div>
+          )}
+        </div>
+
+        {/* Próximos Agendamentos */}
+        <div className="card-spacing">
+          <div className="section-header">
+            <Calendar size={18} className="color-info-icon" />
+            <h2 className="section-header-title">Próximos Agendamentos</h2>
+          </div>
+          {proximosAgendamentos.length > 0 ? (
+            <div className="space-y-3">
+              {proximosAgendamentos.map(a => (
+                <div key={a.id} className="border rounded-lg p-4 bg-white flex items-center justify-between">
+                  <div className="space-y-1">
+                    <div className="font-medium text-gray-900">{new Date(a.data_hora).toLocaleString('pt-BR')}</div>
+                    <div className="text-sm text-gray-700">
+                      <strong>Profissional:</strong> {a.profissional?.nome || '-'}
+                      {a.profissional?.especialidade ? ` - ${a.profissional.especialidade}` : ''}
+                    </div>
+                    {a.observacoes && (
+                      <div className="text-xs text-gray-600">Obs: {a.observacoes}</div>
+                    )}
+                  </div>
+                  <span className={`badge badge-sm ${
+                    (a.status || '').toUpperCase() === 'CONFIRMADO' ? 'badge-info' :
+                    (a.status || '').toUpperCase() === 'REALIZADO' ? 'badge-success' :
+                    (a.status || '').toUpperCase() === 'CANCELADO' ? 'badge-error' :
+                    (a.status || '').toUpperCase() === 'FALTOU' ? 'badge-warning' : 'badge-neutral'
+                  }`}>
+                    {(a.status || 'AGENDADO').toString().replace(/_/g, ' ')}
+                  </span>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="alert alert-info mt-4">
+              <AlertCircle className="alert-icon" />
+              <div className="alert-content">Nenhum agendamento futuro encontrado.</div>
+            </div>
+          )}
         </div>
       </div>
     )

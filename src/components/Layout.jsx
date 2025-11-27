@@ -24,7 +24,7 @@ import {
 const navigation = [
   { name: 'Dashboard', href: '/', icon: Home, allowedFor: ['PROFISSIONAL', 'RESPONSAVEL', 'ADMIN'] },
   { name: 'Usuários', href: '/usuarios', icon: UserCheck, allowedFor: ['ADMIN', 'PROFISSIONAL'] },
-  { name: 'Pacientes', href: '/pacientes', icon: Users, allowedFor: ['PROFISSIONAL', 'ADMIN'] },
+  { name: 'Pacientes', href: '/pacientes', icon: Users, allowedFor: ['PROFISSIONAL', 'ADMIN', 'RESPONSAVEL'] },
   { name: 'Profissionais', href: '/profissionais', icon: UserCheck, allowedFor: ['PROFISSIONAL', 'ADMIN'] },
   { name: 'Planos Terapêuticos', href: '/planos-terapeuticos', icon: FileText, allowedFor: ['PROFISSIONAL', 'ADMIN'] },
   { name: 'Metas Terapêuticas', href: '/metas-terapeuticas', icon: Target, allowedFor: ['PROFISSIONAL', 'ADMIN'] },
