@@ -18,9 +18,9 @@ export default function RegistroDiarioExportImportAjuda({ open, onOpenChange }) 
         'O arquivo Excel serve como intermediário para coleta de dados offline'
       ],
       bestPractices: [
-        '✓ Use esta funcionalidade para coleta de dados em campo ou por profissionais autônomos',
-        '✓ Sempre mantenha uma cópia do arquivo Excel original antes de importar',
-        '✓ Verifique os dados antes de importar para evitar inconsistências'
+        ' Use esta funcionalidade para coleta de dados em campo ou por profissionais autônomos',
+        ' Sempre mantenha uma cópia do arquivo Excel original antes de importar',
+        ' Verifique os dados antes de importar para evitar inconsistências'
       ]
     },
     {
@@ -36,9 +36,9 @@ export default function RegistroDiarioExportImportAjuda({ open, onOpenChange }) 
         'Apenas perguntas respondíveis aparecem no Excel para preenchimento'
       ],
       bestPractices: [
-        '✓ Verifique se o protocolo correto foi selecionado antes de exportar',
-        '✓ A data é importante para manter histórico de quando os dados foram coletados',
-        '✓ Sempre valide os dados do paciente e meta antes de enviar o arquivo'
+        ' Verifique se o protocolo correto foi selecionado antes de exportar',
+        ' A data é importante para manter histórico de quando os dados foram coletados',
+        ' Sempre valide os dados do paciente e meta antes de enviar o arquivo'
       ]
     },
     {
@@ -53,10 +53,10 @@ export default function RegistroDiarioExportImportAjuda({ open, onOpenChange }) 
         'Distribua este arquivo para preenchimento offline ou envie por email'
       ],
       bestPractices: [
-        '✓ Não modifique as colunas de estrutura, apenas a coluna "Resposta"',
-        '✓ Instruções claras devem ser dadas a quem vai preencher o Excel',
-        '✓ Mantenha uma cópia do arquivo original em seus registros',
-        '✓ Para perguntas MÚLTIPLA, certifique-se que o preenchimento segue exatamente uma das opções fornecidas'
+        ' Não modifique as colunas de estrutura, apenas a coluna "Resposta"',
+        ' Instruções claras devem ser dadas a quem vai preencher o Excel',
+        ' Mantenha uma cópia do arquivo original em seus registros',
+        ' Para perguntas MÚLTIPLA, certifique-se que o preenchimento segue exatamente uma das opções fornecidas'
       ]
     },
     {
@@ -74,10 +74,10 @@ export default function RegistroDiarioExportImportAjuda({ open, onOpenChange }) 
         'Não altere o ID de nenhuma pergunta'
       ],
       bestPractices: [
-        '✓ Crie um documento com instruções para quem vai preencher o Excel',
-        '✓ Forneça exemplos de respostas esperadas para cada tipo',
-        '✓ Para MÚLTIPLA, deixe visível quais são as opções válidas',
-        '✓ Valide os dados antes de enviar de volta para importação'
+        ' Crie um documento com instruções para quem vai preencher o Excel',
+        ' Forneça exemplos de respostas esperadas para cada tipo',
+        ' Para MÚLTIPLA, deixe visível quais são as opções válidas',
+        ' Valide os dados antes de enviar de volta para importação'
       ]
     },
     {
@@ -94,10 +94,10 @@ export default function RegistroDiarioExportImportAjuda({ open, onOpenChange }) 
         'Apenas depois de validar, clique em "Salvar Respostas"'
       ],
       bestPractices: [
-        '✓ IMPORTANTE: Sempre use o mesmo paciente, meta e protocolo que foi exportado',
-        '✓ Revise o preview das respostas carregadas antes de salvar',
-        '✓ Se faltar alguma resposta obrigatória, o arquivo precisa ser revisado',
-        '✓ Manter rastreabilidade: guarde ambos os arquivos (original exportado e preenchido)'
+        ' IMPORTANTE: Sempre use o mesmo paciente, meta e protocolo que foi exportado',
+        ' Revise o preview das respostas carregadas antes de salvar',
+        ' Se faltar alguma resposta obrigatória, o arquivo precisa ser revisado',
+        ' Manter rastreabilidade: guarde ambos os arquivos (original exportado e preenchido)'
       ]
     },
     {
@@ -113,10 +113,10 @@ export default function RegistroDiarioExportImportAjuda({ open, onOpenChange }) 
         'Se ver algo errado no preview, cancele e peça correção do arquivo'
       ],
       bestPractices: [
-        '✓ Sempre revise o preview das respostas carregadas',
-        '✓ Verifique manualmente que as respostas fazem sentido clinicamente',
-        '✓ Se houver dúvida sobre uma resposta, retorne ao cliente/profissional',
-        '✓ Não confie apenas na validação automática - a responsabilidade é sua'
+        ' Sempre revise o preview das respostas carregadas',
+        ' Verifique manualmente que as respostas fazem sentido clinicamente',
+        ' Se houver dúvida sobre uma resposta, retorne ao cliente/profissional',
+        ' Não confie apenas na validação automática - a responsabilidade é sua'
       ]
     },
     {
@@ -133,10 +133,10 @@ export default function RegistroDiarioExportImportAjuda({ open, onOpenChange }) 
         '  • Visualizar o registro criado na lista de Registros Diários'
       ],
       bestPractices: [
-        '✓ Após salvar, o sistema confirma o sucesso com uma notificação',
-        '✓ Você pode editar o registro depois se precisar fazer correções',
-        '✓ Mantenha os arquivos Excel como backup dos dados importados',
-        '✓ Considere documentar qual profissional/cliente preencheu cada protocolo'
+        ' Após salvar, o sistema confirma o sucesso com uma notificação',
+        ' Você pode editar o registro depois se precisar fazer correções',
+        ' Mantenha os arquivos Excel como backup dos dados importados',
+        ' Considere documentar qual profissional/cliente preencheu cada protocolo'
       ]
     },
     {
@@ -166,12 +166,12 @@ export default function RegistroDiarioExportImportAjuda({ open, onOpenChange }) 
         '• Sempre use o MESMO protocolo para exportar e importar'
       ],
       bestPractices: [
-        '✓ Estabeleça padrões claros com sua equipe sobre como usar esta funcionalidade',
-        '✓ Documente instruções para clientes que vão preencher protocolos remotamente',
-        '✓ Use nomes de arquivo descritivos para facilitar rastreamento',
-        '✓ Mantenha backup dos arquivos Excel preenchidos',
-        '✓ Revise regularmente os registros importados para garantir qualidade',
-        '✓ Esta ferramenta é poderosa para escala, mas requer validação manual'
+        ' Estabeleça padrões claros com sua equipe sobre como usar esta funcionalidade',
+        ' Documente instruções para clientes que vão preencher protocolos remotamente',
+        ' Use nomes de arquivo descritivos para facilitar rastreamento',
+        ' Mantenha backup dos arquivos Excel preenchidos',
+        ' Revise regularmente os registros importados para garantir qualidade',
+        ' Esta ferramenta é poderosa para escala, mas requer validação manual'
       ]
     }
   ];
@@ -267,7 +267,7 @@ export default function RegistroDiarioExportImportAjuda({ open, onOpenChange }) 
                 <div className="space-y-2 pl-6">
                   {passo.bestPractices.map((practice, idx) => (
                     <div key={idx} className="text-sm text-gray-700 flex gap-2">
-                      <span className="text-green-600 font-bold">✓</span>
+                      <span className="text-green-600 font-bold"></span>
                       <span>{practice}</span>
                     </div>
                   ))}

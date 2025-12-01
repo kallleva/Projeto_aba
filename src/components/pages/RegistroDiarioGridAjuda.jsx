@@ -18,9 +18,9 @@ export default function RegistroDiarioGridAjuda({ open, onOpenChange }) {
         'Você pode acessar esta página sempre que precisar consultar o histórico'
       ],
       bestPractices: [
-        '✓ Regularidade: Preencha registros após cada sessão/atendimento',
-        '✓ Consistência: Use sempre o mesmo protocolo para comparações no tempo',
-        '✓ Documentação: Adicione observações importantes nos campos de descrição'
+        ' Regularidade: Preencha registros após cada sessão/atendimento',
+        ' Consistência: Use sempre o mesmo protocolo para comparações no tempo',
+        ' Documentação: Adicione observações importantes nos campos de descrição'
       ]
     },
     {
@@ -35,9 +35,9 @@ export default function RegistroDiarioGridAjuda({ open, onOpenChange }) {
         'Coluna "Ações": Botões para editar ou deletar o registro'
       ],
       bestPractices: [
-        '✓ Revise a data do registro - sempre deve ser a data do atendimento realizado',
-        '✓ A nota ajuda a rastrear tendências de progresso ao longo do tempo',
-        '✓ Use as ações com cuidado - deletar é permanente'
+        ' Revise a data do registro - sempre deve ser a data do atendimento realizado',
+        ' A nota ajuda a rastrear tendências de progresso ao longo do tempo',
+        ' Use as ações com cuidado - deletar é permanente'
       ]
     },
     {
@@ -52,10 +52,10 @@ export default function RegistroDiarioGridAjuda({ open, onOpenChange }) {
         'Ideal para coleta de dados padronizados que permitem comparação'
       ],
       bestPractices: [
-        '✓ Use Protocolo para métricas clínicas objetivas',
-        '✓ Escolha o protocolo mais apropriado para o tipo de avaliação',
-        '✓ Preencha com precisão - estes dados serão usados em relatórios',
-        '✓ Revise antes de salvar para evitar erros'
+        ' Use Protocolo para métricas clínicas objetivas',
+        ' Escolha o protocolo mais apropriado para o tipo de avaliação',
+        ' Preencha com precisão - estes dados serão usados em relatórios',
+        ' Revise antes de salvar para evitar erros'
       ]
     },
     {
@@ -69,10 +69,10 @@ export default function RegistroDiarioGridAjuda({ open, onOpenChange }) {
         'Útil para complementar dados quantitativos com qualitativo'
       ],
       bestPractices: [
-        '✓ Use Descrição para narrativa clínica e observações qualitativas',
-        '✓ Combine Protocolo + Descrição para coleta mais completa',
-        '✓ Seja específico nas observações - evite generalizações',
-        '✓ Documente comportamentos, insights e mudanças significativas'
+        ' Use Descrição para narrativa clínica e observações qualitativas',
+        ' Combine Protocolo + Descrição para coleta mais completa',
+        ' Seja específico nas observações - evite generalizações',
+        ' Documente comportamentos, insights e mudanças significativas'
       ]
     },
     {
@@ -87,10 +87,10 @@ export default function RegistroDiarioGridAjuda({ open, onOpenChange }) {
         'Abre uma página dedicada com todas as opções de import/export'
       ],
       bestPractices: [
-        '✓ Use quando precisar coletar dados de forma offline',
-        '✓ Sempre valide os dados antes de importar',
-        '✓ Mantenha copias dos arquivos como backup',
-        '✓ Use o mesmo protocolo para export e import'
+        ' Use quando precisar coletar dados de forma offline',
+        ' Sempre valide os dados antes de importar',
+        ' Mantenha copias dos arquivos como backup',
+        ' Use o mesmo protocolo para export e import'
       ]
     },
     {
@@ -107,10 +107,10 @@ export default function RegistroDiarioGridAjuda({ open, onOpenChange }) {
         'Clique em "Limpar Filtros" para resetar todos os filtros'
       ],
       bestPractices: [
-        '✓ Use intervalo de datas para análises de período específico',
-        '✓ Filtre por meta para revisar progresso em objetivo específico',
-        '✓ Use nota min/max para encontrar registros com desempenho particular',
-        '✓ Salve mentalmente combinações úteis para reuso frequente'
+        ' Use intervalo de datas para análises de período específico',
+        ' Filtre por meta para revisar progresso em objetivo específico',
+        ' Use nota min/max para encontrar registros com desempenho particular',
+        ' Salve mentalmente combinações úteis para reuso frequente'
       ]
     },
     {
@@ -122,14 +122,14 @@ export default function RegistroDiarioGridAjuda({ open, onOpenChange }) {
         'Se for Descrição: Abre a tela de edição de texto',
         'Você pode alterar qualquer campo após criação',
         'Alterações são salvas ao clicar em "Salvar"',
-        'Campos já respondidos mostram um ✓ verde (em Protocolos)',
+        'Campos já respondidos mostram um  verde (em Protocolos)',
         'Ao editar, você revisita os mesmos dados para ajustes'
       ],
       bestPractices: [
-        '✓ Edite logo após criação se notar erros',
-        '✓ Documente por que está editando registros antigos',
-        '✓ Evite edições frequentes - mantém auditoria clara',
-        '✓ Para correções maiores, considere criar novo registro'
+        ' Edite logo após criação se notar erros',
+        ' Documente por que está editando registros antigos',
+        ' Evite edições frequentes - mantém auditoria clara',
+        ' Para correções maiores, considere criar novo registro'
       ]
     },
     {
@@ -143,10 +143,10 @@ export default function RegistroDiarioGridAjuda({ open, onOpenChange }) {
         'Considere arquivar em vez de deletar para auditoria'
       ],
       bestPractices: [
-        '✓ Antes de deletar, verifique se é realmente o registro correto',
-        '✓ Documente o motivo de deletar (ex: duplicado, erro de paciente)',
-        '✓ Considere criar políticas de retenção para seu clínica',
-        '✓ Evite deletar registros históricos importantes'
+        ' Antes de deletar, verifique se é realmente o registro correto',
+        ' Documente o motivo de deletar (ex: duplicado, erro de paciente)',
+        ' Considere criar políticas de retenção para seu clínica',
+        ' Evite deletar registros históricos importantes'
       ]
     },
     {
@@ -161,9 +161,9 @@ export default function RegistroDiarioGridAjuda({ open, onOpenChange }) {
         'Após filtrar, volta automaticamente para a página 1'
       ],
       bestPractices: [
-        '✓ Use filtros para reduzir quantidade de páginas',
-        '✓ Memorize pacientes/metas frequentemente acessadas',
-        '✓ Use busca para encontrar registro específico mais rápido'
+        ' Use filtros para reduzir quantidade de páginas',
+        ' Memorize pacientes/metas frequentemente acessadas',
+        ' Use busca para encontrar registro específico mais rápido'
       ]
     },
     {
@@ -190,11 +190,11 @@ export default function RegistroDiarioGridAjuda({ open, onOpenChange }) {
         '• Mantenha dados limpos e organizados'
       ],
       bestPractices: [
-        '✓ Estabeleça rotina: Sempre preench após atendimento',
-        '✓ Use nomes descritivos em observações',
-        '✓ Revise dados antes de usar em relatórios',
-        '✓ Faça backup periódico dos dados importantes',
-        '✓ Valide dados com colegas/supervisor quando necessário'
+        ' Estabeleça rotina: Sempre preench após atendimento',
+        ' Use nomes descritivos em observações',
+        ' Revise dados antes de usar em relatórios',
+        ' Faça backup periódico dos dados importantes',
+        ' Valide dados com colegas/supervisor quando necessário'
       ]
     }
   ];
@@ -290,7 +290,7 @@ export default function RegistroDiarioGridAjuda({ open, onOpenChange }) {
                 <div className="space-y-2 pl-6">
                   {passo.bestPractices.map((practice, idx) => (
                     <div key={idx} className="text-sm text-gray-700 flex gap-2">
-                      <span className="text-green-600 font-bold">✓</span>
+                      <span className="text-green-600 font-bold"></span>
                       <span>{practice}</span>
                     </div>
                   ))}

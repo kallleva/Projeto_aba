@@ -20,10 +20,10 @@ export default function ProfissionaisAjuda({ open, onOpenChange }) {
         'Email e telefone são informações críticas para comunicação'
       ],
       bestPractices: [
-        '✓ Mantenha dados de contato atualizados para boa comunicação',
-        '✓ Use especialidades descritivas e padronizadas',
-        '✓ Revise regularmente a lista de profissionais',
-        '✓ Guarde informações de contato importante em lugar seguro'
+        ' Mantenha dados de contato atualizados para boa comunicação',
+        ' Use especialidades descritivas e padronizadas',
+        ' Revise regularmente a lista de profissionais',
+        ' Guarde informações de contato importante em lugar seguro'
       ]
     },
     {
@@ -50,10 +50,10 @@ export default function ProfissionaisAjuda({ open, onOpenChange }) {
         '  • Importante para contato rápido e emergências'
       ],
       bestPractices: [
-        '✓ Todos os campos são obrigatórios (*) - não deixe em branco',
-        '✓ Verifique email e telefone antes de salvar',
-        '✓ Use dados profissionais, não pessoais (quando possível)',
-        '✓ Mantenha informações atualizadas regularmente'
+        ' Todos os campos são obrigatórios (*) - não deixe em branco',
+        ' Verifique email e telefone antes de salvar',
+        ' Use dados profissionais, não pessoais (quando possível)',
+        ' Mantenha informações atualizadas regularmente'
       ]
     },
     {
@@ -75,10 +75,10 @@ export default function ProfissionaisAjuda({ open, onOpenChange }) {
         '  • Digitar um telefone para encontrar profissional específico'
       ],
       bestPractices: [
-        '✓ Use buscas para encontrar rapidamente em listas grandes',
-        '✓ Teste com partes do nome ou especialidade',
-        '✓ Se não encontrar, tente buscar por outro campo (email ou telefone)',
-        '✓ Limpe a busca clicando no X ou deletando o texto'
+        ' Use buscas para encontrar rapidamente em listas grandes',
+        ' Teste com partes do nome ou especialidade',
+        ' Se não encontrar, tente buscar por outro campo (email ou telefone)',
+        ' Limpe a busca clicando no X ou deletando o texto'
       ]
     },
     {
@@ -99,10 +99,10 @@ export default function ProfissionaisAjuda({ open, onOpenChange }) {
         '  • A lista será atualizada automaticamente'
       ],
       bestPractices: [
-        '✓ Verifique se o profissional já existe antes de criar',
-        '✓ Use dados completos e corretos desde o início',
-        '✓ Coordene com o profissional antes de criar (para email/telefone)',
-        '✓ Revise os dados antes de clicar em "Cadastrar"'
+        ' Verifique se o profissional já existe antes de criar',
+        ' Use dados completos e corretos desde o início',
+        ' Coordene com o profissional antes de criar (para email/telefone)',
+        ' Revise os dados antes de clicar em "Cadastrar"'
       ]
     },
     {
@@ -124,10 +124,10 @@ export default function ProfissionaisAjuda({ open, onOpenChange }) {
         '  • A tabela mostrará dados atualizados'
       ],
       bestPractices: [
-        '✓ Edite logo ao descobrir um erro',
-        '✓ Comunique mudanças importantes',
-        '✓ Verifique dados antes de atualizar',
-        '✓ Documente por que está editando'
+        ' Edite logo ao descobrir um erro',
+        ' Comunique mudanças importantes',
+        ' Verifique dados antes de atualizar',
+        ' Documente por que está editando'
       ]
     },
     {
@@ -149,10 +149,10 @@ export default function ProfissionaisAjuda({ open, onOpenChange }) {
         '  • Se for erro, cancele a operação'
       ],
       bestPractices: [
-        '✓ NUNCA delete por impulso - sempre confirme',
-        '✓ Antes de deletar, verifique dados múltiplas vezes',
-        '✓ Se for acidente, cancele no diálogo de confirmação',
-        '✓ Mantenha backup antes de deletar profissional importante'
+        ' NUNCA delete por impulso - sempre confirme',
+        ' Antes de deletar, verifique dados múltiplas vezes',
+        ' Se for acidente, cancele no diálogo de confirmação',
+        ' Mantenha backup antes de deletar profissional importante'
       ]
     },
     {
@@ -178,10 +178,10 @@ export default function ProfissionaisAjuda({ open, onOpenChange }) {
         '  • Exemplo: "Fisioterapeuta", "Médico", "Nutricionista"'
       ],
       bestPractices: [
-        '✓ Use nomes de especialidade que acionem as categorias corretas',
-        '✓ Cores ajudam identificação visual rápida na tabela',
-        '✓ Se quiser cor específica, use a palavra-chave na especialidade',
-        '✓ Seja consistente nos nomes de especialidade'
+        ' Use nomes de especialidade que acionem as categorias corretas',
+        ' Cores ajudam identificação visual rápida na tabela',
+        ' Se quiser cor específica, use a palavra-chave na especialidade',
+        ' Seja consistente nos nomes de especialidade'
       ]
     },
     {
@@ -215,10 +215,10 @@ export default function ProfissionaisAjuda({ open, onOpenChange }) {
         '  • Alinhados à direita para fácil acesso'
       ],
       bestPractices: [
-        '✓ Revise email e telefone regularmente',
-        '✓ Use busca para encontrar profissional específico',
-        '✓ Aproveite cores para identificação rápida',
-        '✓ Clique em ações apenas no profissional CORRETO'
+        ' Revise email e telefone regularmente',
+        ' Use busca para encontrar profissional específico',
+        ' Aproveite cores para identificação rápida',
+        ' Clique em ações apenas no profissional CORRETO'
       ]
     },
     {
@@ -247,11 +247,11 @@ export default function ProfissionaisAjuda({ open, onOpenChange }) {
         '• Valide dados com colegas quando necessário'
       ],
       bestPractices: [
-        '✓ Estabeleça rotina de atualização de dados',
-        '✓ Mantenha backup da lista de profissionais',
-        '✓ Use buscas para verificar duplicatas',
-        '✓ Revise regularmente para qualidade dos dados',
-        '✓ Comunique mudanças de forma clara e profissional'
+        ' Estabeleça rotina de atualização de dados',
+        ' Mantenha backup da lista de profissionais',
+        ' Use buscas para verificar duplicatas',
+        ' Revise regularmente para qualidade dos dados',
+        ' Comunique mudanças de forma clara e profissional'
       ]
     }
   ];
@@ -347,7 +347,7 @@ export default function ProfissionaisAjuda({ open, onOpenChange }) {
                 <div className="space-y-2 pl-6">
                   {passo.bestPractices.map((practice, idx) => (
                     <div key={idx} className="text-sm text-gray-700 flex gap-2">
-                      <span className="text-green-600 font-bold">✓</span>
+                      <span className="text-green-600 font-bold"></span>
                       <span>{practice}</span>
                     </div>
                   ))}

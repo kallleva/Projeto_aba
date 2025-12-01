@@ -24,7 +24,8 @@ import {
   Trash2,
   Clock,
   AlertCircle,
-  List
+  List,
+  HelpCircle
 } from 'lucide-react'
 import { 
   LineChart, 
@@ -39,6 +40,7 @@ import {
 import ApiService from '@/lib/api'
 import { Search } from 'lucide-react'
 import { useAuth } from '@/contexts/AuthContext'
+import PacienteDetalhesAjuda from './PacienteDetalhesAjuda'
 
 export default function PacienteDetalhes() {
   const { id } = useParams()
@@ -70,6 +72,7 @@ export default function PacienteDetalhes() {
   const [currentDate, setCurrentDate] = useState(new Date())
   const [agendamentosPorDia, setAgendamentosPorDia] = useState({})
   const [updatingAgendamento, setUpdatingAgendamento] = useState(null)
+  const [ajudaOpen, setAjudaOpen] = useState(false)
   
   const [formData, setFormData] = useState({
     nome: '',
@@ -736,7 +739,19 @@ export default function PacienteDetalhes() {
             Voltar
           </Button>
         </div>
-        <h1 className="page-title">{paciente.nome}</h1>
+        <div className="flex items-center justify-between gap-4">
+          <h1 className="page-title">{paciente.nome}</h1>
+          <Button 
+            variant="outline" 
+            size="sm"
+            onClick={() => setAjudaOpen(true)}
+            className="flex items-center gap-2"
+            title="Ajuda"
+          >
+            <HelpCircle className="h-4 w-4" />
+            Ajuda
+          </Button>
+        </div>
         <p className="page-subtitle">
           <span className={`badge ${getDiagnosticoBadgeClass(paciente.diagnostico)}`}>
             {paciente.diagnostico}
@@ -1711,6 +1726,7 @@ export default function PacienteDetalhes() {
           </div>
         </div>
       )}
+      <PacienteDetalhesAjuda open={ajudaOpen} onOpenChange={setAjudaOpen} />
     </div>
   )
 }

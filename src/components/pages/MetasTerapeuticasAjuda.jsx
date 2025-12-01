@@ -22,12 +22,12 @@ export default function MetasTerapeuticasAjuda({ open, onOpenChange }) {
         'Vista Kanban organiza metas por status em colunas'
       ],
       bestPractices: [
-        '✓ Crie metas DEPOIS de criar o plano terapêutico',
-        '✓ Metas devem ser específicas, mensuráveis e realistas',
-        '✓ Defina datas realistas de início e término',
-        '✓ Vincule formulários relevantes para avaliação',
-        '✓ Revise metas regularmente durante o tratamento',
-        '✓ Marque como concluída quando atingida'
+        ' Crie metas DEPOIS de criar o plano terapêutico',
+        ' Metas devem ser específicas, mensuráveis e realistas',
+        ' Defina datas realistas de início e término',
+        ' Vincule formulários relevantes para avaliação',
+        ' Revise metas regularmente durante o tratamento',
+        ' Marque como concluída quando atingida'
       ]
     },
     {
@@ -71,11 +71,11 @@ export default function MetasTerapeuticasAjuda({ open, onOpenChange }) {
         '  • Clique no formulário para seleção toggle'
       ],
       bestPractices: [
-        '✓ Todos os campos com * são obrigatórios',
-        '✓ Descrição deve ser clara e mensurável',
-        '✓ Defina datas realistas (3-6 meses típico)',
-        '✓ Selecione formulários que avaliam a meta',
-        '✓ Use linguagem clínica precisa na descrição'
+        ' Todos os campos com * são obrigatórios',
+        ' Descrição deve ser clara e mensurável',
+        ' Defina datas realistas (3-6 meses típico)',
+        ' Selecione formulários que avaliam a meta',
+        ' Use linguagem clínica precisa na descrição'
       ]
     },
     {
@@ -122,10 +122,10 @@ export default function MetasTerapeuticasAjuda({ open, onOpenChange }) {
         '  • Meta aparecerá no Kanban'
       ],
       bestPractices: [
-        '✓ Crie metas dentro de um plano existente',
-        '✓ Descrição deve ser específica e mensurável',
-        '✓ Datas devem ser realistas para o paciente',
-        '✓ Vincule formulários pertinentes para avaliação'
+        ' Crie metas dentro de um plano existente',
+        ' Descrição deve ser específica e mensurável',
+        ' Datas devem ser realistas para o paciente',
+        ' Vincule formulários pertinentes para avaliação'
       ]
     },
     {
@@ -158,10 +158,10 @@ export default function MetasTerapeuticasAjuda({ open, onOpenChange }) {
         '  • Progresso na cor correspondente ao status'
       ],
       bestPractices: [
-        '✓ Use Kanban para visualizar metas por status',
-        '✓ Progresso é apenas referência temporal',
-        '✓ Revise regularmente para atualizar status',
-        '✓ Não dependa apenas de progresso - acompanhe clinicamente'
+        ' Use Kanban para visualizar metas por status',
+        ' Progresso é apenas referência temporal',
+        ' Revise regularmente para atualizar status',
+        ' Não dependa apenas de progresso - acompanhe clinicamente'
       ]
     },
     {
@@ -194,10 +194,10 @@ export default function MetasTerapeuticasAjuda({ open, onOpenChange }) {
         '  • Resultados aparecem em tempo real'
       ],
       bestPractices: [
-        '✓ Use busca para encontrar metas por descrição',
-        '✓ Filtre por plano para focar em paciente específico',
-        '✓ Filtre por status para acompanhar progresso',
-        '✓ Combine filtros para resultados mais precisos'
+        ' Use busca para encontrar metas por descrição',
+        ' Filtre por plano para focar em paciente específico',
+        ' Filtre por status para acompanhar progresso',
+        ' Combine filtros para resultados mais precisos'
       ]
     },
     {
@@ -234,10 +234,10 @@ export default function MetasTerapeuticasAjuda({ open, onOpenChange }) {
         '  • Primeira opção é mais rápida'
       ],
       bestPractices: [
-        '✓ Edite logo ao descobrir erro',
-        '✓ Mantenha descrição clara e específica',
-        '✓ Ajuste datas conforme necessário',
-        '✓ Revise formulários regularmente'
+        ' Edite logo ao descobrir erro',
+        ' Mantenha descrição clara e específica',
+        ' Ajuste datas conforme necessário',
+        ' Revise formulários regularmente'
       ]
     },
     {
@@ -269,18 +269,18 @@ export default function MetasTerapeuticasAjuda({ open, onOpenChange }) {
         '  • Mais seguro para auditoria'
       ],
       bestPractices: [
-        '✓ NUNCA delete sem confirmar',
-        '✓ Antes de deletar, verifique dados',
-        '✓ Se duvidoso, cancele a operação',
-        '✓ Prefira marcar "Concluída" a deletar',
-        '✓ Delete apenas metas realmente desnecessárias'
+        ' NUNCA delete sem confirmar',
+        ' Antes de deletar, verifique dados',
+        ' Se duvidoso, cancele a operação',
+        ' Prefira marcar "Concluída" a deletar',
+        ' Delete apenas metas realmente desnecessárias'
       ]
     },
     {
       titulo: '✅ Marcando Meta como Concluída',
       descricao: 'Use o botão "Concluir" para marcar meta como realizada.',
       dicas: [
-        'Metas em andamento têm botão "Concluir" (✓)',
+        'Metas em andamento têm botão "Concluir" ()',
         'Clique nele para marcar como concluída',
         'Meta será movida para coluna de "Concluídas"',
         'Progresso ficará em 100%',
@@ -303,11 +303,11 @@ export default function MetasTerapeuticasAjuda({ open, onOpenChange }) {
         '  • Usar edição se precisar alterar outras coisas'
       ],
       bestPractices: [
-        '✓ Marque como concluída quando meta é atingida',
-        '✓ Revise clinicamente antes de concluir',
-        '✓ Não confunda progresso temporal com conclusão',
-        '✓ Use conclusão como feedback de sucesso',
-        '✓ Crie novas metas após conclusão se necessário'
+        ' Marque como concluída quando meta é atingida',
+        ' Revise clinicamente antes de concluir',
+        ' Não confunda progresso temporal com conclusão',
+        ' Use conclusão como feedback de sucesso',
+        ' Crie novas metas após conclusão se necessário'
       ]
     },
     {
@@ -342,12 +342,12 @@ export default function MetasTerapeuticasAjuda({ open, onOpenChange }) {
         '  • Progresso clínico é mais importante'
       ],
       bestPractices: [
-        '✓ Crie plano ANTES de criar metas',
-        '✓ Defina metas ANTES de fazer registros',
-        '✓ Vincule formulários relevantes',
-        '✓ Revise metas conforme evolução do paciente',
-        '✓ Não confunda progresso temporal com progresso clínico',
-        '✓ Use metas para estruturar o tratamento'
+        ' Crie plano ANTES de criar metas',
+        ' Defina metas ANTES de fazer registros',
+        ' Vincule formulários relevantes',
+        ' Revise metas conforme evolução do paciente',
+        ' Não confunda progresso temporal com progresso clínico',
+        ' Use metas para estruturar o tratamento'
       ]
     },
     {
@@ -391,14 +391,14 @@ export default function MetasTerapeuticasAjuda({ open, onOpenChange }) {
         '  • Comunique metas com paciente/responsável'
       ],
       bestPractices: [
-        '✓ Sempre crie plano antes de meta',
-        '✓ Defina metas específicas e mensuráveis',
-        '✓ Revise e atualize regularmente',
-        '✓ Marque concluídas conforme progresso',
-        '✓ Use para estruturar acompanhamento',
-        '✓ Comunique metas claramente',
-        '✓ Combine com registros diários',
-        '✓ Ajuste conforme evolução do paciente'
+        ' Sempre crie plano antes de meta',
+        ' Defina metas específicas e mensuráveis',
+        ' Revise e atualize regularmente',
+        ' Marque concluídas conforme progresso',
+        ' Use para estruturar acompanhamento',
+        ' Comunique metas claramente',
+        ' Combine com registros diários',
+        ' Ajuste conforme evolução do paciente'
       ]
     }
   ];
@@ -494,7 +494,7 @@ export default function MetasTerapeuticasAjuda({ open, onOpenChange }) {
                 <div className="space-y-2 pl-6">
                   {passo.bestPractices.map((practice, idx) => (
                     <div key={idx} className="text-sm text-gray-700 flex gap-2">
-                      <span className="text-green-600 font-bold">✓</span>
+                      <span className="text-green-600 font-bold"></span>
                       <span>{practice}</span>
                     </div>
                   ))}

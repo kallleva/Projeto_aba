@@ -6,8 +6,9 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { useToast } from '@/hooks/use-toast';
 import ApiService from '@/lib/api';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Save, ArrowLeft, AlertCircle, FileText, Paperclip } from 'lucide-react';
+import { Save, ArrowLeft, AlertCircle, FileText, Paperclip, HelpCircle } from 'lucide-react';
 import AnexosChecklist from '@/components/AnexosChecklist';
+import RegistroDiarioDescritivoAjuda from './RegistroDiarioDescritivoAjuda';
 
 export default function RegistroDiarioDescritivo() {
   const [formData, setFormData] = useState({
@@ -19,6 +20,7 @@ export default function RegistroDiarioDescritivo() {
   const [pacienteSelecionado, setPacienteSelecionado] = useState(null);
   const [metas, setMetas] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [ajudaOpen, setAjudaOpen] = useState(false);
   const { toast } = useToast();
   const { id } = useParams();
   const navigate = useNavigate();
@@ -162,11 +164,22 @@ export default function RegistroDiarioDescritivo() {
           >
             <ArrowLeft size={16} />
           </Button>
-          <div>
-            <h1 className="page-title">
-              <FileText className="inline mr-2" size={24} />
-              {id === 'novo' ? 'Nova Descrição de Sessão' : 'Editar Descrição de Sessão'}
-            </h1>
+          <div className="flex-1">
+            <div className="flex items-center gap-3 mb-1">
+              <h1 className="page-title">
+                <FileText className="inline mr-2" size={24} />
+                {id === 'novo' ? 'Nova Descrição de Sessão' : 'Editar Descrição de Sessão'}
+              </h1>
+              <Button
+                onClick={() => setAjudaOpen(true)}
+                variant="outline"
+                size="icon"
+                className="h-10 w-10"
+                title="Abrir guia de ajuda"
+              >
+                <HelpCircle className="h-5 w-5" />
+              </Button>
+            </div>
             <p className="page-subtitle">Registre observações e detalhes sobre a sessão realizada</p>
           </div>
         </div>
@@ -322,6 +335,8 @@ export default function RegistroDiarioDescritivo() {
           </div>
         </form>
       </div>
+
+      <RegistroDiarioDescritivoAjuda open={ajudaOpen} onOpenChange={setAjudaOpen} />
     </div>
   );
 }

@@ -21,11 +21,11 @@ export default function PlanosTerapeuticosAjuda({ open, onOpenChange }) {
         'Serve como referência para registro diário e acompanhamento'
       ],
       bestPractices: [
-        '✓ Crie um plano claro e específico para cada paciente',
-        '✓ Revise periodicamente se o plano ainda é adequado',
-        '✓ Mantenha objetivos realistas e mensuráveis',
-        '✓ Coordene planos com todos os profissionais envolvidos',
-        '✓ Use o plano como base para registros diários'
+        ' Crie um plano claro e específico para cada paciente',
+        ' Revise periodicamente se o plano ainda é adequado',
+        ' Mantenha objetivos realistas e mensuráveis',
+        ' Coordene planos com todos os profissionais envolvidos',
+        ' Use o plano como base para registros diários'
       ]
     },
     {
@@ -55,11 +55,11 @@ export default function PlanosTerapeuticosAjuda({ open, onOpenChange }) {
         '  • Formato: DD/MM/YYYY'
       ],
       bestPractices: [
-        '✓ Todos os campos marcados com * são obrigatórios',
-        '✓ Objetivo geral deve ser claro e específico',
-        '✓ Use termos clínicos precisos no objetivo',
-        '✓ Evite generalizações ("melhorar em tudo")',
-        '✓ Defina objetivos que possam ser medidos/avaliados'
+        ' Todos os campos marcados com * são obrigatórios',
+        ' Objetivo geral deve ser claro e específico',
+        ' Use termos clínicos precisos no objetivo',
+        ' Evite generalizações ("melhorar em tudo")',
+        ' Defina objetivos que possam ser medidos/avaliados'
       ]
     },
     {
@@ -95,10 +95,10 @@ export default function PlanosTerapeuticosAjuda({ open, onOpenChange }) {
         '  • Plano aparecerá na lista'
       ],
       bestPractices: [
-        '✓ Preencha com cuidado antes de enviar',
-        '✓ Objetivo geral deve descrever claramente o resultado esperado',
-        '✓ Verifique paciente e profissional corretos',
-        '✓ Salve a data de criação para histórico'
+        ' Preencha com cuidado antes de enviar',
+        ' Objetivo geral deve descrever claramente o resultado esperado',
+        ' Verifique paciente e profissional corretos',
+        ' Salve a data de criação para histórico'
       ]
     },
     {
@@ -125,10 +125,10 @@ export default function PlanosTerapeuticosAjuda({ open, onOpenChange }) {
         '  • Limpe a busca para ver todos os planos'
       ],
       bestPractices: [
-        '✓ Use busca para encontrar plano de paciente específico',
-        '✓ Teste diferentes termos se não encontrar',
-        '✓ Limpe o campo para voltar a ver todos',
-        '✓ Use para verificar se plano já existe antes de criar'
+        ' Use busca para encontrar plano de paciente específico',
+        ' Teste diferentes termos se não encontrar',
+        ' Limpe o campo para voltar a ver todos',
+        ' Use para verificar se plano já existe antes de criar'
       ]
     },
     {
@@ -158,10 +158,10 @@ export default function PlanosTerapeuticosAjuda({ open, onOpenChange }) {
         '  • Atualizar data se necessário'
       ],
       bestPractices: [
-        '✓ Edite logo ao descobrir erro',
-        '✓ Revise mudanças antes de salvar',
-        '✓ Comunique alterações importantes ao profissional',
-        '✓ Mantenha objetivo alinhado com evolução do paciente'
+        ' Edite logo ao descobrir erro',
+        ' Revise mudanças antes de salvar',
+        ' Comunique alterações importantes ao profissional',
+        ' Mantenha objetivo alinhado com evolução do paciente'
       ]
     },
     {
@@ -190,11 +190,11 @@ export default function PlanosTerapeuticosAjuda({ open, onOpenChange }) {
         '  • Necessidade de limpeza de dados obsoletos'
       ],
       bestPractices: [
-        '✓ NUNCA delete por impulso - sempre confirme',
-        '✓ Antes de deletar, verifique dados',
-        '✓ Se duvidoso, cancel a operação',
-        '✓ Considere impacto nos registros diários',
-        '✓ Documente por que está deletando'
+        ' NUNCA delete por impulso - sempre confirme',
+        ' Antes de deletar, verifique dados',
+        ' Se duvidoso, cancel a operação',
+        ' Considere impacto nos registros diários',
+        ' Documente por que está deletando'
       ]
     },
     {
@@ -228,10 +228,10 @@ export default function PlanosTerapeuticosAjuda({ open, onOpenChange }) {
         '  • Alinhados à direita para fácil acesso'
       ],
       bestPractices: [
-        '✓ Revise dados antes de fazer ações',
-        '✓ Use busca para encontrar plano específico',
-        '✓ Passe mouse sobre objetivo truncado para ler completo',
-        '✓ Clique em ações apenas no plano CORRETO'
+        ' Revise dados antes de fazer ações',
+        ' Use busca para encontrar plano específico',
+        ' Passe mouse sobre objetivo truncado para ler completo',
+        ' Clique em ações apenas no plano CORRETO'
       ]
     },
     {
@@ -263,11 +263,11 @@ export default function PlanosTerapeuticosAjuda({ open, onOpenChange }) {
         '  • Metas são mais específicas que objetivo geral'
       ],
       bestPractices: [
-        '✓ Crie plano ANTES de fazer registros',
-        '✓ Alinha plano com metas estabelecidas',
-        '✓ Revise plano periodicamente',
-        '✓ Atualize conforme evolução do paciente',
-        '✓ Mantenha histórico de planos anteriores'
+        ' Crie plano ANTES de fazer registros',
+        ' Alinha plano com metas estabelecidas',
+        ' Revise plano periodicamente',
+        ' Atualize conforme evolução do paciente',
+        ' Mantenha histórico de planos anteriores'
       ]
     },
     {
@@ -301,12 +301,12 @@ export default function PlanosTerapeuticosAjuda({ open, onOpenChange }) {
         '  • Feedback de profissional → Implemente mudanças'
       ],
       bestPractices: [
-        '✓ Sempre crie plano ANTES de começar registros',
-        '✓ Revise e atualize plano regularmente',
-        '✓ Mantenha alinhamento com metas terapêuticas',
-        '✓ Comunique mudanças de plano com profissional',
-        '✓ Use plano como guia para registros diários',
-        '✓ Archive planos antigos em vez de deletar'
+        ' Sempre crie plano ANTES de começar registros',
+        ' Revise e atualize plano regularmente',
+        ' Mantenha alinhamento com metas terapêuticas',
+        ' Comunique mudanças de plano com profissional',
+        ' Use plano como guia para registros diários',
+        ' Archive planos antigos em vez de deletar'
       ]
     }
   ];
@@ -402,7 +402,7 @@ export default function PlanosTerapeuticosAjuda({ open, onOpenChange }) {
                 <div className="space-y-2 pl-6">
                   {passo.bestPractices.map((practice, idx) => (
                     <div key={idx} className="text-sm text-gray-700 flex gap-2">
-                      <span className="text-green-600 font-bold">✓</span>
+                      <span className="text-green-600 font-bold"></span>
                       <span>{practice}</span>
                     </div>
                   ))}
