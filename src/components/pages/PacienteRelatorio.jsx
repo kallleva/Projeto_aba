@@ -273,14 +273,14 @@ export default function PacienteRelatorio({ paciente, relatorioPaciente, agendam
           }
         }
         const label = nomeFormulario ? `${formatDate(item.data)} - ${nomeFormulario}` : `${formatDate(item.data)} - Protocolo ${formularioId}`;
-        console.log(`Data ${idx}:`, { value: item.data, label, temFormulario: !!formularioId });
+       // console.log(`Data ${idx}:`, { value: item.data, label, temFormulario: !!formularioId });
         return {
           value: item.data,
           label
         };
       });
 
-    console.log('todasDatas montadas (apenas com formulário):', datas);
+    //console.log('todasDatas montadas (apenas com formulário):', datas);
     return datas;
   }, [relatorioPaciente, formatDate, dataInicial, dataFinal]);
 
@@ -363,7 +363,10 @@ export default function PacienteRelatorio({ paciente, relatorioPaciente, agendam
           mapa[chave].presencas += 1;
         } else if (agend.presente === false) {
           mapa[chave].faltas += 1;
-        } else if (agend.status === 'CANCELADO' || agend.status === 'AUSÊNCIA') {
+        } else if (agend.status === 'FALTOU') {
+          // Status FALTOU também é contabilizado como falta
+          mapa[chave].faltas += 1;
+        } else if (agend.status === 'CANCELADO') {
           mapa[chave].ausencias += 1;
         } else {
           // Se não tem status claro, não contar (agendado mas sem resultado)
@@ -376,8 +379,9 @@ export default function PacienteRelatorio({ paciente, relatorioPaciente, agendam
     const resultado = Object.values(mapa)
       .sort((a, b) => new Date(a.data) - new Date(b.data));
     
-    // console.log('presencaData calculado:', resultado);
-    // console.log('Filtro aplicado - Inicial:', dataInicial, 'Final:', dataFinal);
+   // console.log('presencaData calculado:', resultado);
+   // console.log('Filtro aplicado - Inicial:', dataInicial, 'Final:', dataFinal);
+   // console.log('Agendamentos processados:', agendamentos.length, '| Datas únicas:', Object.keys(mapa).length);
     return resultado;
   }, [agendamentos, formatDate, dataInicial, dataFinal, refreshGrafico]);
 
