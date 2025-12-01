@@ -324,7 +324,7 @@ export default function PacienteRelatorio({ paciente, relatorioPaciente, agendam
   // Calcular dados de comparecimento/faltas por data
   const presencaData = React.useMemo(() => {
     if (!agendamentos || !Array.isArray(agendamentos) || agendamentos.length === 0) {
-      console.warn('presencaData: Nenhum agendamento disponível');
+      // console.warn('presencaData: Nenhum agendamento disponível');
       return [];
     }
 
@@ -376,8 +376,8 @@ export default function PacienteRelatorio({ paciente, relatorioPaciente, agendam
     const resultado = Object.values(mapa)
       .sort((a, b) => new Date(a.data) - new Date(b.data));
     
-    console.log('presencaData calculado:', resultado);
-    console.log('Filtro aplicado - Inicial:', dataInicial, 'Final:', dataFinal);
+    // console.log('presencaData calculado:', resultado);
+    // console.log('Filtro aplicado - Inicial:', dataInicial, 'Final:', dataFinal);
     return resultado;
   }, [agendamentos, formatDate, dataInicial, dataFinal, refreshGrafico]);
 

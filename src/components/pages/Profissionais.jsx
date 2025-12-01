@@ -5,13 +5,15 @@ import { Label } from '@/components/ui/label'
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
 import { useToast } from '@/hooks/use-toast'
 import { useAuth } from '@/contexts/AuthContext'
-import { Plus, Edit, Trash2, Mail, Phone, Search, Users, AlertCircle } from 'lucide-react'
+import { Plus, Edit, Trash2, Mail, Phone, Search, Users, AlertCircle, HelpCircle } from 'lucide-react'
 import ApiService from '@/lib/api'
+import ProfissionaisAjuda from './ProfissionaisAjuda'
 
 export default function Profissionais() {
   const { user } = useAuth()
   const [profissionais, setProfissionais] = useState([])
   const [loading, setLoading] = useState(true)
+  const [ajudaOpen, setAjudaOpen] = useState(false)
   const [dialogOpen, setDialogOpen] = useState(false)
   const [editingProfissional, setEditingProfissional] = useState(null)
   const [search, setSearch] = useState('')
@@ -174,30 +176,40 @@ export default function Profissionais() {
               }
             </p>
           </div>
-          {isAdmin && (
+          <div className="flex gap-2 flex-wrap">
             <Button 
-              onClick={() => {
-                resetForm()
-                setDialogOpen(true)
-              }}
-              style={{ backgroundColor: '#0ea5e9', color: 'white' }}
+              onClick={() => setAjudaOpen(true)}
+              variant="outline"
+              className="flex items-center gap-2"
             >
-              <Plus className="mr-2 h-4 w-4" />
-              Novo Profissional
+              <HelpCircle className="h-4 w-4" />
+              Ajuda
             </Button>
-          )}
-          {isProfissional && user?.profissional && (
-            <Button 
-              onClick={() => {
-                handleEdit(user.profissional)
-                setDialogOpen(true)
-              }}
-              style={{ backgroundColor: '#0ea5e9', color: 'white' }}
-            >
-              <Edit className="mr-2 h-4 w-4" />
-              Editar Meus Dados
-            </Button>
-          )}
+            {isAdmin && (
+              <Button 
+                onClick={() => {
+                  resetForm()
+                  setDialogOpen(true)
+                }}
+                style={{ backgroundColor: '#0ea5e9', color: 'white' }}
+              >
+                <Plus className="mr-2 h-4 w-4" />
+                Novo Profissional
+              </Button>
+            )}
+            {isProfissional && user?.profissional && (
+              <Button 
+                onClick={() => {
+                  handleEdit(user.profissional)
+                  setDialogOpen(true)
+                }}
+                style={{ backgroundColor: '#0ea5e9', color: 'white' }}
+              >
+                <Edit className="mr-2 h-4 w-4" />
+                Editar Meus Dados
+              </Button>
+            )}
+          </div>
         </div>
       </div>
 
@@ -381,6 +393,8 @@ export default function Profissionais() {
           </div>
         )}
       </div>
+
+      <ProfissionaisAjuda open={ajudaOpen} onOpenChange={setAjudaOpen} />
     </div>
   )
 }

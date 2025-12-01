@@ -7,12 +7,14 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { useToast } from '@/hooks/use-toast';
 import ApiService from '@/lib/api';
 import { useNavigate } from 'react-router-dom';
-import { Plus, Edit, Trash2, Search, X, AlertCircle, Calendar } from 'lucide-react';
+import { Plus, Edit, Trash2, Search, X, AlertCircle, Calendar, HelpCircle } from 'lucide-react';
+import RegistroDiarioGridAjuda from './RegistroDiarioGridAjuda';
 
 export default function RegistroDiarioGrid() {
   const [registros, setRegistros] = useState([]);
   const [metas, setMetas] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [ajudaOpen, setAjudaOpen] = useState(false);
   const [filtros, setFiltros] = useState({
     meta_id: '',
     data_inicio: '',
@@ -136,6 +138,14 @@ export default function RegistroDiarioGrid() {
             <p className="page-subtitle">Acompanhe e gerencie todos os registros de pacientes</p>
           </div>
           <div className="flex gap-2 flex-wrap">
+            <Button 
+              onClick={() => setAjudaOpen(true)}
+              variant="outline"
+              className="flex items-center gap-2"
+            >
+              <HelpCircle className="h-4 w-4" />
+              Ajuda
+            </Button>
             <Button 
               onClick={() => navigate('/registro-diario/export-import')} 
               variant="outline"
@@ -458,6 +468,8 @@ export default function RegistroDiarioGrid() {
           </div>
         )}
       </div>
+
+      <RegistroDiarioGridAjuda open={ajudaOpen} onOpenChange={setAjudaOpen} />
     </div>
   );
 }

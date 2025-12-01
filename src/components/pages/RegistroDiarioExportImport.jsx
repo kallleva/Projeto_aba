@@ -6,7 +6,8 @@ import { Input } from '@/components/ui/input';
 import { useToast } from '@/hooks/use-toast';
 import ApiService from '@/lib/api';
 import * as XLSX from 'xlsx';
-import { Download, Upload, AlertCircle, CheckCircle2 } from 'lucide-react';
+import { Download, Upload, AlertCircle, CheckCircle2, HelpCircle } from 'lucide-react';
+import RegistroDiarioExportImportAjuda from './RegistroDiarioExportImportAjuda';
 
 export default function RegistroDiarioExportImport() {
   const [modo, setModo] = useState('exportar'); // 'exportar' ou 'importar'
@@ -19,6 +20,7 @@ export default function RegistroDiarioExportImport() {
   const [perguntas, setPerguntas] = useState([]);
   const [data, setData] = useState(new Date().toISOString().split('T')[0]);
   const [loading, setLoading] = useState(false);
+  const [ajudaOpen, setAjudaOpen] = useState(false);
   const { toast } = useToast();
 
   // Carregar pacientes ao iniciar
@@ -231,9 +233,23 @@ export default function RegistroDiarioExportImport() {
 
   return (
     <div className="page-section">
-      <div className="page-title">Exportar/Importar Protocolo</div>
-      <div className="page-subtitle">
-        Exporte perguntas para o cliente preencher em Excel, ou importe as respostas preenchidas
+      <div className="flex items-center justify-between mb-6">
+        <div>
+          <div className="page-title">Exportar/Importar Protocolo</div>
+          <div className="page-subtitle">
+            Exporte perguntas para o cliente preencher em Excel, ou importe as respostas preenchidas
+          </div>
+        </div>
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() => setAjudaOpen(true)}
+          className="flex items-center gap-2 h-9 whitespace-nowrap"
+          title="Ver guia completo sobre Export/Import"
+        >
+          <HelpCircle size={16} />
+          <span className="hidden sm:inline">Ajuda</span>
+        </Button>
       </div>
 
       <div className="card-spacing space-y-8">
@@ -415,6 +431,9 @@ export default function RegistroDiarioExportImport() {
           </div>
         )}
       </div>
+
+      {/* Modal de Ajuda */}
+      <RegistroDiarioExportImportAjuda open={ajudaOpen} onOpenChange={setAjudaOpen} />
     </div>
   );
 }

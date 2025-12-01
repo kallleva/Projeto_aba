@@ -6,14 +6,16 @@ import { Textarea } from '@/components/ui/textarea'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
 import { useToast } from '@/hooks/use-toast'
-import { Plus, Edit, Trash2, User, UserCheck, Search, AlertCircle, FileText } from 'lucide-react'
+import { Plus, Edit, Trash2, User, UserCheck, Search, AlertCircle, FileText, HelpCircle } from 'lucide-react'
 import ApiService from '@/lib/api'
+import PlanosTerapeuticosAjuda from './PlanosTerapeuticosAjuda'
 
 export default function PlanosTerapeuticos() {
   const [planos, setPlanos] = useState([])
   const [pacientes, setPacientes] = useState([])
   const [profissionais, setProfissionais] = useState([])
   const [loading, setLoading] = useState(true)
+  const [ajudaOpen, setAjudaOpen] = useState(false)
   const [dialogOpen, setDialogOpen] = useState(false)
   const [editingPlano, setEditingPlano] = useState(null)
   const [searchTerm, setSearchTerm] = useState("") // 🔎 filtro de busca
@@ -148,16 +150,25 @@ export default function PlanosTerapeuticos() {
               Gerencie os planos terapêuticos dos pacientes
             </p>
           </div>
-          <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-            <DialogTrigger asChild>
-              <Button 
-                onClick={resetForm}
-                style={{ backgroundColor: '#0ea5e9', color: 'white' }}
-              >
-                <Plus className="mr-2 h-4 w-4" />
-                Novo Plano
-              </Button>
-            </DialogTrigger>
+          <div className="flex gap-2 flex-wrap">
+            <Button 
+              onClick={() => setAjudaOpen(true)}
+              variant="outline"
+              className="flex items-center gap-2"
+            >
+              <HelpCircle className="h-4 w-4" />
+              Ajuda
+            </Button>
+            <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+              <DialogTrigger asChild>
+                <Button 
+                  onClick={resetForm}
+                  style={{ backgroundColor: '#0ea5e9', color: 'white' }}
+                >
+                  <Plus className="mr-2 h-4 w-4" />
+                  Novo Plano
+                </Button>
+              </DialogTrigger>
             <DialogContent className="sm:max-w-[500px]">
               <DialogHeader>
                 <DialogTitle>
@@ -244,9 +255,12 @@ export default function PlanosTerapeuticos() {
                 </DialogFooter>
               </form>
             </DialogContent>
-          </Dialog>
+            </Dialog>
+          </div>
         </div>
       </div>
+
+      <PlanosTerapeuticosAjuda open={ajudaOpen} onOpenChange={setAjudaOpen} />
 
       {/* Card Principal - Lista de Planos */}
       <div className="card-spacing">

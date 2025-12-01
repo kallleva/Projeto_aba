@@ -5,9 +5,10 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select"
 import { Textarea } from "@/components/ui/textarea"
-import { Plus, Edit, Trash2, CheckCircle, Calendar, AlertCircle, Target } from "lucide-react"
+import { Plus, Edit, Trash2, CheckCircle, Calendar, AlertCircle, Target, HelpCircle } from "lucide-react"
 import { useToast } from "@/hooks/use-toast"
 import ApiService from "@/lib/api"
+import MetasTerapeuticasAjuda from "./MetasTerapeuticasAjuda"
 
 export default function MetasTerapeuticasKanban() {
   const [metas, setMetas] = useState([])
@@ -17,6 +18,7 @@ export default function MetasTerapeuticasKanban() {
   // Controle do modal
   const [dialogOpen, setDialogOpen] = useState(false)
   const [editingMeta, setEditingMeta] = useState(null)
+  const [ajudaOpen, setAjudaOpen] = useState(false)
 
   // Filtros
   const [search, setSearch] = useState("")
@@ -157,16 +159,25 @@ export default function MetasTerapeuticasKanban() {
             <h1 className="page-title">Metas Terapêuticas</h1>
             <p className="page-subtitle">Planeje e acompanhe os objetivos terapêuticos dos pacientes</p>
           </div>
-          <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-            <DialogTrigger asChild>
-              <Button 
-                onClick={resetForm}
-                style={{ backgroundColor: '#0ea5e9', color: 'white' }}
-              >
-                <Plus className="mr-2 h-4 w-4" />
-                Nova Meta
-              </Button>
-            </DialogTrigger>
+          <div className="flex gap-2">
+            <Button 
+              onClick={() => setAjudaOpen(true)}
+              variant="outline"
+              size="icon"
+              title="Abrir guia de ajuda"
+            >
+              <HelpCircle className="h-4 w-4" />
+            </Button>
+            <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+              <DialogTrigger asChild>
+                <Button 
+                  onClick={resetForm}
+                  style={{ backgroundColor: '#0ea5e9', color: 'white' }}
+                >
+                  <Plus className="mr-2 h-4 w-4" />
+                  Nova Meta
+                </Button>
+              </DialogTrigger>
             <DialogContent className="sm:max-w-[600px]">
               <DialogHeader>
                 <DialogTitle>{editingMeta ? "Editar Meta Terapêutica" : "Criar Nova Meta Terapêutica"}</DialogTitle>
@@ -269,9 +280,12 @@ export default function MetasTerapeuticasKanban() {
                 </DialogFooter>
               </form>
             </DialogContent>
-          </Dialog>
+            </Dialog>
+          </div>
         </div>
       </div>
+
+      <MetasTerapeuticasAjuda open={ajudaOpen} onOpenChange={setAjudaOpen} />
 
       {/* Filtros */}
       <div className="card-spacing">

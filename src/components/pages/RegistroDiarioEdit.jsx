@@ -6,7 +6,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { useToast } from '@/hooks/use-toast';
 import ApiService from '@/lib/api';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Save, ArrowLeft, AlertCircle } from 'lucide-react';
+import { Save, ArrowLeft, AlertCircle, HelpCircle } from 'lucide-react';
+import RegistroDiarioAjuda from './RegistroDiarioAjuda';
 
 
 
@@ -26,6 +27,7 @@ export default function RegistroDiarioEdit() {
   const [formularioSelecionado, setFormularioSelecionado] = useState(null);
   const [loading, setLoading] = useState(true);
   const [errosObrigatorios, setErrosObrigatorios] = useState({});
+  const [ajudaOpen, setAjudaOpen] = useState(false);
   const { toast} = useToast();
   const { id } = useParams();
   const navigate = useNavigate();
@@ -469,10 +471,20 @@ export default function RegistroDiarioEdit() {
           >
             <ArrowLeft size={16} />
           </Button>
-          <div>
+          <div className="flex-1">
             <h1 className="page-title">{id === 'novo' ? 'Novo Registro Diário' : 'Editar Registro Diário'}</h1>
             <p className="page-subtitle">Preencha ou edite as informações do registro diário</p>
           </div>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => setAjudaOpen(true)}
+            className="flex items-center gap-2 h-9"
+            title="Ver guia de como preencher o registro"
+          >
+            <HelpCircle size={16} />
+            <span className="hidden sm:inline">Ajuda</span>
+          </Button>
         </div>
       </div>
 
@@ -634,6 +646,9 @@ export default function RegistroDiarioEdit() {
           </div>
         </form>
       </div>
+
+      {/* Modal de Ajuda */}
+      <RegistroDiarioAjuda open={ajudaOpen} onOpenChange={setAjudaOpen} />
     </div>
   );
 }
