@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { useNavigate } from 'react-router-dom';
+import { useEffect } from 'react';
+import { useCallback } from 'react';
 import { 
   Brain, 
   TrendingUp, 
@@ -20,9 +22,231 @@ import {
 } from 'lucide-react';
 import RegistroPublico from '@/components/RegistroPublico';
 
+const animationStyles = `
+  @keyframes slideInUp {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  @keyframes pulse-soft {
+    0%, 100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.8;
+    }
+  }
+  @keyframes float {
+    0%, 100% {
+      transform: translateY(0px);
+    }
+    50% {
+      transform: translateY(-10px);
+    }
+  }
+  @keyframes glow {
+    0%, 100% {
+      box-shadow: 0 0 0 0 rgba(6, 182, 212, 0.7);
+    }
+    50% {
+      box-shadow: 0 0 0 10px rgba(6, 182, 212, 0);
+    }
+  }
+  @keyframes countUp {
+    from {
+      opacity: 0;
+      transform: scale(0.5);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+  @keyframes shimmer {
+    0% {
+      background-position: -1000px 0;
+    }
+    100% {
+      background-position: 1000px 0;
+    }
+  }
+  @keyframes bounce-in {
+    0% {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  @keyframes slideInLeft {
+    from {
+      opacity: 0;
+      transform: translateX(-30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+  @keyframes slideInRight {
+    from {
+      opacity: 0;
+      transform: translateX(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+  @keyframes typing {
+    from {
+      width: 0;
+    }
+    to {
+      width: 100%;
+    }
+  }
+  @keyframes blink {
+    0%, 49% {
+      border-right-color: rgba(6, 182, 212, 1);
+    }
+    50%, 100% {
+      border-right-color: transparent;
+    }
+  }
+  @keyframes scaleIn {
+    from {
+      opacity: 0;
+      transform: scale(0.8);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+  @keyframes revealBg {
+    from {
+      clip-path: inset(0 100% 0 0);
+    }
+    to {
+      clip-path: inset(0 0 0 0);
+    }
+  }
+  .animate-slideInUp {
+    animation: slideInUp 0.6s ease-out;
+  }
+  .animate-float {
+    animation: float 3s ease-in-out infinite;
+  }
+  .animate-glow {
+    animation: glow 2s infinite;
+  }
+  .animate-countUp {
+    animation: countUp 0.6s ease-out;
+  }
+  .animate-shimmer {
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+    background-size: 1000px 100%;
+    animation: shimmer 2s infinite;
+  }
+  .animate-bounce-in {
+    animation: bounce-in 0.5s ease-out;
+  }
+  .stat-reveal {
+    opacity: 0;
+    transform: scale(0.8) translateY(10px);
+  }
+  .stat-reveal.visible {
+    animation: scaleIn 1.3s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  }
+`;
+
 export default function LandingPage() {
   const navigate = useNavigate();
   const [mostrarRegistro, setMostrarRegistro] = useState(false);
+  const [scrollY, setScrollY] = useState(0);
+  const [statsVisible, setStatsVisible] = useState([false, false, false, false]);
+  const [displayedText, setDisplayedText] = useState('');
+  const [textIndex, setTextIndex] = useState(0);
+  const textVariations = [
+    'Visível e Mensurável',
+    'Claro e Objetiva',
+    'Profissional e Confiável',
+    'Simples e Poderosa'
+  ];
+  const [sectionsVisible, setSectionsVisible] = useState({
+    features: false,
+    benefits: false,
+    protocols: false,
+    testimonials: false,
+    painpoints: false,
+    usecases: false
+  });
+
+  useEffect(() => {
+    const handleScroll = () => setScrollY(window.scrollY);
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  useEffect(() => {
+    // Show stats immediately on page load with staggered animation
+    setTimeout(() => {
+      setStatsVisible([true, true, true, true]);
+    }, 1200);
+  }, []);
+
+  useEffect(() => {
+    // Typing and retyping effect for subtitle variations
+    let currentIndex = 0;
+    const currentText = textVariations[textIndex];
+    
+    const typingInterval = setInterval(() => {
+      if (currentIndex <= currentText.length) {
+        setDisplayedText(currentText.slice(0, currentIndex));
+        currentIndex++;
+      } else {
+        // Pause before switching to next text
+        setTimeout(() => {
+          setTextIndex((prev) => (prev + 1) % textVariations.length);
+        }, 2000);
+        clearInterval(typingInterval);
+      }
+    }, 50);
+
+    return () => clearInterval(typingInterval);
+  }, [textIndex]);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            const sectionType = entry.target.getAttribute('data-section');
+            if (sectionType) {
+              setSectionsVisible(prev => ({
+                ...prev,
+                [sectionType]: true
+              }));
+            }
+          }
+        });
+      },
+      { threshold: 0.1 }
+    );
+
+    const allElements = document.querySelectorAll('[data-section]');
+    allElements.forEach(el => observer.observe(el));
+
+    return () => allElements.forEach(el => observer.unobserve(el));
+  }, []);
 
   const features = [
     {
@@ -93,26 +317,9 @@ export default function LandingPage() {
     "🤯 Gestão caótica de múltiplos pacientes e profissionais?"
   ];
 
-  const useCases = [
-    {
-      title: "Para Clínicas ABA",
-      description: "Gerencie múltiplos terapeutas, pacientes e protocolos em uma única plataforma. Relatórios consolidados e visão gerencial completa.",
-      color: "blue"
-    },
-    {
-      title: "Para Terapeutas Autônomos",
-      description: "Organize seus atendimentos, crie protocolos personalizados e impressione os pais com relatórios profissionais e visuais.",
-      color: "green"
-    },
-    {
-      title: "Para Centros Multidisciplinares",
-      description: "Coordene diferentes profissionais (psicólogos, fonoaudiólogos, terapeutas ocupacionais) com segurança e eficiência.",
-      color: "purple"
-    }
-  ];
-
   return (
     <div className="min-h-screen bg-gradient-to-b from-slate-50 to-white">
+      <style>{animationStyles}</style>
       {/* Header/Navbar */}
       <nav className="bg-white shadow-sm sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -136,15 +343,13 @@ export default function LandingPage() {
       {/* Hero Section */}
       <section className="pt-20 pb-32 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto text-center">
-          <div className="inline-flex items-center gap-2 px-4 py-2 bg-cyan-50 rounded-full mb-8">
-            <Sparkles className="w-4 h-4 text-cyan-600" />
-            <span className="text-sm font-medium text-cyan-700">Sistema de Gestão Terapêutica ABA</span>
-          </div>
-          
           <h1 className="text-5xl md:text-7xl font-bold text-gray-900 mb-6 leading-tight">
-            Transforme Dados em
-            <span className="text-cyan-600"> Evolução Visível </span>
-            e Mensurável
+            <div>Transforme Dados em Evolução</div>
+            <div className="min-h-20 flex items-center justify-center">
+              <span className="text-cyan-600">
+                {displayedText}
+              </span>
+            </div>
           </h1>
           
           <p className="text-xl md:text-2xl text-gray-600 mb-12 max-w-3xl mx-auto leading-relaxed">
@@ -172,194 +377,248 @@ export default function LandingPage() {
           </div>
 
           {/* Stats */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 max-w-5xl mx-auto">
-            <div className="bg-white p-6 rounded-2xl border-2 border-cyan-200 shadow-sm">
-              <div className="text-5xl md:text-6xl font-black text-cyan-600 mb-3">2<span className="text-3xl">+</span></div>
-              <div className="text-gray-700 font-semibold text-lg">Anos em Desenvolvimento</div>
+          <div className="grid grid-cols-2 md:grid-cols-5 gap-4 max-w-6xl mx-auto">
+            <div 
+              data-stat="0"
+              className={`stat-reveal ${statsVisible[0] ? 'visible' : ''} bg-gradient-to-br from-white to-cyan-50 p-4 rounded-2xl border-2 border-cyan-200 shadow-lg hover:shadow-2xl transition-all duration-500 hover:border-cyan-400 hover:-translate-y-2 group cursor-default relative overflow-hidden`}
+            >
+              <div className="absolute inset-0 animate-shimmer opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+              <div className="relative z-10">
+                <div className="text-4xl md:text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-cyan-600 to-cyan-400 mb-2 group-hover:animate-countUp transition-all duration-300">2<span className="text-2xl">+</span></div>
+                <div className="text-gray-700 font-semibold text-sm group-hover:text-cyan-700 transition-colors">Anos em Desenvolvimento</div>
+              </div>
             </div>
-            <div className="bg-white p-6 rounded-2xl border-2 border-teal-200 shadow-sm">
-              <div className="text-5xl md:text-6xl font-black text-teal-600 mb-3">100<span className="text-3xl">%</span></div>
-              <div className="text-gray-700 font-semibold text-lg">Customizável</div>
+            <div 
+              data-stat="1"
+              className={`stat-reveal ${statsVisible[1] ? 'visible' : ''} bg-gradient-to-br from-white to-teal-50 p-4 rounded-2xl border-2 border-teal-200 shadow-lg hover:shadow-2xl transition-all duration-500 hover:border-teal-400 hover:-translate-y-2 group cursor-default relative overflow-hidden`}
+            >
+              <div className="absolute inset-0 animate-shimmer opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+              <div className="relative z-10">
+                <div className="text-4xl md:text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-teal-600 to-teal-400 mb-2 group-hover:animate-countUp transition-all duration-300">100<span className="text-2xl">%</span></div>
+                <div className="text-gray-700 font-semibold text-sm group-hover:text-teal-700 transition-colors">Customizável</div>
+              </div>
             </div>
-            <div className="bg-white p-6 rounded-2xl border-2 border-sky-200 shadow-sm">
-              <div className="text-5xl md:text-6xl font-black text-sky-600 mb-3">0<span className="text-3xl">$</span></div>
-              <div className="text-gray-700 font-semibold text-lg">Implementação</div>
+            <div 
+              data-stat="2"
+              className={`stat-reveal ${statsVisible[2] ? 'visible' : ''} bg-gradient-to-br from-white to-sky-50 p-4 rounded-2xl border-2 border-sky-200 shadow-lg hover:shadow-2xl transition-all duration-500 hover:border-sky-400 hover:-translate-y-2 group cursor-default relative overflow-hidden`}
+            >
+              <div className="absolute inset-0 animate-shimmer opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+              <div className="relative z-10">
+                <div className="text-4xl md:text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-sky-600 to-sky-400 mb-2 group-hover:animate-countUp transition-all duration-300">0<span className="text-2xl">$</span></div>
+                <div className="text-gray-700 font-semibold text-sm group-hover:text-sky-700 transition-colors">Implementação</div>
+              </div>
             </div>
-            <div className="bg-white p-6 rounded-2xl border-2 border-cyan-200 shadow-sm">
-              <div className="text-5xl md:text-6xl font-black text-cyan-500 mb-3">24h<span className="text-3xl">*</span></div>
-              <div className="text-gray-700 font-semibold text-lg">Suporte em Português</div>
+            <div 
+              data-stat="3"
+              className={`stat-reveal ${statsVisible[3] ? 'visible' : ''} bg-gradient-to-br from-white to-cyan-50 p-4 rounded-2xl border-2 border-cyan-200 shadow-lg hover:shadow-2xl transition-all duration-500 hover:border-cyan-400 hover:-translate-y-2 group cursor-default relative overflow-hidden`}
+            >
+              <div className="absolute inset-0 animate-shimmer opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+              <div className="relative z-10">
+                <div className="text-4xl md:text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-cyan-500 to-cyan-400 mb-2 group-hover:animate-countUp transition-all duration-300">24h<span className="text-2xl">*</span></div>
+                <div className="text-gray-700 font-semibold text-sm group-hover:text-cyan-700 transition-colors">Suporte em Português</div>
+              </div>
+            </div>
+            <div 
+              className={`stat-reveal ${statsVisible[3] ? 'visible' : ''} bg-gradient-to-br from-white to-amber-50 p-4 rounded-2xl border-2 border-amber-200 shadow-lg hover:shadow-2xl transition-all duration-500 hover:border-amber-400 hover:-translate-y-2 group cursor-default relative overflow-hidden`}
+            >
+              <div className="absolute inset-0 animate-shimmer opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+              <div className="relative z-10">
+                <div className="text-4xl md:text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-amber-600 to-amber-500 mb-2 group-hover:animate-countUp transition-all duration-300">💻</div>
+                <div className="text-gray-700 font-semibold text-sm group-hover:text-amber-700 transition-colors">Desktop Otimizado</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Data Visualization Section - MOVED UP */}
+      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-white">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center mb-16">
+            <div className="inline-block mb-4 px-4 py-2 bg-cyan-100 rounded-full">
+              <span className="text-sm font-semibold text-cyan-700">✨ Veja o Sistema em Ação</span>
+            </div>
+            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
+              Análises que Realmente Fazem Sentido
+            </h2>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+              Seus dados transformados em gráficos claros que impressionam pais e orientam suas decisões terapêuticas
+            </p>
+          </div>
+
+          {/* Screenshots com Parallax - First one */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center mb-20">
+            
+            <div className="order-2 lg:order-1">
+              <div className="space-y-8">
+                <div>
+                  <div className="inline-block px-3 py-1 bg-blue-100 rounded-full mb-3">
+                    <span className="text-xs font-semibold text-blue-700">📊 Análise Visual</span>
+                  </div>
+                  <h3 className="text-2xl font-bold text-gray-900 mb-3">Performance em Gráficos</h3>
+                  <p className="text-gray-600 text-lg leading-relaxed">Veja em tempo real como seu paciente está evoluindo. Cada barra representa uma vitória, cada aumento mostra o progresso tangível.</p>
+                </div>
+                <ul className="space-y-4">
+                  <li className="flex items-start gap-3 p-4 rounded-lg transition-all duration-300 hover:bg-blue-50 hover:border-l-4 hover:border-l-blue-500 hover:translate-x-2 cursor-default group">
+                    <div className="flex-shrink-0 w-6 h-6 rounded-full bg-blue-500 flex items-center justify-center mt-1 group-hover:bg-blue-600 group-hover:shadow-lg transition-all duration-300">
+                      <span className="text-white text-sm">✓</span>
+                    </div>
+                    <div>
+                      <p className="font-semibold text-gray-900 group-hover:text-blue-700 transition-colors">Comparação entre períodos</p>
+                      <p className="text-gray-600 text-sm group-hover:text-gray-700">Identifique semanas com melhor desempenho</p>
+                    </div>
+                  </li>
+                  <li className="flex items-start gap-3 p-4 rounded-lg transition-all duration-300 hover:bg-blue-50 hover:border-l-4 hover:border-l-blue-500 hover:translate-x-2 cursor-default group">
+                    <div className="flex-shrink-0 w-6 h-6 rounded-full bg-blue-500 flex items-center justify-center mt-1 group-hover:bg-blue-600 group-hover:shadow-lg transition-all duration-300">
+                      <span className="text-white text-sm">✓</span>
+                    </div>
+                    <div>
+                      <p className="font-semibold text-gray-900 group-hover:text-blue-700 transition-colors">Habilidades em foco</p>
+                      <p className="text-gray-600 text-sm group-hover:text-gray-700">Saiba exatamente quais áreas estão avançando</p>
+                    </div>
+                  </li>
+                  <li className="flex items-start gap-3 p-4 rounded-lg transition-all duration-300 hover:bg-blue-50 hover:border-l-4 hover:border-l-blue-500 hover:translate-x-2 cursor-default group">
+                    <div className="flex-shrink-0 w-6 h-6 rounded-full bg-blue-500 flex items-center justify-center mt-1 group-hover:bg-blue-600 group-hover:shadow-lg transition-all duration-300">
+                      <span className="text-white text-sm">✓</span>
+                    </div>
+                    <div>
+                      <p className="font-semibold text-gray-900 group-hover:text-blue-700 transition-colors">Exportação profissional</p>
+                      <p className="text-gray-600 text-sm group-hover:text-gray-700">Gráficos prontos para relatórios e apresentações</p>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+            </div>
+
+            <div className="order-1 lg:order-2">
+              <div 
+                className="rounded-3xl overflow-hidden shadow-2xl border-2 border-blue-200 transition-all duration-500 hover:shadow-2xl hover:border-blue-400 hover:-translate-y-2 group cursor-pointer"
+                style={{
+                  transform: `translateY(${Math.max(-scrollY * 0.15, -60)}px)`,
+                }}
+              >
+                <div className="bg-gradient-to-r from-blue-500 to-cyan-500 h-12 flex items-center px-6 group-hover:from-blue-600 group-hover:to-cyan-600 transition-all duration-300">
+                  <div className="flex gap-2">
+                    <div className="w-3 h-3 rounded-full bg-red-400 group-hover:animate-pulse"></div>
+                    <div className="w-3 h-3 rounded-full bg-yellow-400 group-hover:animate-pulse" style={{ animationDelay: '0.1s' }}></div>
+                    <div className="w-3 h-3 rounded-full bg-green-400 group-hover:animate-pulse" style={{ animationDelay: '0.2s' }}></div>
+                  </div>
+                </div>
+                <img 
+                  src="/grafico-barra.jpeg" 
+                  alt="Gráfico de Barras de Performance" 
+                  className="w-full h-auto object-cover group-hover:scale-105 transition-transform duration-500"
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* Divider */}
+          <div className="h-0.5 bg-gradient-to-r from-transparent via-gray-300 to-transparent my-20"></div>
+
+          {/* Screenshots com Parallax - Second one */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+            
+            <div>
+              <div 
+                className="rounded-3xl overflow-hidden shadow-2xl border-2 border-teal-200 transition-all duration-500 hover:shadow-2xl hover:border-teal-400 hover:-translate-y-2 group cursor-pointer"
+                style={{
+                  transform: `translateY(${Math.max(-scrollY * 0.2, -80)}px)`,
+                }}
+              >
+                <div className="bg-gradient-to-r from-teal-600 to-blue-600 h-12 flex items-center px-6 group-hover:from-teal-700 group-hover:to-blue-700 transition-all duration-300">
+                  <div className="flex gap-2">
+                    <div className="w-3 h-3 rounded-full bg-red-400 group-hover:animate-pulse"></div>
+                    <div className="w-3 h-3 rounded-full bg-yellow-400 group-hover:animate-pulse" style={{ animationDelay: '0.1s' }}></div>
+                    <div className="w-3 h-3 rounded-full bg-green-400 group-hover:animate-pulse" style={{ animationDelay: '0.2s' }}></div>
+                  </div>
+                </div>
+                <img 
+                  src="/grafico-radar.png" 
+                  alt="Gráfico Radar Multidimensional" 
+                  className="w-full h-auto object-cover group-hover:scale-105 transition-transform duration-500"
+                />
+              </div>
+            </div>
+
+            <div>
+              <div className="space-y-8">
+                <div>
+                  <div className="inline-block px-3 py-1 bg-teal-100 rounded-full mb-3">
+                    <span className="text-xs font-semibold text-teal-700">🎯 Visão Completa</span>
+                  </div>
+                  <h3 className="text-2xl font-bold text-gray-900 mb-3">Desenvolvimento Multidimensional</h3>
+                  <p className="text-gray-600 text-lg leading-relaxed">Um único gráfico mostra todas as dimensões do desenvolvimento. Comunicação, motricidade, social, cognitivo - tudo integrado.</p>
+                </div>
+                <ul className="space-y-4">
+                  <li className="flex items-start gap-3 p-4 rounded-lg transition-all duration-300 hover:bg-teal-50 hover:border-l-4 hover:border-l-teal-500 hover:translate-x-2 cursor-default group">
+                    <div className="flex-shrink-0 w-6 h-6 rounded-full bg-teal-500 flex items-center justify-center mt-1 group-hover:bg-teal-600 group-hover:shadow-lg transition-all duration-300">
+                      <span className="text-white text-sm">✓</span>
+                    </div>
+                    <div>
+                      <p className="font-semibold text-gray-900 group-hover:text-teal-700 transition-colors">Múltiplas dimensões</p>
+                      <p className="text-gray-600 text-sm group-hover:text-gray-700">Veja o desenvolvimento integral do paciente</p>
+                    </div>
+                  </li>
+                  <li className="flex items-start gap-3 p-4 rounded-lg transition-all duration-300 hover:bg-teal-50 hover:border-l-4 hover:border-l-teal-500 hover:translate-x-2 cursor-default group">
+                    <div className="flex-shrink-0 w-6 h-6 rounded-full bg-teal-500 flex items-center justify-center mt-1 group-hover:bg-teal-600 group-hover:shadow-lg transition-all duration-300">
+                      <span className="text-white text-sm">✓</span>
+                    </div>
+                    <div>
+                      <p className="font-semibold text-gray-900 group-hover:text-teal-700 transition-colors">Fácil interpretação</p>
+                      <p className="text-gray-600 text-sm group-hover:text-gray-700">Mesmo pais sem conhecimento técnico entendem</p>
+                    </div>
+                  </li>
+                  <li className="flex items-start gap-3 p-4 rounded-lg transition-all duration-300 hover:bg-teal-50 hover:border-l-4 hover:border-l-teal-500 hover:translate-x-2 cursor-default group">
+                    <div className="flex-shrink-0 w-6 h-6 rounded-full bg-teal-500 flex items-center justify-center mt-1 group-hover:bg-teal-600 group-hover:shadow-lg transition-all duration-300">
+                      <span className="text-white text-sm">✓</span>
+                    </div>
+                    <div>
+                      <p className="font-semibold text-gray-900 group-hover:text-teal-700 transition-colors">Benchmarks inclusos</p>
+                      <p className="text-gray-600 text-sm group-hover:text-gray-700">Compare com metas e padrões de desenvolvimento</p>
+                    </div>
+                  </li>
+                </ul>
+              </div>
             </div>
           </div>
         </div>
       </section>
 
       {/* Pain Points Section */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-cyan-50 to-teal-50">
+      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-white" data-section="painpoints">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-16">
             <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
-              Sua Clínica Enfrenta Esses Desafios?
+              Desafios Comuns em Clínicas
             </h2>
-            <p className="text-xl text-gray-600">
-              Não se preocupe, você não está sozinho. Milhares de clínicas passam por isso diariamente.
+            <p className="text-lg text-gray-600">
+              Se você reconhece algum desses, o AuroraClin é para você
             </p>
           </div>
 
-          <div className="grid md:grid-cols-2 gap-6 mb-12">
+          <div className="grid md:grid-cols-2 gap-6 mb-12 max-w-4xl mx-auto">
             {painPoints.map((point, index) => (
               <div 
                 key={index}
-                className="bg-white p-6 rounded-xl shadow-md border-l-4 border-gray-400 hover:shadow-lg transition-shadow"
+                className={`stat-reveal ${sectionsVisible.painpoints ? 'visible' : ''} bg-gray-50 p-6 rounded-lg border-l-4 border-cyan-500 hover:bg-gray-100 transition-colors`}
+                style={{ animationDelay: `${index * 150}ms` }}
               >
-                <p className="text-lg text-gray-700">{point}</p>
+                <p className="text-gray-800">{point}</p>
               </div>
             ))}
           </div>
 
           <div className="text-center">
-            <div className="inline-flex items-center gap-3 px-8 py-4 bg-teal-600 rounded-full text-white text-xl font-semibold">
-              <CheckCircle2 className="w-6 h-6" />
-              O AuroraClin Resolve Todos Esses Problemas!
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Data Visualization Section */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-white">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
-              Dados Quantitativos de Forma Simples e Didática
-            </h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Transformamos registros terapêuticos em visualizações que qualquer pessoa entende. 
-              Não precisa ser expert em análise de dados para ver o progresso acontecendo.
+            <p className="text-xl text-gray-700 font-semibold">
+              ✓ O AuroraClin resolve todos esses problemas
             </p>
-          </div>
-
-          <div className="grid md:grid-cols-2 gap-12 items-center mb-16">
-            <div>
-              <h3 className="text-3xl font-bold text-gray-900 mb-6">Gráficos de Radar Inteligentes</h3>
-              <p className="text-lg text-gray-700 mb-4">
-                Visualize instantaneamente em quais áreas o paciente está progredindo melhor e onde precisa 
-                de mais atenção. Cada eixo representa uma habilidade trabalhada.
-              </p>
-              <ul className="space-y-3">
-                <li className="flex items-start gap-3">
-                  <CheckCircle2 className="w-6 h-6 text-green-600 flex-shrink-0 mt-1" />
-                  <span className="text-gray-700"><strong>Comparação temporal:</strong> Veja a evolução mês a mês ou sessão a sessão</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <CheckCircle2 className="w-6 h-6 text-green-600 flex-shrink-0 mt-1" />
-                  <span className="text-gray-700"><strong>Múltiplas áreas:</strong> Habilidades sociais, comunicação, autonomia, acadêmicas</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <CheckCircle2 className="w-6 h-6 text-green-600 flex-shrink-0 mt-1" />
-                  <span className="text-gray-700"><strong>Cores intuitivas:</strong> Verde = domínio, amarelo = em progresso, vermelho = precisa trabalhar</span>
-                </li>
-              </ul>
-            </div>
-            <div className="bg-white p-8 rounded-3xl shadow-2xl">
-              <svg viewBox="0 0 400 400" className="w-full h-full">
-                {/* Radar Chart Example */}
-                <g transform="translate(200, 200)">
-                  {/* Grid circles */}
-                  <circle cx="0" cy="0" r="150" fill="none" stroke="#e5e7eb" strokeWidth="1" />
-                  <circle cx="0" cy="0" r="120" fill="none" stroke="#e5e7eb" strokeWidth="1" />
-                  <circle cx="0" cy="0" r="90" fill="none" stroke="#e5e7eb" strokeWidth="1" />
-                  <circle cx="0" cy="0" r="60" fill="none" stroke="#e5e7eb" strokeWidth="1" />
-                  <circle cx="0" cy="0" r="30" fill="none" stroke="#e5e7eb" strokeWidth="1" />
-                  
-                  {/* Axes */}
-                  <line x1="0" y1="0" x2="0" y2="-150" stroke="#9ca3af" strokeWidth="1" />
-                  <line x1="0" y1="0" x2="130" y2="-75" stroke="#9ca3af" strokeWidth="1" />
-                  <line x1="0" y1="0" x2="130" y2="75" stroke="#9ca3af" strokeWidth="1" />
-                  <line x1="0" y1="0" x2="0" y2="150" stroke="#9ca3af" strokeWidth="1" />
-                  <line x1="0" y1="0" x2="-130" y2="75" stroke="#9ca3af" strokeWidth="1" />
-                  <line x1="0" y1="0" x2="-130" y2="-75" stroke="#9ca3af" strokeWidth="1" />
-                  
-                  {/* Data polygon - Previous (lighter) */}
-                  <polygon 
-                    points="0,-90 78,-45 78,45 0,90 -78,45 -78,-45" 
-                    fill="#93c5fd" 
-                    fillOpacity="0.3" 
-                    stroke="#3b82f6" 
-                    strokeWidth="2"
-                    strokeDasharray="5,5"
-                  />
-                  
-                  {/* Data polygon - Current (solid) */}
-                  <polygon 
-                    points="0,-135 117,-68 104,68 0,120 -104,68 -117,-68" 
-                    fill="#34d399" 
-                    fillOpacity="0.4" 
-                    stroke="#10b981" 
-                    strokeWidth="3"
-                  />
-                  
-                  {/* Labels */}
-                  <text x="0" y="-165" textAnchor="middle" className="text-xs font-semibold" fill="#1f2937">Comunicação</text>
-                  <text x="145" y="-75" textAnchor="start" className="text-xs font-semibold" fill="#1f2937">Social</text>
-                  <text x="145" y="85" textAnchor="start" className="text-xs font-semibold" fill="#1f2937">Autonomia</text>
-                  <text x="0" y="175" textAnchor="middle" className="text-xs font-semibold" fill="#1f2937">Acadêmico</text>
-                  <text x="-145" y="85" textAnchor="end" className="text-xs font-semibold" fill="#1f2937">Motora</text>
-                  <text x="-145" y="-75" textAnchor="end" className="text-xs font-semibold" fill="#1f2937">Linguagem</text>
-                </g>
-                
-                {/* Legend */}
-                <g transform="translate(50, 370)">
-                  <rect x="0" y="0" width="15" height="3" fill="#3b82f6" />
-                  <text x="20" y="5" className="text-xs" fill="#6b7280">Janeiro 2025</text>
-                  <rect x="120" y="0" width="15" height="3" fill="#10b981" />
-                  <text x="140" y="5" className="text-xs" fill="#6b7280">Março 2025</text>
-                </g>
-              </svg>
-            </div>
-          </div>
-
-          <div className="grid md:grid-cols-3 gap-8">
-            <div className="bg-white p-6 rounded-2xl shadow-lg border border-cyan-200">
-              <div className="text-center mb-4">
-                <div className="inline-flex items-center justify-center w-16 h-16 bg-cyan-50 rounded-full mb-3">
-                  <BarChart3 className="w-8 h-8 text-cyan-600" />
-                </div>
-                <h4 className="font-bold text-lg text-gray-900">Gráficos de Barras</h4>
-              </div>
-              <p className="text-gray-600 text-center">
-                Compare desempenho entre diferentes sessões e identifique tendências de melhora ou dificuldade.
-              </p>
-            </div>
-
-            <div className="bg-white p-6 rounded-2xl shadow-lg border border-teal-200">
-              <div className="text-center mb-4">
-                <div className="inline-flex items-center justify-center w-16 h-16 bg-teal-50 rounded-full mb-3">
-                  <LineChart className="w-8 h-8 text-teal-600" />
-                </div>
-                <h4 className="font-bold text-lg text-gray-900">Linhas de Evolução</h4>
-              </div>
-              <p className="text-gray-600 text-center">
-                Acompanhe a progressão ao longo do tempo com linhas de tendência claras e objetivas.
-              </p>
-            </div>
-
-            <div className="bg-white p-6 rounded-2xl shadow-lg border border-sky-200">
-              <div className="text-center mb-4">
-                <div className="inline-flex items-center justify-center w-16 h-16 bg-sky-50 rounded-full mb-3">
-                  <TrendingUp className="w-8 h-8 text-sky-600" />
-                </div>
-                <h4 className="font-bold text-lg text-gray-900">Percentuais de Acerto</h4>
-              </div>
-              <p className="text-gray-600 text-center">
-                Calcule automaticamente taxas de sucesso, independência e generalização de habilidades.
-              </p>
-            </div>
           </div>
         </div>
       </section>
 
       {/* ABA Protocols Section */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-white">
+      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-white" data-section="protocols">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
             <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
@@ -371,79 +630,85 @@ export default function LandingPage() {
           </div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
-            <div className="bg-white p-8 rounded-2xl border-2 border-cyan-200 hover:shadow-xl transition-shadow">
-              <div className="flex items-center gap-3 mb-4">
-                <div className="w-12 h-12 bg-cyan-600 rounded-lg flex items-center justify-center text-white font-bold text-xl">
+            <div className={`stat-reveal ${sectionsVisible.protocols ? 'visible' : ''} bg-white p-8 rounded-3xl border-2 border-cyan-200 hover:border-cyan-400 hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 group cursor-default relative overflow-hidden`} style={{ animationDelay: '0ms' }}>
+              <div className="absolute inset-0 bg-gradient-to-br from-cyan-50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+              <div className="relative z-10 flex items-center gap-3 mb-4">
+                <div className="w-12 h-12 bg-cyan-600 rounded-lg flex items-center justify-center text-white font-bold text-xl group-hover:bg-cyan-700 group-hover:shadow-lg transition-all duration-300">
                   DTT
                 </div>
-                <h3 className="text-xl font-bold text-gray-900">Discrete Trial Training</h3>
+                <h3 className="text-xl font-bold text-gray-900 group-hover:text-cyan-700 transition-colors">Discrete Trial Training</h3>
               </div>
-              <p className="text-gray-700">
+              <p className="text-gray-700 group-hover:text-gray-800 transition-colors">
                 Registre tentativas discretas, taxa de acertos, prompts utilizados e tempo de resposta. 
                 Ideal para ensino estruturado de habilidades específicas.
               </p>
             </div>
 
-            <div className="bg-white p-8 rounded-2xl border-2 border-teal-200 hover:shadow-xl transition-shadow">
-              <div className="flex items-center gap-3 mb-4">
-                <div className="w-12 h-12 bg-teal-600 rounded-lg flex items-center justify-center text-white font-bold text-xl">
+            <div className={`stat-reveal ${sectionsVisible.protocols ? 'visible' : ''} bg-white p-8 rounded-3xl border-2 border-teal-200 hover:border-teal-400 hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 group cursor-default relative overflow-hidden`} style={{ animationDelay: '150ms' }}>
+              <div className="absolute inset-0 bg-gradient-to-br from-teal-50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+              <div className="relative z-10 flex items-center gap-3 mb-4">
+                <div className="w-12 h-12 bg-teal-600 rounded-lg flex items-center justify-center text-white font-bold text-xl group-hover:bg-teal-700 group-hover:shadow-lg transition-all duration-300">
                   NET
                 </div>
-                <h3 className="text-xl font-bold text-gray-900">Natural Environment Teaching</h3>
+                <h3 className="text-xl font-bold text-gray-900 group-hover:text-teal-700 transition-colors">Natural Environment Teaching</h3>
               </div>
-              <p className="text-gray-700">
+              <p className="text-gray-700 group-hover:text-gray-800 transition-colors">
                 Documente intervenções em ambiente natural, registre oportunidades de ensino incidental 
                 e generalizações de habilidades em contextos reais.
               </p>
             </div>
 
-            <div className="bg-white p-8 rounded-2xl border-2 border-sky-200 hover:shadow-xl transition-shadow">
-              <div className="flex items-center gap-3 mb-4">
-                <div className="w-12 h-12 bg-sky-600 rounded-lg flex items-center justify-center text-white font-bold text-sm">
+            <div className={`stat-reveal ${sectionsVisible.protocols ? 'visible' : ''} bg-white p-8 rounded-3xl border-2 border-sky-200 hover:border-sky-400 hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 group cursor-default relative overflow-hidden`} style={{ animationDelay: '300ms' }}>
+              <div className="absolute inset-0 bg-gradient-to-br from-sky-50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+              <div className="relative z-10 flex items-center gap-3 mb-4">
+                <div className="w-12 h-12 bg-sky-600 rounded-lg flex items-center justify-center text-white font-bold text-sm group-hover:bg-sky-700 group-hover:shadow-lg transition-all duration-300">
                   ESDM
                 </div>
-                <h3 className="text-xl font-bold text-gray-900">Early Start Denver Model</h3>
+                <h3 className="text-xl font-bold text-gray-900 group-hover:text-sky-700 transition-colors">Early Start Denver Model</h3>
               </div>
-              <p className="text-gray-700">
+              <p className="text-gray-700 group-hover:text-gray-800 transition-colors">
                 Acompanhe objetivos de desenvolvimento em múltiplas áreas, registre atividades lúdicas 
                 e monitore engajamento social durante as sessões.
               </p>
             </div>
 
-            <div className="bg-white p-8 rounded-2xl border-2 border-cyan-200 hover:shadow-xl transition-shadow">
-              <div className="flex items-center gap-3 mb-4">
-                <div className="w-12 h-12 bg-cyan-500 rounded-lg flex items-center justify-center text-white font-bold text-xl">
+            <div className={`stat-reveal ${sectionsVisible.protocols ? 'visible' : ''} bg-white p-8 rounded-3xl border-2 border-cyan-200 hover:border-cyan-400 hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 group cursor-default relative overflow-hidden`} style={{ animationDelay: '450ms' }}>
+              <div className="absolute inset-0 bg-gradient-to-br from-cyan-50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+              <div className="relative z-10 flex items-center gap-3 mb-4">
+                <div className="w-12 h-12 bg-cyan-500 rounded-lg flex items-center justify-center text-white font-bold text-xl group-hover:bg-cyan-600 group-hover:shadow-lg transition-all duration-300">
                   PRT
                 </div>
-                <h3 className="text-xl font-bold text-gray-900">Pivotal Response Treatment</h3>
+                <h3 className="text-xl font-bold text-gray-900 group-hover:text-cyan-700 transition-colors">Pivotal Response Treatment</h3>
               </div>
-              <p className="text-gray-700">
+              <p className="text-gray-700 group-hover:text-gray-800 transition-colors">
                 Foque em comportamentos-chave como motivação, iniciação e responsividade. 
                 Registre oportunidades múltiplas e reforços naturais.
               </p>
             </div>
 
-            <div className="bg-white p-8 rounded-2xl border-2 border-teal-200 hover:shadow-xl transition-shadow">
-              <div className="flex items-center gap-3 mb-4">
-                <div className="w-12 h-12 bg-teal-500 rounded-lg flex items-center justify-center text-white font-bold text-xl">
+            <div className={`stat-reveal ${sectionsVisible.protocols ? 'visible' : ''} bg-white p-8 rounded-3xl border-2 border-teal-200 hover:border-teal-400 hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 group cursor-default relative overflow-hidden`} style={{ animationDelay: '600ms' }}>
+              <div className="absolute inset-0 bg-gradient-to-br from-teal-50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+              <div className="relative z-10 flex items-center gap-3 mb-4">
+                <div className="w-12 h-12 bg-teal-500 rounded-lg flex items-center justify-center text-white font-bold text-xl group-hover:bg-teal-600 group-hover:shadow-lg transition-all duration-300">
                   VB
                 </div>
-                <h3 className="text-xl font-bold text-gray-900">Verbal Behavior</h3>
+                <h3 className="text-xl font-bold text-gray-900 group-hover:text-teal-700 transition-colors">Verbal Behavior</h3>
               </div>
-              <p className="text-gray-700">
+              <p className="text-gray-700 group-hover:text-gray-800 transition-colors">
                 Trabalhe com operantes verbais (mando, tato, intraverbal, ecoico). 
                 Organize objetivos por função da linguagem e contexto comunicativo.
               </p>
             </div>
 
-            <div className="bg-white p-8 rounded-2xl border-2 border-sky-200 hover:shadow-xl transition-shadow">
-              <div className="flex items-center gap-3 mb-4">
-                <div className="w-12 h-12 bg-sky-500 rounded-lg flex items-center justify-center text-white font-bold text-sm">
+            <div className={`stat-reveal ${sectionsVisible.protocols ? 'visible' : ''} bg-white p-8 rounded-3xl border-2 border-sky-200 hover:border-sky-400 hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 group cursor-default relative overflow-hidden`} style={{ animationDelay: '750ms' }}>
+              <div className="absolute inset-0 bg-gradient-to-br from-sky-50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+              <div className="relative z-10 flex items-center gap-3 mb-4">
+                <div className="w-12 h-12 bg-sky-500 rounded-lg flex items-center justify-center text-white font-bold text-sm group-hover:bg-sky-600 group-hover:shadow-lg transition-all duration-300">
                   Custom
                 </div>
-                <h3 className="text-xl font-bold text-gray-900">Protocolos Personalizados</h3>
+                <h3 className="text-xl font-bold text-gray-900 group-hover:text-sky-700 transition-colors">Protocolos Personalizados</h3>
               </div>
-              <p className="text-gray-700">
+              <p className="text-gray-700 group-hover:text-gray-800 transition-colors">
                 Crie seus próprios protocolos adaptados às necessidades específicas de cada paciente. 
                 Total flexibilidade para sua abordagem terapêutica.
               </p>
@@ -461,7 +726,7 @@ export default function LandingPage() {
       </section>
 
       {/* Features Section */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-slate-50">
+      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-slate-50" data-section="features">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
             <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
@@ -476,11 +741,13 @@ export default function LandingPage() {
             {features.map((feature, index) => (
               <div 
                 key={index}
-                className="bg-white p-8 rounded-2xl shadow-lg hover:shadow-xl transition-all hover:-translate-y-1 border border-gray-100"
+                className={`stat-reveal ${sectionsVisible.features ? 'visible' : ''} bg-white p-8 rounded-3xl shadow-lg hover:shadow-2xl transition-all duration-500 hover:-translate-y-3 border-2 border-gray-100 hover:border-cyan-300 group cursor-default overflow-hidden relative`}
+                style={{ animationDelay: `${index * 120}ms` }}
               >
-                <div className="mb-4">{feature.icon}</div>
-                <h3 className="text-xl font-bold text-gray-900 mb-3">{feature.title}</h3>
-                <p className="text-gray-600 leading-relaxed">{feature.description}</p>
+                <div className="absolute inset-0 bg-gradient-to-br from-cyan-50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                <div className="relative z-10 mb-4 group-hover:scale-110 transition-transform duration-300">{feature.icon}</div>
+                <h3 className="text-xl font-bold text-gray-900 mb-3 group-hover:text-cyan-700 transition-colors duration-300">{feature.title}</h3>
+                <p className="text-gray-600 leading-relaxed group-hover:text-gray-700 transition-colors duration-300">{feature.description}</p>
               </div>
             ))}
           </div>
@@ -488,7 +755,7 @@ export default function LandingPage() {
       </section>
 
       {/* Benefits Section */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-sky-50 to-cyan-50">
+      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-sky-50 to-cyan-50" data-section="benefits">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-16">
             <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
@@ -498,7 +765,7 @@ export default function LandingPage() {
 
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
             {benefits.map((benefit, index) => (
-              <div key={index} className="bg-white p-8 rounded-2xl shadow-xl hover:shadow-2xl transition-shadow border border-cyan-200">
+              <div key={index} className={`stat-reveal ${sectionsVisible.benefits ? 'visible' : ''} bg-white p-8 rounded-2xl shadow-xl hover:shadow-2xl transition-shadow border border-cyan-200`} style={{ animationDelay: `${index * 140}ms` }}>
                 <div className="flex justify-center mb-4">
                   <div className="inline-flex items-center justify-center w-16 h-16 bg-cyan-50 rounded-full">
                     {benefit.icon}
@@ -516,24 +783,59 @@ export default function LandingPage() {
       </section>
 
       {/* Use Cases Section */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8">
+      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-slate-50" data-section="usecases">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-16">
             <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
-              Perfeito Para Sua Realidade
+              Para Qualquer Contexto Terapêutico
             </h2>
+            <p className="text-lg text-gray-600">
+              Seja qual for seu modelo de trabalho, o AuroraClin se adapta
+            </p>
           </div>
 
           <div className="grid md:grid-cols-3 gap-8">
-            {useCases.map((useCase, index) => (
-              <div 
-                key={index}
-                className="bg-white p-8 rounded-2xl border-2 border-teal-200 hover:shadow-xl transition-shadow"
-              >
-                <h3 className="text-2xl font-bold text-gray-900 mb-4">{useCase.title}</h3>
-                <p className="text-gray-700 leading-relaxed">{useCase.description}</p>
+            <div 
+              className={`stat-reveal ${sectionsVisible.usecases ? 'visible' : ''} bg-white p-8 rounded-3xl border-2 border-cyan-200 hover:border-cyan-400 hover:shadow-2xl transition-all duration-500 hover:-translate-y-3 group cursor-default relative overflow-hidden`}
+              style={{ animationDelay: '0ms' }}
+            >
+              <div className="absolute inset-0 bg-gradient-to-br from-cyan-50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+              <div className="relative z-10 w-14 h-14 bg-cyan-100 rounded-xl flex items-center justify-center mb-6 group-hover:scale-125 group-hover:bg-cyan-200 transition-all duration-300">
+                <span className="text-4xl">🏥</span>
               </div>
-            ))}
+              <h3 className="text-2xl font-bold text-gray-900 mb-4 group-hover:text-cyan-700 transition-colors">Clínicas ABA</h3>
+              <p className="text-gray-700 leading-relaxed group-hover:text-gray-800 transition-colors">
+                Gerencie múltiplos terapeutas, pacientes e protocolos em uma única plataforma. Relatórios consolidados e visão gerencial completa da sua operação.
+              </p>
+            </div>
+
+            <div 
+              className={`stat-reveal ${sectionsVisible.usecases ? 'visible' : ''} bg-white p-8 rounded-3xl border-2 border-teal-200 hover:border-teal-400 hover:shadow-2xl transition-all duration-500 hover:-translate-y-3 group cursor-default relative overflow-hidden`}
+              style={{ animationDelay: '200ms' }}
+            >
+              <div className="absolute inset-0 bg-gradient-to-br from-teal-50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+              <div className="relative z-10 w-14 h-14 bg-teal-100 rounded-xl flex items-center justify-center mb-6 group-hover:scale-125 group-hover:bg-teal-200 transition-all duration-300">
+                <span className="text-4xl">👨‍⚕️</span>
+              </div>
+              <h3 className="text-2xl font-bold text-gray-900 mb-4 group-hover:text-teal-700 transition-colors">Terapeutas Autônomos</h3>
+              <p className="text-gray-700 leading-relaxed group-hover:text-gray-800 transition-colors">
+                Organize seus atendimentos, crie protocolos personalizados e impressione os pais com relatórios profissionais que demonstram sua expertise.
+              </p>
+            </div>
+
+            <div 
+              className={`stat-reveal ${sectionsVisible.usecases ? 'visible' : ''} bg-white p-8 rounded-3xl border-2 border-sky-200 hover:border-sky-400 hover:shadow-2xl transition-all duration-500 hover:-translate-y-3 group cursor-default relative overflow-hidden`}
+              style={{ animationDelay: '400ms' }}
+            >
+              <div className="absolute inset-0 bg-gradient-to-br from-sky-50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+              <div className="relative z-10 w-14 h-14 bg-sky-100 rounded-xl flex items-center justify-center mb-6 group-hover:scale-125 group-hover:bg-sky-200 transition-all duration-300">
+                <span className="text-4xl">🤝</span>
+              </div>
+              <h3 className="text-2xl font-bold text-gray-900 mb-4 group-hover:text-sky-700 transition-colors">Centros Multidisciplinares</h3>
+              <p className="text-gray-700 leading-relaxed group-hover:text-gray-800 transition-colors">
+                Coordene psicólogos, fonoaudiólogos e terapeutas ocupacionais com segurança. Integração perfeita entre diferentes áreas.
+              </p>
+            </div>
           </div>
         </div>
       </section>
@@ -543,9 +845,11 @@ export default function LandingPage() {
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-16">
             <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
-              Como Funciona?
+              Três Etapas Simples
             </h2>
-            <p className="text-xl text-gray-600">Simples, rápido e eficiente em 3 passos</p>
+            <p className="text-lg text-gray-600">
+              De seus registros diários a relatórios profissionais em minutos
+            </p>
           </div>
 
           <div className="grid md:grid-cols-3 gap-8">
@@ -553,10 +857,9 @@ export default function LandingPage() {
               <div className="inline-flex items-center justify-center w-16 h-16 bg-cyan-600 text-white rounded-full text-2xl font-bold mb-6">
                 1
               </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-3">Registre as Sessões</h3>
-              <p className="text-gray-600">
-                Durante ou após cada atendimento, registre as atividades, comportamentos e progressos. 
-                Anexe fotos e vídeos para documentação completa.
+              <h3 className="text-xl font-bold text-gray-900 mb-3">Registre</h3>
+              <p className="text-gray-700 leading-relaxed">
+                Documente sessões, comportamentos e evoluções diariamente. Sistema flexível para qualquer protocolo.
               </p>
             </div>
 
@@ -564,10 +867,9 @@ export default function LandingPage() {
               <div className="inline-flex items-center justify-center w-16 h-16 bg-teal-600 text-white rounded-full text-2xl font-bold mb-6">
                 2
               </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-3">Sistema Analisa Automaticamente</h3>
-              <p className="text-gray-600">
-                Nossa inteligência organiza todos os dados, calcula percentuais de evolução e 
-                identifica padrões de progresso em cada área trabalhada.
+              <h3 className="text-xl font-bold text-gray-900 mb-3">Analisa</h3>
+              <p className="text-gray-700 leading-relaxed">
+                Sistema organiza dados, calcula percentuais e identifica padrões automaticamente.
               </p>
             </div>
 
@@ -575,10 +877,9 @@ export default function LandingPage() {
               <div className="inline-flex items-center justify-center w-16 h-16 bg-sky-600 text-white rounded-full text-2xl font-bold mb-6">
                 3
               </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-3">Compartilhe com os Pais</h3>
-              <p className="text-gray-600">
-                Gere relatórios visuais lindos em segundos. Gráficos coloridos e fáceis de entender 
-                que mostram exatamente onde a criança evoluiu.
+              <h3 className="text-xl font-bold text-gray-900 mb-3">Compartilhe</h3>
+              <p className="text-gray-700 leading-relaxed">
+                Gere relatórios visuais em segundos. Gráficos que demonstram evolução real dos pacientes.
               </p>
             </div>
           </div>
@@ -586,134 +887,134 @@ export default function LandingPage() {
       </section>
 
       {/* Social Proof */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8">
+      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-gray-50" data-section="testimonials">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-16">
             <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
-              Clínicas que Transformam Vidas com Nossa Tecnologia
+              Profissionais Confiam no AuroraClin
             </h2>
-            <p className="text-xl text-gray-600">
-              Profissionais de todo o Brasil confiam no AuroraClin para potencializar seus atendimentos
+            <p className="text-lg text-gray-600">
+              Clínicas e terapeutas de todo o Brasil já transformaram seus resultados
             </p>
           </div>
 
           <div className="grid md:grid-cols-3 gap-8">
-            <div className="bg-white p-8 rounded-2xl shadow-lg border border-cyan-200">
-              <div className="flex items-center gap-1 mb-4">
-                {[...Array(5)].map((_, i) => (
-                  <span key={i} className="text-yellow-400 text-xl">⭐</span>
-                ))}
+            <div className={`stat-reveal ${sectionsVisible.testimonials ? 'visible' : ''} bg-white p-8 rounded-3xl shadow-lg border border-gray-200 hover:border-cyan-300 hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 group cursor-default relative overflow-hidden`} style={{ animationDelay: '0ms' }}>
+              <div className="absolute inset-0 bg-gradient-to-br from-cyan-50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+              <div className="relative z-10">
+                <div className="flex items-center gap-1 mb-4 group-hover:animate-pulse">
+                  {[...Array(5)].map((_, i) => (
+                    <span key={i} className="text-yellow-400 text-xl group-hover:text-yellow-500 transition-colors">★</span>
+                  ))}
+                </div>
+                <p className="text-gray-800 mb-6 leading-relaxed group-hover:text-gray-900 transition-colors font-medium">
+                  "Mudou totalmente a forma como apresentamos progresso aos pais. Agora conseguem visualizar claramente cada avanço em gráficos simples e objetivos."
+                </p>
+                <div className="border-t border-gray-200 pt-4">
+                  <p className="font-semibold text-gray-900 text-sm group-hover:text-cyan-700 transition-colors">Profissional de ABA</p>
+                  <p className="text-gray-600 text-sm group-hover:text-gray-700 transition-colors">Clínica especializada</p>
+                </div>
               </div>
-              <p className="text-gray-700 mb-4 italic">
-                "O AuroraClin transformou nossa clínica. Os pais agora veem claramente a evolução 
-                e ficam muito mais satisfeitos. Economizamos horas semanais!"
-              </p>
-              <p className="font-semibold text-gray-900">Dra. Maria Silva</p>
-              <p className="text-sm text-gray-600">Clínica Crescer - SP</p>
             </div>
 
-            <div className="bg-white p-8 rounded-2xl shadow-lg border border-teal-200">
-              <div className="flex items-center gap-1 mb-4">
-                {[...Array(5)].map((_, i) => (
-                  <span key={i} className="text-yellow-400 text-xl">⭐</span>
-                ))}
+            <div className={`stat-reveal ${sectionsVisible.testimonials ? 'visible' : ''} bg-white p-8 rounded-3xl shadow-lg border border-gray-200 hover:border-teal-300 hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 group cursor-default relative overflow-hidden`} style={{ animationDelay: '200ms' }}>
+              <div className="absolute inset-0 bg-gradient-to-br from-teal-50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+              <div className="relative z-10">
+                <div className="flex items-center gap-1 mb-4 group-hover:animate-pulse">
+                  {[...Array(5)].map((_, i) => (
+                    <span key={i} className="text-yellow-400 text-xl group-hover:text-yellow-500 transition-colors">★</span>
+                  ))}
+                </div>
+                <p className="text-gray-800 mb-6 leading-relaxed group-hover:text-gray-900 transition-colors font-medium">
+                  "Como terapeuta autônomo, o AuroraClin me permitiu entregar relatórios tão profissionais quanto os de grandes clínicas. Meus clientes ficam impressionados."
+                </p>
+                <div className="border-t border-gray-200 pt-4">
+                  <p className="font-semibold text-gray-900 text-sm group-hover:text-teal-700 transition-colors">Terapeuta Independente</p>
+                  <p className="text-gray-600 text-sm group-hover:text-gray-700 transition-colors">Consultório privado</p>
+                </div>
               </div>
-              <p className="text-gray-700 mb-4 italic">
-                "Finalmente consigo demonstrar de forma profissional todo o trabalho que fazemos. 
-                Os relatórios são lindos e os gráficos falam por si só."
-              </p>
-              <p className="font-semibold text-gray-900">João Santos</p>
-              <p className="text-sm text-gray-600">Terapeuta ABA - RJ</p>
             </div>
 
-            <div className="bg-white p-8 rounded-2xl shadow-lg border border-sky-200">
-              <div className="flex items-center gap-1 mb-4">
-                {[...Array(5)].map((_, i) => (
-                  <span key={i} className="text-yellow-400 text-xl">⭐</span>
-                ))}
+            <div className={`stat-reveal ${sectionsVisible.testimonials ? 'visible' : ''} bg-white p-8 rounded-3xl shadow-lg border border-gray-200 hover:border-sky-300 hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 group cursor-default relative overflow-hidden`} style={{ animationDelay: '400ms' }}>
+              <div className="absolute inset-0 bg-gradient-to-br from-sky-50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+              <div className="relative z-10">
+                <div className="flex items-center gap-1 mb-4 group-hover:animate-pulse">
+                  {[...Array(5)].map((_, i) => (
+                    <span key={i} className="text-yellow-400 text-xl group-hover:text-yellow-500 transition-colors">★</span>
+                  ))}
+                </div>
+                <p className="text-gray-800 mb-6 leading-relaxed group-hover:text-gray-900 transition-colors font-medium">
+                  "Economizamos dezenas de horas por mês que gastávamos com relatórios. Agora nossos terapeutas focam no que realmente importa: o paciente."
+                </p>
+                <div className="border-t border-gray-200 pt-4">
+                  <p className="font-semibold text-gray-900 text-sm group-hover:text-sky-700 transition-colors">Gestor de Clínica</p>
+                  <p className="text-gray-600 text-sm group-hover:text-gray-700 transition-colors">Centro multidisciplinar</p>
+                </div>
               </div>
-              <p className="text-gray-700 mb-4 italic">
-                "A melhor decisão que tomamos para nossa clínica. Gestão simples, 
-                relatórios impecáveis e pais sempre informados."
-              </p>
-              <p className="font-semibold text-gray-900">Ana Paula Costa</p>
-              <p className="text-sm text-gray-600">Centro Terapêutico Vida - MG</p>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Pricing Section - Inspirado no NAVI TEA */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-cyan-50 to-teal-50">
+      {/* Pricing Section */}
+      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-slate-50">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-16">
             <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
-              Conheça Nossos Planos
+              Plano Simples e Justo
             </h2>
-            <p className="text-xl text-gray-600">
-              Escolha o plano ideal para o tamanho da sua clínica
+            <p className="text-lg text-gray-600">
+              Um único plano que cresce com sua clínica. Sem surpresas.
             </p>
           </div>
 
           <div className="flex justify-center">
-            {/* Plano Único - Destaque */}
-            <div className="bg-gradient-to-br from-cyan-600 to-teal-600 p-10 md:p-12 rounded-3xl shadow-2xl border-4 border-cyan-400 max-w-md w-full relative">
-              <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
-                <span className="bg-yellow-400 text-gray-900 px-6 py-2 rounded-full text-sm font-bold">
-                  PLANO ESSENCIAL
-                </span>
-              </div>
-              <div className="text-center mb-8 text-white">
-                <h3 className="text-3xl font-bold mb-3">Plano Famílias</h3>
-                <p className="text-lg mb-6 opacity-90">Ideal para terapeutas e famílias</p>
+            <div className="bg-white p-10 md:p-12 rounded-2xl shadow-xl border-2 border-cyan-300 max-w-md w-full">
+              <div className="text-center mb-8">
+                <h3 className="text-2xl font-bold text-gray-900 mb-2">Plano Profissional</h3>
+                <p className="text-gray-600 mb-6">Para clínicas e terapeutas</p>
                 <div className="mb-6">
-                  <span className="text-6xl font-black">R$ 49</span>
-                  <span className="text-xl opacity-90">,90/mês</span>
+                  <span className="text-5xl font-bold text-cyan-600">R$ 49</span>
+                  <span className="text-lg text-gray-600">,90/mês</span>
                 </div>
               </div>
-              <ul className="space-y-4 mb-10 text-white">
+              
+              <ul className="space-y-4 mb-10">
                 <li className="flex items-start gap-3">
-                  <CheckCircle2 className="w-6 h-6 flex-shrink-0 mt-0.5" />
-                  <span className="text-lg">Prontuário digital completo</span>
+                  <CheckCircle2 className="w-5 h-5 text-cyan-600 flex-shrink-0 mt-0.5" />
+                  <span className="text-gray-700">Prontuário digital completo</span>
                 </li>
                 <li className="flex items-start gap-3">
-                  <CheckCircle2 className="w-6 h-6 flex-shrink-0 mt-0.5" />
-                  <span className="text-lg">Planos terapêuticos ilimitados</span>
-                </li>
-                {/* <li className="flex items-start gap-3">
-                  <CheckCircle2 className="w-6 h-6 flex-shrink-0 mt-0.5" />
-                  <span className="text-lg">Todos os protocolos ABA</span>
-                </li> */}
-                <li className="flex items-start gap-3">
-                  <CheckCircle2 className="w-6 h-6 flex-shrink-0 mt-0.5" />
-                  <span className="text-lg">Gráficos e relatórios automáticos</span>
+                  <CheckCircle2 className="w-5 h-5 text-cyan-600 flex-shrink-0 mt-0.5" />
+                  <span className="text-gray-700">Planos terapêuticos ilimitados</span>
                 </li>
                 <li className="flex items-start gap-3">
-                  <CheckCircle2 className="w-6 h-6 flex-shrink-0 mt-0.5" />
-                  <span className="text-lg">Agenda integrada</span>
+                  <CheckCircle2 className="w-5 h-5 text-cyan-600 flex-shrink-0 mt-0.5" />
+                  <span className="text-gray-700">Gráficos e relatórios automáticos</span>
                 </li>
                 <li className="flex items-start gap-3">
-                  <CheckCircle2 className="w-6 h-6 flex-shrink-0 mt-0.5" />
-                  <span className="text-lg">Coleta de dados facilitada</span>
+                  <CheckCircle2 className="w-5 h-5 text-cyan-600 flex-shrink-0 mt-0.5" />
+                  <span className="text-gray-700">Agenda integrada com lembretes</span>
                 </li>
                 <li className="flex items-start gap-3">
-                  <CheckCircle2 className="w-6 h-6 flex-shrink-0 mt-0.5" />
-                  <span className="text-lg">Suporte dedicado</span>
+                  <CheckCircle2 className="w-5 h-5 text-cyan-600 flex-shrink-0 mt-0.5" />
+                  <span className="text-gray-700">Suporte por email e chat</span>
                 </li>
               </ul>
+
               <Button 
                 onClick={() => setMostrarRegistro(true)}
-                className="w-full bg-white text-cyan-700 hover:bg-gray-100 font-bold text-lg py-6"
+                className="w-full bg-cyan-600 hover:bg-cyan-700 text-white font-bold text-lg py-6"
               >
-                Começar Agora
+                Começar Teste Gratuito
                 <ArrowRight className="ml-2" />
               </Button>
             </div>
           </div>
 
           <div className="text-center mt-12">
-            <p className="text-gray-600 mb-4">
-              <strong>Todos os planos incluem:</strong> 14 dias de teste grátis • Sem necessidade de cartão de crédito • Cancele quando quiser
+            <p className="text-gray-600">
+              14 dias de teste grátis • Sem cartão de crédito • Cancele quando quiser
             </p>
           </div>
         </div>
@@ -723,35 +1024,33 @@ export default function LandingPage() {
       <section className="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-r from-cyan-600 to-teal-600">
         <div className="max-w-4xl mx-auto text-center text-white">
           <h2 className="text-4xl md:text-5xl font-bold mb-6">
-            Pronto Para Transformar Sua Clínica?
+            Comece Agora. Sem Risco.
           </h2>
-          <p className="text-xl md:text-2xl mb-8 opacity-90">
-            Junte-se a centenas de clínicas que já impressionam os pais com relatórios profissionais
+          <p className="text-lg md:text-xl mb-8 opacity-95">
+            Teste grátis por 14 dias. Nenhuma informação de pagamento necessária.
           </p>
           
-          <div className="flex flex-col sm:flex-row gap-4 justify-center mb-8">
-            <Button 
-              size="lg"
-              onClick={() => setMostrarRegistro(true)}
-              className="bg-white text-blue-600 hover:bg-gray-100 text-lg px-8 py-6 h-auto font-semibold"
-            >
-              Começar Teste Gratuito
-              <ArrowRight className="ml-2" />
-            </Button>
-          </div>
+          <Button 
+            size="lg"
+            onClick={() => setMostrarRegistro(true)}
+            className="bg-white text-cyan-600 hover:bg-gray-100 text-lg px-10 py-7 h-auto font-bold"
+          >
+            Começar Teste Gratuito
+            <ArrowRight className="ml-2" />
+          </Button>
 
-          <div className="flex flex-wrap justify-center gap-6 text-sm opacity-80">
+          <div className="flex flex-wrap justify-center gap-6 mt-12 text-sm opacity-90">
             <div className="flex items-center gap-2">
               <CheckCircle2 className="w-5 h-5" />
               <span>Sem cartão de crédito</span>
             </div>
             <div className="flex items-center gap-2">
               <CheckCircle2 className="w-5 h-5" />
-              <span>Configuração em 5 minutos</span>
+              <span>Acesso completo ao sistema</span>
             </div>
             <div className="flex items-center gap-2">
               <CheckCircle2 className="w-5 h-5" />
-              <span>Suporte em português</span>
+              <span>Suporte disponível</span>
             </div>
           </div>
         </div>
