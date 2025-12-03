@@ -284,7 +284,6 @@ export default function RegistroDiarioEdit() {
         respostas: respostasPorId,
         formulario_id: formularioSelecionado?.id
       };
-      // console.log('Payload enviado para o backend:', payload);
       if (id === 'novo') {
         await ApiService.createChecklistDiario(payload);
         toast({ title: 'Sucesso', description: 'Registro criado com sucesso!' });
@@ -398,7 +397,6 @@ export default function RegistroDiarioEdit() {
               <Select
                 value={formData.respostas[perguntaKey] || ''}
                 onValueChange={v => {
-                  console.log(`✏️ Alterando MULTIPLA ${perguntaKey} para: ${v}`);
                   handleRespostaChange(perguntaKey, v);
                 }}
                 required={p.obrigatoria}

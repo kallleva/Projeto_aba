@@ -129,7 +129,8 @@ export default function PlanosTerapeuticos() {
 
   const formatDate = (dateString) => {
     if (!dateString) return '-'
-    return new Date(dateString).toLocaleDateString('pt-BR')
+    const [ano, mes, dia] = dateString.split('T')[0].split('-')
+    return `${dia}/${mes}/${ano}`
   }
 
   // 🔎 filtra os planos com base no termo digitado

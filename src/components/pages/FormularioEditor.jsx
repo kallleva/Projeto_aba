@@ -65,8 +65,10 @@ export default function FormularioEditor() {
             if (tipo === 'PERCENTUAL' && rawFormula) formulaNormalizada = rawFormula.replace(/\s+/g, '').toUpperCase();
             const siglaNormalizada = (row['Sigla'] || '').toUpperCase().replace(/[^A-Z0-9_]/g, '').slice(0, 16);
             let finalFormula = formulaNormalizada;
-            const regexPercentual = /^PERCENTUAL\(P\d+:P\d+\)$/;
+            // Aceita qualquer padrão de sigla, não apenas P1, P2, etc.
+            const regexPercentual = /^PERCENTUAL\([A-Z_0-9]+:[A-Z_0-9]+\)$/i;
             if (tipo === 'PERCENTUAL' && (!finalFormula || !regexPercentual.test(finalFormula))) {
+              // Só gera P1:P42 se não houver fórmula válida
               const numerosSiglas = perguntas.map(p => p.sigla).filter(s => /^P\d+$/.test(s)).map(s => parseInt(s.substring(1), 10));
               const maior = numerosSiglas.length ? Math.max(...numerosSiglas) : (idx + 1);
               finalFormula = `PERCENTUAL(P1:P${maior})`;
@@ -114,8 +116,10 @@ export default function FormularioEditor() {
             if (tipo === 'PERCENTUAL' && rawFormula) formulaNormalizada = rawFormula.replace(/\s+/g, '').toUpperCase();
             const siglaNormalizada = (row['Sigla'] || '').toUpperCase().replace(/[^A-Z0-9_]/g, '').slice(0, 16);
             let finalFormula = formulaNormalizada;
-            const regexPercentual = /^PERCENTUAL\(P\d+:P\d+\)$/;
+            // Aceita qualquer padrão de sigla, não apenas P1, P2, etc.
+            const regexPercentual = /^PERCENTUAL\([A-Z_0-9]+:[A-Z_0-9]+\)$/i;
             if (tipo === 'PERCENTUAL' && (!finalFormula || !regexPercentual.test(finalFormula))) {
+              // Só gera P1:P42 se não houver fórmula válida
               const numerosSiglas = perguntas.map(p => p.sigla).filter(s => /^P\d+$/.test(s)).map(s => parseInt(s.substring(1), 10));
               const maior = numerosSiglas.length ? Math.max(...numerosSiglas) : (idx + 1);
               finalFormula = `PERCENTUAL(P1:P${maior})`;
@@ -374,12 +378,13 @@ export default function FormularioEditor() {
       // Atualizar formData com fórmulas preenchidas
       setFormData(prev => ({ ...prev, perguntas: perguntasAtualizadas }));
       
-      const percentuaisInvalidos = perguntasAtualizadas.filter(p => p.tipo === 'PERCENTUAL' && (!p.formula || p.formula.trim() === '' || !p.formula.match(/^PERCENTUAL\(P\d+:P\d+\)$/)))
+      // Validar formato da fórmula PERCENTUAL - aceita qualquer sigla (P1, VOCAL_1, ECOICO_1, etc.)
+      const percentuaisInvalidos = perguntasAtualizadas.filter(p => p.tipo === 'PERCENTUAL' && (!p.formula || p.formula.trim() === '' || !p.formula.match(/^PERCENTUAL\([A-Z_0-9]+:[A-Z_0-9]+\)$/i)))
       
       if (percentuaisInvalidos.length > 0) {
         toast({
           title: 'Fórmulas de percentual inválidas',
-          description: `Perguntas do tipo Percentual devem ter uma fórmula no formato PERCENTUAL(P1:P15): ${percentuaisInvalidos.map(p => p.texto).join(', ')}`,
+          description: `Perguntas do tipo Percentual devem ter uma fórmula no formato PERCENTUAL(SIGLA_INICIO:SIGLA_FIM): ${percentuaisInvalidos.map(p => p.texto).join(', ')}`,
           variant: 'destructive'
         })
         setSaving(false)
@@ -885,7 +890,7 @@ export default function FormularioEditor() {
                         )}
                         {p.tipo === 'PERCENTUAL' && (
                           <Input
-                            placeholder="Ex: PERCENTUAL(P1:P15)"
+                            placeholder="Ex: PERCENTUAL(P1:P15) ou PERCENTUAL(VOCAL_1:VOCAL_5)"
                             value={p.formula || ''}
                             onChange={(e) => {
                               const novas = [...formData.perguntas]

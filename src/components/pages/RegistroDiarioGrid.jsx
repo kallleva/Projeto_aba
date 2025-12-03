@@ -385,7 +385,11 @@ export default function RegistroDiarioGrid() {
                     <td className="font-semibold">{r.paciente_nome || 'N/A'}</td>
                     <td>
                       <span className="text-sm" style={{color: 'var(--color-neutral-700)'}}>
-                        {new Date(r.data).toLocaleDateString('pt-BR')}
+                        {(() => {
+                          if (!r.data) return '-'
+                          const [ano, mes, dia] = r.data.split('T')[0].split('-')
+                          return `${dia}/${mes}/${ano}`
+                        })()}
                       </span>
                     </td>
                     <td>{r.meta_descricao}</td>

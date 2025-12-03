@@ -253,7 +253,9 @@ export default function Relatorios() {
   }
 
   const formatDate = (dateString) => {
-    return new Date(dateString).toLocaleDateString('pt-BR')
+    if (!dateString) return '-'
+    const [ano, mes, dia] = dateString.split('T')[0].split('-')
+    return `${dia}/${mes}/${ano}`
   }
 
   if (loading) {

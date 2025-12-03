@@ -95,12 +95,12 @@ export default function RegistroDiario() {
 
     // Filtro por data início
     if (filtros.data_inicio) {
-      filtrados = filtrados.filter(r => r && r.data && new Date(r.data) >= new Date(filtros.data_inicio))
+      filtrados = filtrados.filter(r => r && r.data && r.data >= filtros.data_inicio)
     }
 
     // Filtro por data fim
     if (filtros.data_fim) {
-      filtrados = filtrados.filter(r => r && r.data && new Date(r.data) <= new Date(filtros.data_fim))
+      filtrados = filtrados.filter(r => r && r.data && r.data <= filtros.data_fim)
     }
 
     // Filtro por nota mínima
@@ -709,9 +709,16 @@ export default function RegistroDiario() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {registrosFiltrados.map(r => (
+                {registrosFiltrados.map(r => {
+                  // Converter data ISO para formato brasileiro sem timezone
+                  const formatarData = (dataStr) => {
+                    if (!dataStr) return '-'
+                    const [ano, mes, dia] = dataStr.split('T')[0].split('-')
+                    return `${dia}/${mes}/${ano}`
+                  }
+                  return (
                   <TableRow key={r.id}>
-                    <TableCell>{new Date(r.data).toLocaleDateString('pt-BR')}</TableCell>
+                    <TableCell>{formatarData(r.data)}</TableCell>
                     <TableCell>{r.meta_descricao}</TableCell>
                     <TableCell>{r.formulario_nome || r.formulario_titulo}</TableCell>
                     <TableCell>
@@ -733,7 +740,8 @@ export default function RegistroDiario() {
                       </div>
                     </TableCell>
                   </TableRow>
-                ))}
+                  )
+                })}
               </TableBody>
             </Table>
           )}

@@ -123,7 +123,11 @@ function getBarChartData(relatorio, datasSelecionadas) {
   indiceNomes.forEach(sigla => {
     const entry = { name: sigla };
     globaisFiltrados.forEach(item => {
-      let dataLabel = new Date(item.data).toLocaleDateString('pt-BR');
+      let dataLabel = (() => {
+        if (!item.data) return '-'
+        const [ano, mes, dia] = item.data.split('T')[0].split('-')
+        return `${dia}/${mes}/${ano}`
+      })();
       let valor = 0;
       Object.entries(item.indices).forEach(([key, v]) => {
         let itemSigla = '';

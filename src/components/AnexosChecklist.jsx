@@ -227,7 +227,11 @@ export default function AnexosChecklist({ checklistId }) {
                     <div className="flex items-center gap-3 mt-1">
                       <span className="text-xs text-gray-500">{anexo.tamanho_formatado}</span>
                       <span className="text-xs text-gray-500">
-                        {new Date(anexo.criado_em).toLocaleDateString('pt-BR')}
+                        {(() => {
+                          if (!anexo.criado_em) return '-'
+                          const [ano, mes, dia] = anexo.criado_em.split('T')[0].split('-')
+                          return `${dia}/${mes}/${ano}`
+                        })()}
                       </span>
                     </div>
                   </div>
