@@ -203,6 +203,7 @@ export default function RegistroDiarioExportImport() {
         observacao: 'Importado via Excel'
       };
 
+
       await ApiService.createChecklistDiario(payload);
 
       toast({
@@ -287,8 +288,11 @@ export default function RegistroDiarioExportImport() {
           <div className="form-group">
             <Label className="text-sm font-semibold text-gray-700 mb-2 block">Meta Terapêutica *</Label>
             <Select
-              value={metaSelecionada ? metaSelecionada.toString() : ''}
-              onValueChange={setMetaSelecionada}
+              value={metaSelecionada ? metaSelecionada.id.toString() : ''}
+              onValueChange={(v) => {
+                const meta = metas.find(m => m.id === parseInt(v));
+                setMetaSelecionada(meta);
+              }}
               disabled={!pacienteSelecionado}
             >
               <SelectTrigger className="h-10 bg-white border border-gray-300 rounded-lg hover:border-gray-400 focus:border-[#0ea5e9] disabled:bg-gray-100 disabled:cursor-not-allowed">
