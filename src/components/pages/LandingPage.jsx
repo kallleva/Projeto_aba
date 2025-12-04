@@ -189,6 +189,14 @@ export default function LandingPage() {
     painpoints: false,
     usecases: false
   });
+  const [expandedFaq, setExpandedFaq] = useState(0);
+  const [roiData, setRoiData] = useState({
+    pacientes: 10,
+    horaValor: 100,
+    horasEconomizadas: 75,
+    faturamentoExtra: 7500,
+    roiMes: 150
+  });
 
   useEffect(() => {
     const handleScroll = () => setScrollY(window.scrollY);
@@ -317,6 +325,45 @@ export default function LandingPage() {
     "🤯 Gestão caótica de múltiplos pacientes e profissionais?"
   ];
 
+  const calcularROI = (pacientes, hora) => {
+    const horasPorPaciente = 7.5;
+    const horasReduzidas = 0.33;
+    const horasEconomizadas = (horasPorPaciente - horasReduzidas) * pacientes;
+    const faturamentoExtra = horasEconomizadas * hora;
+    const custoMensalAuroraClin = pacientes * 49.9;
+    let roi = ((faturamentoExtra - custoMensalAuroraClin) / custoMensalAuroraClin * 100);
+    
+    // Limita ROI a 300% para evitar números irrealistas
+    roi = Math.min(roi, 300);
+    
+    setRoiData({
+      pacientes,
+      horaValor: hora,
+      horasEconomizadas: Math.round(horasEconomizadas),
+      faturamentoExtra: Math.round(faturamentoExtra),
+      roiMes: Math.round(roi)
+    });
+  };
+
+  const faqItems = [
+    {
+      pergunta: "Quanto tempo leva para aprender?",
+      resposta: "Onboarding em 30 minutos. Muitos usuários criam o primeiro relatório no mesmo dia."
+    },
+    {
+      pergunta: "E se a automação errar?",
+      resposta: "Nunca inventamos dados. Apenas organizamos o que você registrou. Você sempre revisa antes de enviar."
+    },
+    {
+      pergunta: "Posso customizar para meus pacientes?",
+      resposta: "100% personalizável. Adapte protocolos e templates conforme sua necessidade."
+    },
+    {
+      pergunta: "Os dados são seguros?",
+      resposta: "Criptografia bancária, backup automático e conformidade LGPD. Seus dados mais protegidos que em planilhas."
+    }
+  ];
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-slate-50 to-white">
       <style>{animationStyles}</style>
@@ -344,10 +391,11 @@ export default function LandingPage() {
       <section className="pt-20 pb-32 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto text-center">
           <h1 className="text-5xl md:text-7xl font-bold text-gray-900 mb-6 leading-tight">
-            <div>Transforme Dados em Evolução</div>
-            <div className="min-h-20 flex items-center justify-center">
+            <div className="mb-4">Transforme Dados em Evolução</div>
+            <div className="h-32 md:h-40 lg:h-48 flex items-center justify-center">
               <span className="text-cyan-600">
                 {displayedText}
+                <span className="animate-pulse">|</span>
               </span>
             </div>
           </h1>
@@ -886,7 +934,256 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* Social Proof */}
+      {/* ROI Calculator Section */}
+      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-cyan-50 to-white">
+        <div className="max-w-4xl mx-auto">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
+              Quanto Você Vai Economizar?
+            </h2>
+            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+              Descubra quanto tempo e dinheiro você deixa na mesa todos os meses sem automação
+            </p>
+          </div>
+
+          <div className="bg-white rounded-3xl shadow-2xl border-2 border-cyan-200 p-12">
+            <div className="grid md:grid-cols-2 gap-8 mb-8">
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-3">Quantos pacientes você atende?</label>
+                <div className="flex items-center gap-4">
+                  <input 
+                    type="range" 
+                    min="1" 
+                    max="50" 
+                    value={roiData.pacientes}
+                    className="flex-1 h-3 bg-cyan-200 rounded-lg appearance-none cursor-pointer accent-cyan-600"
+                    onChange={(e) => calcularROI(parseInt(e.target.value), roiData.horaValor)}
+                  />
+                  <span className="text-2xl font-bold text-cyan-600 min-w-12">{roiData.pacientes}</span>
+                  <span className="text-gray-600">pacientes</span>
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-3">Sua hora vale quanto?</label>
+                <div className="flex items-center gap-4">
+                  <span className="text-gray-600">R$</span>
+                  <input 
+                    type="number" 
+                    min="0" 
+                    value={roiData.horaValor}
+                    className="flex-1 px-4 py-3 border-2 border-cyan-300 rounded-lg focus:outline-none focus:border-cyan-500"
+                    onChange={(e) => calcularROI(roiData.pacientes, parseInt(e.target.value) || 0)}
+                  />
+                  <span className="text-gray-600">/hora</span>
+                </div>
+              </div>
+            </div>
+
+            <div className="grid md:grid-cols-3 gap-6 mt-12">
+              <div className="bg-gradient-to-br from-cyan-50 to-cyan-100 p-6 rounded-2xl border-2 border-cyan-200">
+                <p className="text-sm text-gray-600 mb-2">Horas economizadas/mês</p>
+                <p className="text-4xl font-black text-cyan-600">{roiData.horasEconomizadas}h</p>
+              </div>
+              <div className="bg-gradient-to-br from-teal-50 to-teal-100 p-6 rounded-2xl border-2 border-teal-200">
+                <p className="text-sm text-gray-600 mb-2">Faturamento potencial extra</p>
+                <p className="text-4xl font-black text-teal-600">R$ {(roiData.faturamentoExtra / 1000).toFixed(1)}k</p>
+              </div>
+              <div className="bg-gradient-to-br from-sky-50 to-sky-100 p-6 rounded-2xl border-2 border-sky-200">
+                <p className="text-sm text-gray-600 mb-2">ROI em 1 mês</p>
+                <p className="text-4xl font-black text-sky-600">+{roiData.roiMes}%</p>
+              </div>
+            </div>
+
+            <p className="text-center text-sm text-gray-600 mt-8">
+              *Cálculo baseado em 7.5h de trabalho em relatórios por paciente/mês, reduzido para 20 minutos com AuroraClin
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* FAQ Section */}
+      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-white">
+        <div className="max-w-4xl mx-auto">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
+              Suas Dúvidas Respondidas
+            </h2>
+            <p className="text-lg text-gray-600">
+              Respostas honestas para as preocupações reais de profissionais ABA
+            </p>
+          </div>
+
+          <div className="space-y-4">
+            {faqItems.map((item, index) => (
+              <div
+                key={index}
+                className={`rounded-xl border transition-all duration-300 ${
+                  expandedFaq === index
+                    ? 'border-cyan-400 bg-cyan-50 shadow-md'
+                    : 'border-gray-200 bg-gray-50 hover:border-cyan-300'
+                }`}
+              >
+                <button
+                  onClick={() => setExpandedFaq(expandedFaq === index ? -1 : index)}
+                  className="w-full text-left p-5 flex items-center justify-between group"
+                >
+                  <h3 className="text-base font-semibold text-gray-900 group-hover:text-cyan-700 transition-colors">
+                    {item.pergunta}
+                  </h3>
+                  <span className={`text-lg text-gray-500 transition-transform duration-300 flex-shrink-0 ${expandedFaq === index ? 'rotate-180' : ''}`}>
+                    ▼
+                  </span>
+                </button>
+
+                {expandedFaq === index && (
+                  <div className="px-5 pb-5 pt-0 border-t border-cyan-200">
+                    <p className="text-sm text-gray-700 leading-relaxed">
+                      {item.resposta}
+                    </p>
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Before & After Section */}
+      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-slate-50 to-white">
+        <div className="max-w-6xl mx-auto">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
+              Sua Realidade Antes e Depois
+            </h2>
+            <p className="text-lg text-gray-600">
+              Veja a transformação que nossos primeiros usuários experimentaram
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-2 gap-12">
+            {/* Antes */}
+            <div className="bg-red-50 border-2 border-red-200 rounded-3xl p-8">
+              <div className="text-center mb-8">
+                <h3 className="text-2xl font-bold text-red-700 mb-2">❌ ANTES</h3>
+                <p className="text-sm text-red-600">(Sem AuroraClin)</p>
+              </div>
+
+              <ul className="space-y-4">
+                {/* <li className="flex items-start gap-3">
+                  <span className="text-red-500 font-bold mt-1">×</span>
+                  <div>
+                    <p className="font-semibold text-gray-900">7-8 horas por paciente</p>
+                    <p className="text-sm text-gray-600">Criando relatórios manualmente</p>
+                  </div>
+                </li> */}
+                <li className="flex items-start gap-3">
+                  <span className="text-red-500 font-bold mt-1">×</span>
+                  <div>
+                    <p className="font-semibold text-gray-900">Dados desorganizados</p>
+                    <p className="text-sm text-gray-600">Planilhas, anotações soltas, emails</p>
+                  </div>
+                </li>
+                <li className="flex items-start gap-3">
+                  <span className="text-red-500 font-bold mt-1">×</span>
+                  <div>
+                    <p className="font-semibold text-gray-900">Pais confusos</p>
+                    <p className="text-sm text-gray-600">Difícil demonstrar progresso tangível</p>
+                  </div>
+                </li>
+                <li className="flex items-start gap-3">
+                  <span className="text-red-500 font-bold mt-1">×</span>
+                  <div>
+                    <p className="font-semibold text-gray-900">Erros frequentes</p>
+                    <p className="text-sm text-gray-600">Falhas de digitação, cálculos incorretos</p>
+                  </div>
+                </li>
+                <li className="flex items-start gap-3">
+                  <span className="text-red-500 font-bold mt-1">×</span>
+                  <div>
+                    <p className="font-semibold text-gray-900">Sem análises profundas</p>
+                    <p className="text-sm text-gray-600">Impossível rastrear padrões e evolução</p>
+                  </div>
+                </li>
+                <li className="flex items-start gap-3">
+                  <span className="text-red-500 font-bold mt-1">×</span>
+                  <div>
+                    <p className="font-semibold text-gray-900">Noites de trabalho extra</p>
+                    <p className="text-sm text-gray-600">Levando trabalho para casa</p>
+                  </div>
+                </li>
+              </ul>
+            </div>
+
+            {/* Depois */}
+            <div className="bg-green-50 border-2 border-green-200 rounded-3xl p-8">
+              <div className="text-center mb-8">
+                <h3 className="text-2xl font-bold text-green-700 mb-2">✅ DEPOIS</h3>
+                <p className="text-sm text-green-600">(Com AuroraClin)</p>
+              </div>
+
+              <ul className="space-y-4">
+                {/* <li className="flex items-start gap-3">
+                  <span className="text-green-500 font-bold mt-1">✓</span>
+                  <div>
+                    <p className="font-semibold text-gray-900">20 minutos por paciente</p>
+                    <p className="text-sm text-gray-600">Relatórios profissionais gerados automaticamente</p>
+                  </div>
+                </li> */}
+                <li className="flex items-start gap-3">
+                  <span className="text-green-500 font-bold mt-1">✓</span>
+                  <div>
+                    <p className="font-semibold text-gray-900">Tudo centralizado</p>
+                    <p className="text-sm text-gray-600">Um único lugar para todos os dados</p>
+                  </div>
+                </li>
+                <li className="flex items-start gap-3">
+                  <span className="text-green-500 font-bold mt-1">✓</span>
+                  <div>
+                    <p className="font-semibold text-gray-900">Pais entusiasmados</p>
+                    <p className="text-sm text-gray-600">Gráficos visuais que demonstram evolução clara</p>
+                  </div>
+                </li>
+                <li className="flex items-start gap-3">
+                  <span className="text-green-500 font-bold mt-1">✓</span>
+                  <div>
+                    <p className="font-semibold text-gray-900">Zero erros</p>
+                    <p className="text-sm text-gray-600">Cálculos sempre precisos e formatação perfeita</p>
+                  </div>
+                </li>
+                <li className="flex items-start gap-3">
+                  <span className="text-green-500 font-bold mt-1">✓</span>
+                  <div>
+                    <p className="font-semibold text-gray-900">Insights profundos</p>
+                    <p className="text-sm text-gray-600">Identifique padrões e planeje melhor</p>
+                  </div>
+                </li>
+                <li className="flex items-start gap-3">
+                  <span className="text-green-500 font-bold mt-1">✓</span>
+                  <div>
+                    <p className="font-semibold text-gray-900">Tempo para viver</p>
+                    <p className="text-sm text-gray-600">Recupere 75+ horas mensais para descanso</p>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <div className="text-center mt-16">
+            <p className="text-lg text-gray-700 mb-6 max-w-2xl mx-auto">
+              A diferença entre trabalhar <strong>com</strong> tecnologia e trabalhar <strong>contra</strong> a burocracia
+            </p>
+            <Button 
+              size="lg" 
+              onClick={() => setMostrarRegistro(true)}
+              className="bg-cyan-600 hover:bg-cyan-700 text-lg px-8 py-6 h-auto"
+            >
+              Experimente a Diferença Agora
+              <ArrowRight className="ml-2" />
+            </Button>
+          </div>
+        </div>
+      </section>
       <section className="py-20 px-4 sm:px-6 lg:px-8 bg-gray-50" data-section="testimonials">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-16">
