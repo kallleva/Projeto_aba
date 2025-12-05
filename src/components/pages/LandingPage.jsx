@@ -1070,13 +1070,13 @@ export default function LandingPage() {
               </div>
 
               <ul className="space-y-4">
-                {/* <li className="flex items-start gap-3">
+                <li className="flex items-start gap-3">
                   <span className="text-red-500 font-bold mt-1">×</span>
                   <div>
                     <p className="font-semibold text-gray-900">7-8 horas por paciente</p>
                     <p className="text-sm text-gray-600">Criando relatórios manualmente</p>
                   </div>
-                </li> */}
+                </li>
                 <li className="flex items-start gap-3">
                   <span className="text-red-500 font-bold mt-1">×</span>
                   <div>
@@ -1123,13 +1123,13 @@ export default function LandingPage() {
               </div>
 
               <ul className="space-y-4">
-                {/* <li className="flex items-start gap-3">
+                <li className="flex items-start gap-3">
                   <span className="text-green-500 font-bold mt-1">✓</span>
                   <div>
                     <p className="font-semibold text-gray-900">20 minutos por paciente</p>
                     <p className="text-sm text-gray-600">Relatórios profissionais gerados automaticamente</p>
                   </div>
-                </li> */}
+                </li>
                 <li className="flex items-start gap-3">
                   <span className="text-green-500 font-bold mt-1">✓</span>
                   <div>

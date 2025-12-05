@@ -1,4 +1,5 @@
 import PacienteRelatorio from './PacienteRelatorio';
+import RelatorioGerador from './RelatorioGerador';
 import AssistenteIA from '@/components/ai/AssistenteIA'
 import { useState, useEffect } from 'react'
 import { useParams, useNavigate, useSearchParams } from 'react-router-dom'
@@ -25,7 +26,8 @@ import {
   Clock,
   AlertCircle,
   List,
-  HelpCircle
+  HelpCircle,
+  FileText
 } from 'lucide-react'
 import { 
   LineChart, 
@@ -779,7 +781,11 @@ export default function PacienteDetalhes() {
           </TabsTrigger>
           <TabsTrigger value="relatorio" className="flex items-center gap-2">
             <BarChart3 className="h-4 w-4" />
-            Relatório e Gráficos
+            Gráficos
+          </TabsTrigger>
+          <TabsTrigger value="relatorio-gerador" className="flex items-center gap-2">
+            <FileText className="h-4 w-4" />
+            Relatório Completo
           </TabsTrigger>
         </TabsList>
 
@@ -1629,6 +1635,16 @@ export default function PacienteDetalhes() {
               formatDate={formatDate}
             />
           </div>
+        </TabsContent>
+
+        {/* Aba de Geração de Relatório Completo */}
+        <TabsContent value="relatorio-gerador">
+          <RelatorioGerador
+            paciente={paciente}
+            relatorioPaciente={relatorioPaciente}
+            agendamentos={agendamentos}
+            formatDate={formatDate}
+          />
         </TabsContent>
       </Tabs>
 
