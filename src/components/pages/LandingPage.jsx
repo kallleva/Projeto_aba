@@ -409,7 +409,7 @@ export default function LandingPage() {
           <div className="flex flex-col sm:flex-row gap-4 justify-center mb-16">
             <Button 
               size="lg" 
-              onClick={() => setMostrarRegistro(true)}
+              onClick={() => window.open('https://wa.me/5565981420023?text=Ol%C3%A1%2C%20gostaria%20de%20saber%20mais%20sobre%20o%20sistema.', '_blank')}
               className="bg-cyan-600 hover:bg-cyan-700 text-lg px-8 py-6 h-auto"
             >
               Começar Agora Grátis
@@ -1175,7 +1175,7 @@ export default function LandingPage() {
             </p>
             <Button 
               size="lg" 
-              onClick={() => setMostrarRegistro(true)}
+              onClick={() => window.open('https://wa.me/5565981420023?text=Ol%C3%A1%2C%20gostaria%20de%20saber%20mais%20sobre%20o%20sistema.', '_blank')}
               className="bg-cyan-600 hover:bg-cyan-700 text-lg px-8 py-6 h-auto"
             >
               Experimente a Diferença Agora
@@ -1300,7 +1300,7 @@ export default function LandingPage() {
               </ul>
 
               <Button 
-                onClick={() => setMostrarRegistro(true)}
+                onClick={() => window.open('https://wa.me/5565981420023?text=Ol%C3%A1%2C%20gostaria%20de%20saber%20mais%20sobre%20o%20sistema.', '_blank')}
                 className="w-full bg-cyan-600 hover:bg-cyan-700 text-white font-bold text-lg py-6"
               >
                 Começar Teste Gratuito
@@ -1329,7 +1329,7 @@ export default function LandingPage() {
           
           <Button 
             size="lg"
-            onClick={() => setMostrarRegistro(true)}
+            onClick={() => window.open('https://wa.me/5565981420023?text=Ol%C3%A1%2C%20gostaria%20de%20saber%20mais%20sobre%20o%20sistema.', '_blank')}
             className="bg-white text-cyan-600 hover:bg-gray-100 text-lg px-10 py-7 h-auto font-bold"
           >
             Começar Teste Gratuito
@@ -1353,10 +1353,11 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* Modal de Registro */}
+      {/* MODAL COMENTADO - REUTILIZAR DEPOIS
       {mostrarRegistro && (
         <RegistroPublico onClose={() => setMostrarRegistro(false)} />
       )}
+      */}
 
       {/* Footer */}
       <footer className="bg-gray-900 text-white py-12 px-4 sm:px-6 lg:px-8">
