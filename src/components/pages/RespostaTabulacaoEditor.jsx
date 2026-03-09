@@ -32,11 +32,11 @@ export default function RespostaTabulacaoEditor() {
   
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
-  const isNew = id === 'novo';
+  const isNew = !id || id === 'novo';
 
   useEffect(() => {
     loadInitialData();
-  }, []);
+  }, [id]);
 
   useEffect(() => {
     if (form.tabulacao_formulario_id && tabulacoes.length > 0) {
@@ -104,7 +104,7 @@ export default function RespostaTabulacaoEditor() {
       setProfissionais(profissionaisData);
       
       // Se não é novo, carregar dados existentes
-      if (!isNew && id && id !== 'novo') {
+      if (!isNew) {
         try {
           console.log('Carregando resposta existente com ID:', id);
           const resposta = await ApiService.getRespostaTabulacao(id);
