@@ -169,6 +169,13 @@ export default function RegistroDiarioGrid() {
               <Plus className="h-4 w-4" />
               📝 Nova Descrição
             </Button>
+            <Button 
+              onClick={() => navigate('/resposta-tabulacao')}
+              style={{ backgroundColor: '#8b5cf6', color: 'white' }}
+              className="flex items-center gap-2"
+            >
+              📊 Respostas Tabulação
+            </Button>
           </div>
         </div>
       </div>

@@ -24,6 +24,10 @@ import Pergunta from '@/components/pages/Pergunta'
 import Resposta from '@/components/pages/Resposta'
 import Empresas from '@/components/pages/Empresas'
 import LandingPage from '@/components/pages/LandingPage'
+import Tabulacao from '@/components/pages/Tabulacao'
+import TabulacaoEditor from '@/components/pages/TabulacaoEditor'
+import RespostaTabulacaoGrid from '@/components/pages/RespostaTabulacaoGrid'
+import RespostaTabulacaoEditor from '@/components/pages/RespostaTabulacaoEditor'
 import './App.css'
 
 function App() {
@@ -141,6 +145,40 @@ function App() {
                     <Route path="/empresas" element={
                       <ProtectedRoute requireRole={['ADMIN']}>
                         <Empresas />
+                      </ProtectedRoute>
+                    } />
+                    
+                    {/* PROFISSIONAL + ADMIN - Tabulação de Execuções */}
+                    <Route path="/tabulacao" element={
+                      <ProtectedRoute requireRole={['PROFISSIONAL', 'ADMIN']}>
+                        <Tabulacao />
+                      </ProtectedRoute>
+                    } />
+                    <Route path="/tabulacao/nova" element={
+                      <ProtectedRoute requireRole={['PROFISSIONAL', 'ADMIN']}>
+                        <TabulacaoEditor />
+                      </ProtectedRoute>
+                    } />
+                    <Route path="/tabulacao/:id" element={
+                      <ProtectedRoute requireRole={['PROFISSIONAL', 'ADMIN']}>
+                        <TabulacaoEditor />
+                      </ProtectedRoute>
+                    } />
+
+                    {/* PROFISSIONAL + ADMIN - Respostas de Tabulação */}
+                    <Route path="/resposta-tabulacao" element={
+                      <ProtectedRoute requireRole={['PROFISSIONAL', 'ADMIN']}>
+                        <RespostaTabulacaoGrid />
+                      </ProtectedRoute>
+                    } />
+                    <Route path="/resposta-tabulacao/edit/novo" element={
+                      <ProtectedRoute requireRole={['PROFISSIONAL', 'ADMIN']}>
+                        <RespostaTabulacaoEditor />
+                      </ProtectedRoute>
+                    } />
+                    <Route path="/resposta-tabulacao/edit/:id" element={
+                      <ProtectedRoute requireRole={['PROFISSIONAL', 'ADMIN']}>
+                        <RespostaTabulacaoEditor />
                       </ProtectedRoute>
                     } />
                   </Routes>

@@ -730,6 +730,80 @@ class ApiService {
       body: JSON.stringify(body),
     })
   }
+
+  // ========================
+  // Tabulação de Formulários
+  // ========================
+  async getTabulacoes(filters = {}) {
+    const params = new URLSearchParams()
+    Object.entries(filters).forEach(([key, value]) => {
+      if (value) params.append(key, value)
+    })
+    
+    const url = params.toString() ? `/tabulacao?${params.toString()}` : '/tabulacao'
+    return this.request(url)
+  }
+
+  async getTabulacao(id) {
+    return this.request(`/tabulacao/${id}`)
+  }
+
+  async createTabulacao(data) {
+    return this.request('/tabulacao', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    })
+  }
+
+  async updateTabulacao(id, data) {
+    return this.request(`/tabulacao/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(data),
+    })
+  }
+
+  async deleteTabulacao(id) {
+    return this.request(`/tabulacao/${id}`, {
+      method: 'DELETE',
+    })
+  }
+
+  // ========================
+  // Respostas de Tabulação
+  // ========================
+  async listarRespostasTabulacao(filters = {}) {
+    const params = new URLSearchParams()
+    Object.entries(filters).forEach(([key, value]) => {
+      if (value) params.append(key, value)
+    })
+    
+    const url = params.toString() ? `/resposta-tabulacao?${params.toString()}` : '/resposta-tabulacao'
+    return this.request(url)
+  }
+
+  async getRespostaTabulacao(id) {
+    return this.request(`/resposta-tabulacao/${id}`)
+  }
+
+  async createRespostaTabulacao(data) {
+    return this.request('/resposta-tabulacao', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    })
+  }
+
+  async updateRespostaTabulacao(id, data) {
+    return this.request(`/resposta-tabulacao/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(data),
+    })
+  }
+
+  async deleteRespostaTabulacao(id) {
+    return this.request(`/resposta-tabulacao/${id}`, {
+      method: 'DELETE',
+    })
+  }
 }
 
 export default new ApiService()
