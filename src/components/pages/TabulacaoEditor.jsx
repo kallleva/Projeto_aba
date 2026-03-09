@@ -177,6 +177,7 @@ export default function TabulacaoEditor() {
       formData.topicos.forEach(topico => {
         topico.itens.forEach(item => {
           itens.push({
+            id: item.id,  // Importante: enviar o ID para itens existentes
             topico: topico.nome,
             descricao: item.descricao,
             codigo: item.codigo,
@@ -208,11 +209,26 @@ export default function TabulacaoEditor() {
       navigate('/tabulacao')
     } catch (err) {
       console.error('Erro ao salvar tabulação:', err)
-      toast({
-        title: 'Erro',
-        description: 'Erro ao salvar tabulação: ' + err.message,
-        variant: 'destructive'
-      })
+      
+      // Tratamento especial para erro de itens com respostas
+      if (err.response?.status === 400 && err.response?.data?.itens_com_respostas) {
+        const itensComRespostas = err.response.data.itens_com_respostas
+        const listaItens = itensComRespostas
+          .map(item => `• ${item.codigo} (${item.respostas} resposta${item.respostas > 1 ? 's' : ''})`)
+          .join('\n')
+        
+        toast({
+          title: 'Não é possível deletar esses itens',
+          description: `Os seguintes itens possuem respostas registradas:\n${listaItens}`,
+          variant: 'destructive'
+        })
+      } else {
+        toast({
+          title: 'Erro',
+          description: 'Erro ao salvar tabulação: ' + (err.response?.data?.erro || err.message),
+          variant: 'destructive'
+        })
+      }
     } finally {
       setSaving(false)
     }
