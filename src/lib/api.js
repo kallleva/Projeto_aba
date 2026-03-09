@@ -259,6 +259,10 @@ class ApiService {
     return this.request('/metas-terapeuticas?status=EmAndamento')
   }
 
+  async getMetaTerapeutica(id) {
+    return this.request(`/metas-terapeuticas/${id}`)
+  }
+
   async createMetaTerapeutica(data) {
     return this.request('/metas-terapeuticas', {
       method: 'POST',

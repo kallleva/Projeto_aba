@@ -12,6 +12,7 @@ import PacienteDetalhes from '@/components/pages/PacienteDetalhes'
 import Profissionais from '@/components/pages/Profissionais'
 import PlanosTerapeuticos from '@/components/pages/PlanosTerapeuticos'
 import MetasTerapeuticas from '@/components/pages/MetasTerapeuticas'
+import MetasTerapeuticasEditor from '@/components/pages/MetasTerapeuticasEditor'
 import RegistroDiario from '@/components/pages/RegistroDiario'
 import RegistroDiarioGrid from '@/components/pages/RegistroDiarioGrid'
 import RegistroDiarioEdit from '@/components/pages/RegistroDiarioEdit'
@@ -80,6 +81,11 @@ function App() {
                     <Route path="/metas-terapeuticas" element={
                       <ProtectedRoute requireRole={['PROFISSIONAL', 'ADMIN']}>
                         <MetasTerapeuticas />
+                      </ProtectedRoute>
+                    } />
+                    <Route path="/metas-terapeuticas/edit/:id" element={
+                      <ProtectedRoute requireRole={['PROFISSIONAL', 'ADMIN']}>
+                        <MetasTerapeuticasEditor />
                       </ProtectedRoute>
                     } />
                     

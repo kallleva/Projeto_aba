@@ -82,7 +82,7 @@ export default function FormularioEditor() {
               opcoes.length === padrao.length && padrao.every((v, i) => normalize(opcoes[i]) === normalize(v))
             );
             perguntas.push({
-              id: Date.now() + idx,
+              id: null,
               ordem: row['Ordem'] || idx + 1,
               texto: row['Texto'] || '',
               sigla: siglaNormalizada,
@@ -133,7 +133,7 @@ export default function FormularioEditor() {
               opcoes.length === padrao.length && padrao.every((v, i) => normalize(opcoes[i]) === normalize(v))
             );
             perguntas.push({
-              id: Date.now() + idx,
+              id: null,
               ordem: row['Ordem'] || idx + 1,
               texto: row['Texto'] || '',
               sigla: siglaNormalizada,
@@ -283,17 +283,15 @@ export default function FormularioEditor() {
 
   const addPergunta = () => {
     setFormData((prev) => {
-      // Gerar ID único baseado no timestamp e um número aleatório
-      const novoId = Date.now() + Math.floor(Math.random() * 1000)
-      const novaPergunta =         {
-          //id: novoId,
-          ordem: prev.perguntas.length + 1,
-          texto: "Nova pergunta",
-          tipo: "TEXTO",
-          obrigatoria: false,
-          formula: null,
-          opcoes: []
-        }
+      const novaPergunta = {
+        id: null,  // Novo = null, perguntas salvas terão ID do banco
+        ordem: prev.perguntas.length + 1,
+        texto: "Nova pergunta",
+        tipo: "TEXTO",
+        obrigatoria: false,
+        formula: null,
+        opcoes: []
+      }
       
       console.log('Adicionando nova pergunta:', novaPergunta)
       
@@ -450,8 +448,8 @@ export default function FormularioEditor() {
               pergunta.padrao_tipo = p.padrao_tipo || 'ABA'
             }
           }
-          if (p.id && !p.id.toString().startsWith('temp_')) {
-            pergunta.id = p.id
+          if (p.id && typeof p.id === 'number') {
+            pergunta.id = p.id  // Incluir ID apenas para perguntas do banco
           }
           return pergunta
         })
