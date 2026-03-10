@@ -732,62 +732,64 @@ export default function PacienteDetalhes() {
   return (
     <div className="page-section">
       {/* Header */}
-      <div className="mb-8">
-        <div className="flex items-center gap-4 mb-4">
+      <div className="mb-6 md:mb-8">
+        <div className="flex items-center gap-2 md:gap-4 mb-4">
           <Button 
             variant="outline" 
             onClick={() => navigate('/pacientes')}
-            className="flex items-center gap-2"
+            className="flex items-center gap-2 h-8 md:h-9 text-xs md:text-sm px-2 md:px-3"
           >
-            <ArrowLeft className="h-4 w-4" />
-            Voltar
+            <ArrowLeft className="h-3 w-3 md:h-4 md:w-4" />
+            <span className="hidden sm:inline">Voltar</span>
           </Button>
         </div>
-        <div className="flex items-center justify-between gap-4">
-          <h1 className="page-title">{paciente.nome}</h1>
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 md:gap-4 mb-4">
+          <h1 className="page-title text-2xl md:text-3xl lg:text-4xl break-words">{paciente.nome}</h1>
           <Button 
             variant="outline" 
             size="sm"
             onClick={() => setAjudaOpen(true)}
-            className="flex items-center gap-2"
+            className="flex items-center gap-2 w-full sm:w-auto justify-center sm:justify-start h-8 md:h-9 text-xs md:text-sm"
             title="Ajuda"
           >
-            <HelpCircle className="h-4 w-4" />
+            <HelpCircle className="h-3 w-3 md:h-4 md:w-4" />
             Ajuda
           </Button>
         </div>
-        <p className="page-subtitle">
-          <span className={`badge ${getDiagnosticoBadgeClass(paciente.diagnostico)}`}>
+        <p className="page-subtitle text-xs md:text-sm flex flex-col sm:flex-row sm:items-center gap-2 md:gap-4">
+          <span className={`badge ${getDiagnosticoBadgeClass(paciente.diagnostico)} w-fit`}>
             {paciente.diagnostico}
           </span>
-          <span className="ml-4">Idade: {calcularIdade(paciente.data_nascimento)}</span>
+          <span className="whitespace-nowrap">Idade: {calcularIdade(paciente.data_nascimento)}</span>
         </p>
       </div>
 
       {/* Abas */}
       <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4">
-        <TabsList>
-          <TabsTrigger value="editar" className="flex items-center gap-2">
-            <User className="h-4 w-4" />
-            Editar Informações
-          </TabsTrigger>
-          <TabsTrigger value="vinculos" className="flex items-center gap-2">
-            <Users className="h-4 w-4" />
-            Profissionais Vinculados
-          </TabsTrigger>
-          <TabsTrigger value="agenda" className="flex items-center gap-2">
-            <Calendar className="h-4 w-4" />
-            Agenda
-          </TabsTrigger>
-          <TabsTrigger value="relatorio" className="flex items-center gap-2">
-            <BarChart3 className="h-4 w-4" />
-            Gráficos
-          </TabsTrigger>
-          <TabsTrigger value="relatorio-gerador" className="flex items-center gap-2">
-            <FileText className="h-4 w-4" />
-            Relatório Completo
-          </TabsTrigger>
-        </TabsList>
+        <div className="overflow-x-auto -mx-4 md:mx-0 px-4 md:px-0">
+          <TabsList className="inline-flex w-full md:w-auto whitespace-nowrap">
+            <TabsTrigger value="editar" className="flex items-center gap-1 md:gap-2 text-xs md:text-sm px-2 md:px-3 py-2">
+              <User className="h-3 w-3 md:h-4 md:w-4" />
+              <span className="hidden sm:inline">Editar</span>
+            </TabsTrigger>
+            <TabsTrigger value="vinculos" className="flex items-center gap-1 md:gap-2 text-xs md:text-sm px-2 md:px-3 py-2">
+              <Users className="h-3 w-3 md:h-4 md:w-4" />
+              <span className="hidden sm:inline">Profissionais</span>
+            </TabsTrigger>
+            <TabsTrigger value="agenda" className="flex items-center gap-1 md:gap-2 text-xs md:text-sm px-2 md:px-3 py-2">
+              <Calendar className="h-3 w-3 md:h-4 md:w-4" />
+              <span className="hidden sm:inline">Agenda</span>
+            </TabsTrigger>
+            <TabsTrigger value="relatorio" className="flex items-center gap-1 md:gap-2 text-xs md:text-sm px-2 md:px-3 py-2">
+              <BarChart3 className="h-3 w-3 md:h-4 md:w-4" />
+              <span className="hidden sm:inline">Gráficos</span>
+            </TabsTrigger>
+            <TabsTrigger value="relatorio-gerador" className="flex items-center gap-1 md:gap-2 text-xs md:text-sm px-2 md:px-3 py-2">
+              <FileText className="h-3 w-3 md:h-4 md:w-4" />
+              <span className="hidden sm:inline">Relatório</span>
+            </TabsTrigger>
+          </TabsList>
+        </div>
 
         {/* Aba de Edição */}
         <TabsContent value="editar">
@@ -862,23 +864,24 @@ export default function PacienteDetalhes() {
                 </div>
               </div>
 
-              <div className="flex justify-end gap-4 pt-4">
+              <div className="flex flex-col-reverse sm:flex-row justify-end gap-2 md:gap-4 pt-4">
                 <Button 
                   type="button" 
                   variant="outline" 
                   onClick={() => navigate('/pacientes')}
+                  className="w-full sm:w-auto"
                 >
                   Cancelar
                 </Button>
-                <Button type="submit" disabled={saving} style={{ backgroundColor: '#0ea5e9', color: 'white' }}>
+                <Button type="submit" disabled={saving} style={{ backgroundColor: '#0ea5e9', color: 'white' }} className="w-full sm:w-auto">
                   {saving ? (
                     <>
-                      <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                      <div className="animate-spin rounded-full h-3 w-3 md:h-4 md:w-4 border-b-2 border-white mr-2"></div>
                       Salvando...
                     </>
                   ) : (
                     <>
-                      <Save className="mr-2 h-4 w-4" />
+                      <Save className="mr-2 h-3 w-3 md:h-4 md:w-4" />
                       Salvar Alterações
                     </>
                   )}
@@ -892,17 +895,18 @@ export default function PacienteDetalhes() {
         <TabsContent value="vinculos">
           <div className="space-y-6">
             {/* Cabeçalho */}
-            <div className="flex items-center justify-between mb-6">
+            <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3 md:gap-4 mb-6">
               <div>
-                <h2 className="section-header-title">Profissionais Vinculados</h2>
-                <p className="card-text">Gerencie os vínculos terapêuticos de {paciente.nome}</p>
+                <h2 className="section-header-title text-lg md:text-xl">Profissionais Vinculados</h2>
+                <p className="card-text text-xs md:text-sm">Gerencie os vínculos terapêuticos de {paciente.nome}</p>
               </div>
               {canManageVinculos && (
                 <Button 
                   onClick={() => setShowVinculoForm(true)}
                   style={{ backgroundColor: '#0ea5e9', color: 'white' }}
+                  className="w-full md:w-auto flex items-center justify-center md:justify-start"
                 >
-                  <Plus className="mr-2 h-4 w-4" />
+                  <Plus className="mr-2 h-3 w-3 md:h-4 md:w-4" />
                   Novo Vínculo
                 </Button>
               )}
@@ -1010,23 +1014,24 @@ export default function PacienteDetalhes() {
                     />
                   </div>
 
-                  <div className="flex justify-end gap-4 pt-4">
+                  <div className="flex flex-col-reverse sm:flex-row justify-end gap-2 md:gap-4 pt-4">
                     <Button 
                       type="button" 
                       variant="outline" 
                       onClick={resetVinculoForm}
+                      className="w-full sm:w-auto"
                     >
                       Cancelar
                     </Button>
-                    <Button type="submit" disabled={saving} style={{ backgroundColor: '#0ea5e9', color: 'white' }}>
+                    <Button type="submit" disabled={saving} style={{ backgroundColor: '#0ea5e9', color: 'white' }} className="w-full sm:w-auto">
                       {saving ? (
                         <>
-                          <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                          <div className="animate-spin rounded-full h-3 w-3 md:h-4 md:w-4 border-b-2 border-white mr-2"></div>
                           Salvando...
                         </>
                       ) : (
                         <>
-                          <Save className="mr-2 h-4 w-4" />
+                          <Save className="mr-2 h-3 w-3 md:h-4 md:w-4" />
                           {editingVinculo ? 'Atualizar' : 'Criar'} Vínculo
                         </>
                       )}
@@ -1357,23 +1362,24 @@ export default function PacienteDetalhes() {
                     />
                   </div>
 
-                  <div className="flex justify-end gap-4 pt-4">
+                  <div className="flex flex-col-reverse sm:flex-row justify-end gap-2 md:gap-4 pt-4">
                     <Button 
                       type="button" 
                       variant="outline" 
                       onClick={resetAgendamentoForm}
+                      className="w-full sm:w-auto"
                     >
                       Cancelar
                     </Button>
-                    <Button type="submit" disabled={saving} style={{ backgroundColor: '#0ea5e9', color: 'white' }}>
+                    <Button type="submit" disabled={saving} style={{ backgroundColor: '#0ea5e9', color: 'white' }} className="w-full sm:w-auto">
                       {saving ? (
                         <>
-                          <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                          <div className="animate-spin rounded-full h-3 w-3 md:h-4 md:w-4 border-b-2 border-white mr-2"></div>
                           Salvando...
                         </>
                       ) : (
                         <>
-                          <Save className="mr-2 h-4 w-4" />
+                          <Save className="mr-2 h-3 w-3 md:h-4 md:w-4" />
                           {editingAgendamento ? 'Atualizar' : 'Criar'} Agendamento
                         </>
                       )}

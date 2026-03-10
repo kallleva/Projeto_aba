@@ -215,9 +215,9 @@ export default function TabRelatorio({ paciente, relatorioPaciente, agendamentos
         </div>
         <p className="card-text mb-4">Selecione o intervalo de datas para visualizar os dados</p>
         
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4">
           <div className="form-group">
-            <Label htmlFor="dataInicial" className="text-sm font-semibold text-gray-700 mb-2 block">
+            <Label htmlFor="dataInicial" className="text-xs md:text-sm font-semibold text-gray-700 mb-2 block">
               Data Inicial
             </Label>
             <Input
@@ -230,7 +230,7 @@ export default function TabRelatorio({ paciente, relatorioPaciente, agendamentos
           </div>
           
           <div className="form-group">
-            <Label htmlFor="dataFinal" className="text-sm font-semibold text-gray-700 mb-2 block">
+            <Label htmlFor="dataFinal" className="text-xs md:text-sm font-semibold text-gray-700 mb-2 block">
               Data Final
             </Label>
             <Input
@@ -251,34 +251,34 @@ export default function TabRelatorio({ paciente, relatorioPaciente, agendamentos
       </div>
 
       {/* Cards de Resumo */}
-      <div className="card-grid mb-8">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4 lg:gap-6 mb-6 md:mb-8">
         <div className="stat-card color-info">
           <div className="stat-card-icon" style={{ backgroundColor: '#bae6fd' }}>
-            <Target size={24} style={{ color: '#0ea5e9' }} />
+            <Target size={20} style={{ color: '#0ea5e9' }} className="h-4 w-4 md:h-6 md:w-6" />
           </div>
           <div className="stat-card-content">
-            <div className="stat-card-label">Total de Metas</div>
-            <div className="stat-card-value">{relatorioPaciente.resumo?.total_metas || 0}</div>
+            <div className="stat-card-label text-xs md:text-sm">Total de Metas</div>
+            <div className="stat-card-value text-lg md:text-2xl">{relatorioPaciente.resumo?.total_metas || 0}</div>
           </div>
         </div>
 
         <div className="stat-card color-success">
           <div className="stat-card-icon" style={{ backgroundColor: '#d1fae5' }}>
-            <TrendingUp size={24} style={{ color: '#22c55e' }} />
+            <TrendingUp size={20} style={{ color: '#22c55e' }} className="h-4 w-4 md:h-6 md:w-6" />
           </div>
           <div className="stat-card-content">
-            <div className="stat-card-label">Metas Concluídas</div>
-            <div className="stat-card-value">{relatorioPaciente.resumo?.metas_concluidas || 0}</div>
+            <div className="stat-card-label text-xs md:text-sm">Metas Concluídas</div>
+            <div className="stat-card-value text-lg md:text-2xl">{relatorioPaciente.resumo?.metas_concluidas || 0}</div>
           </div>
         </div>
 
         <div className="stat-card color-warning">
           <div className="stat-card-icon" style={{ backgroundColor: '#fef3c7' }}>
-            <BarChart3 size={24} style={{ color: '#f59e0b' }} />
+            <BarChart3 size={20} style={{ color: '#f59e0b' }} className="h-4 w-4 md:h-6 md:w-6" />
           </div>
           <div className="stat-card-content">
-            <div className="stat-card-label">Média Últimos 30 Dias</div>
-            <div className="stat-card-value">{relatorioPaciente.resumo?.media_notas_recentes || 0}</div>
+            <div className="stat-card-label text-xs md:text-sm">Média Últimos 30 Dias</div>
+            <div className="stat-card-value text-lg md:text-2xl">{relatorioPaciente.resumo?.media_notas_recentes || 0}</div>
           </div>
         </div>
       </div>
@@ -405,24 +405,24 @@ export default function TabRelatorio({ paciente, relatorioPaciente, agendamentos
           <BarChart3 size={18} className="color-info-icon" />
           <h2 className="section-header-title">Visualização de Percentuais/Fórmulas</h2>
         </div>
-        <div className="flex flex-col gap-3 mb-4">
-          <p className="card-text">Cada eixo representa um índice calculado. Compare até 3 sessões (datas).</p>
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3 md:gap-4">
+          <p className="card-text text-xs md:text-sm mb-0">Cada eixo representa um índice calculado. Compare até 3 sessões (datas).</p>
           <div className="flex flex-wrap items-center gap-2">
-            <span className="text-sm text-gray-700 mr-2">Tipos de gráfico:</span>
-            <Button type="button" variant={chartsToShow.includes('radar') ? 'default' : 'outline'} size="sm" onClick={() => toggleChart('radar')}>
+            <span className="text-xs md:text-sm text-gray-700 whitespace-nowrap">Tipos de gráfico:</span>
+            <Button type="button" variant={chartsToShow.includes('radar') ? 'default' : 'outline'} size="sm" className="text-xs md:text-sm" onClick={() => toggleChart('radar')}>
               Radar
             </Button>
-            <Button type="button" variant={chartsToShow.includes('bar') ? 'default' : 'outline'} size="sm" onClick={() => toggleChart('bar')}>
+            <Button type="button" variant={chartsToShow.includes('bar') ? 'default' : 'outline'} size="sm" className="text-xs md:text-sm" onClick={() => toggleChart('bar')}>
               Barras
             </Button>
-            <Button type="button" variant={chartsToShow.includes('line') ? 'default' : 'outline'} size="sm" onClick={() => toggleChart('line')}>
+            <Button type="button" variant={chartsToShow.includes('line') ? 'default' : 'outline'} size="sm" className="text-xs md:text-sm" onClick={() => toggleChart('line')}>
               Linhas
             </Button>
-            <Button type="button" variant={chartsToShow.includes('pie') ? 'default' : 'outline'} size="sm" onClick={() => toggleChart('pie')}>
+            <Button type="button" variant={chartsToShow.includes('pie') ? 'default' : 'outline'} size="sm" className="text-xs md:text-sm" onClick={() => toggleChart('pie')}>
               Pizza
             </Button>
             {selectedCharts.length > 0 && (
-              <Button type="button" variant="ghost" size="sm" onClick={() => setSelectedCharts([])} title="Voltar para seleção automática">
+              <Button type="button" variant="ghost" size="sm" className="text-xs md:text-sm" onClick={() => setSelectedCharts([])} title="Voltar para seleção automática">
                 Automático
               </Button>
             )}

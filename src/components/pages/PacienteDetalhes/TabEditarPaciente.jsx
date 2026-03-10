@@ -49,61 +49,65 @@ export default function TabEditarPaciente({ paciente, onUpdate }) {
 
   return (
     <Card>
-      <CardHeader>
-        <CardTitle>Editar Informações do Paciente</CardTitle>
-        <CardDescription>
+      <CardHeader className="pb-3 md:pb-6">
+        <CardTitle className="text-lg md:text-xl">Editar Informações do Paciente</CardTitle>
+        <CardDescription className="text-xs md:text-sm">
           Atualize as informações pessoais do paciente
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <form onSubmit={handleSubmit} className="space-y-6">
-          <div className="grid gap-4 md:grid-cols-2">
+        <form onSubmit={handleSubmit} className="space-y-4 md:space-y-6">
+          <div className="grid gap-3 md:gap-4 grid-cols-1 md:grid-cols-2">
             <div className="space-y-2">
-              <Label htmlFor="nome">Nome</Label>
+              <Label htmlFor="nome" className="text-xs md:text-sm">Nome</Label>
               <Input
                 id="nome"
                 value={formData.nome}
                 onChange={(e) => setFormData({...formData, nome: e.target.value})}
+                className="text-xs md:text-sm"
                 required
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="data_nascimento">Data de Nascimento</Label>
+              <Label htmlFor="data_nascimento" className="text-xs md:text-sm">Data de Nascimento</Label>
               <Input
                 id="data_nascimento"
                 type="date"
                 value={formData.data_nascimento}
                 onChange={(e) => setFormData({...formData, data_nascimento: e.target.value})}
+                className="text-xs md:text-sm"
                 required
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="responsavel">Responsável</Label>
+              <Label htmlFor="responsavel" className="text-xs md:text-sm">Responsável</Label>
               <Input
                 id="responsavel"
                 value={formData.responsavel}
                 onChange={(e) => setFormData({...formData, responsavel: e.target.value})}
+                className="text-xs md:text-sm"
                 required
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="contato">Contato</Label>
+              <Label htmlFor="contato" className="text-xs md:text-sm">Contato</Label>
               <Input
                 id="contato"
                 value={formData.contato}
                 onChange={(e) => setFormData({...formData, contato: e.target.value})}
                 placeholder="Telefone ou email"
+                className="text-xs md:text-sm"
                 required
               />
             </div>
-            <div className="space-y-2">
-              <Label htmlFor="diagnostico">Diagnóstico</Label>
+            <div className="space-y-2 md:col-span-2">
+              <Label htmlFor="diagnostico" className="text-xs md:text-sm">Diagnóstico</Label>
               <Select 
                 value={formData.diagnostico} 
                 onValueChange={(value) => setFormData({...formData, diagnostico: value})}
                 required
               >
-                <SelectTrigger>
+                <SelectTrigger className="text-xs md:text-sm">
                   <SelectValue placeholder="Selecione o diagnóstico" />
                 </SelectTrigger>
                 <SelectContent>
@@ -115,23 +119,24 @@ export default function TabEditarPaciente({ paciente, onUpdate }) {
             </div>
           </div>
 
-          <div className="flex justify-end gap-4">
+          <div className="flex flex-col-reverse sm:flex-row justify-end gap-2 md:gap-4 pt-2 md:pt-4">
             <Button 
               type="button" 
               variant="outline" 
               onClick={() => navigate('/pacientes')}
+              className="text-xs md:text-sm"
             >
               Cancelar
             </Button>
-            <Button type="submit" disabled={saving}>
+            <Button type="submit" disabled={saving} className="text-xs md:text-sm">
               {saving ? (
                 <>
-                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                  <div className="animate-spin rounded-full h-3 w-3 md:h-4 md:w-4 border-b-2 border-white mr-2"></div>
                   Salvando...
                 </>
               ) : (
                 <>
-                  <Save className="mr-2 h-4 w-4" />
+                  <Save className="mr-2 h-3 w-3 md:h-4 md:w-4" />
                   Salvar Alterações
                 </>
               )}

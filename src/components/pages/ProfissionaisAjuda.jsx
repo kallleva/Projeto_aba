@@ -276,25 +276,25 @@ export default function ProfissionaisAjuda({ open, onOpenChange }) {
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
-        <DialogHeader className="pb-6 border-b">
-          <DialogTitle className="text-2xl font-bold flex items-center gap-2">
-            <Lightbulb size={28} className="text-blue-500" />
+      <DialogContent className="max-w-2xl md:max-w-4xl max-h-[95vh] md:max-h-[90vh] overflow-y-auto w-[95vw] md:w-full p-4 md:p-6">
+        <DialogHeader className="pb-3 md:pb-6 border-b">
+          <DialogTitle className="text-lg md:text-2xl font-bold flex items-center gap-2">
+            <Lightbulb size={20} className="md:w-7 md:h-7 text-blue-500" />
             Guia: Cadastro de Profissionais
           </DialogTitle>
-          <DialogDescription className="text-base mt-2">
+          <DialogDescription className="text-xs md:text-base mt-2">
             Aprenda como gerenciar profissionais no sistema
           </DialogDescription>
         </DialogHeader>
 
         {/* Conteúdo Principal */}
-        <div className="py-6 space-y-6">
+        <div className="py-3 md:py-6 space-y-4 md:space-y-6">
           {/* Progresso */}
-          <div className="flex items-center justify-between">
-            <span className="text-sm font-medium text-gray-600">
+          <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-3">
+            <span className="text-xs md:text-sm font-medium text-gray-600">
               Passo {passoAtual + 1} de {passos.length}
             </span>
-            <div className="flex gap-1">
+            <div className="flex gap-1 overflow-x-auto w-full md:w-auto">
               {passos.map((_, index) => (
                 <button
                   key={index}
@@ -312,26 +312,26 @@ export default function ProfissionaisAjuda({ open, onOpenChange }) {
           </div>
 
           {/* Card do Passo */}
-          <Card className="border-l-4 border-l-blue-500">
-            <CardHeader>
-              <CardTitle className="text-xl flex items-center gap-2">
+          <Card className="border-l-4 border-l-blue-500 overflow-hidden">
+            <CardHeader className="pb-3 md:pb-4">
+              <CardTitle className="text-base md:text-xl flex items-center gap-2">
                 {passo.titulo}
               </CardTitle>
-              <CardDescription className="text-base mt-2">
+              <CardDescription className="text-xs md:text-base mt-2">
                 {passo.descricao}
               </CardDescription>
             </CardHeader>
-            <CardContent className="space-y-6">
+            <CardContent className="space-y-4 md:space-y-6">
               {/* Informações */}
               <div>
-                <div className="flex items-center gap-2 mb-3 font-semibold text-blue-700">
-                  <Info size={18} />
+                <div className="flex items-center gap-2 mb-2 md:mb-3 font-semibold text-blue-700 text-sm md:text-base">
+                  <Info size={16} className="md:w-5 md:h-5" />
                   Informações Importantes
                 </div>
-                <ul className="space-y-2 pl-6">
+                <ul className="space-y-1 md:space-y-2 pl-4 md:pl-6">
                   {passo.dicas.map((dica, idx) => (
-                    <li key={idx} className="text-sm text-gray-700 flex gap-2">
-                      <span className="text-blue-500 font-bold">•</span>
+                    <li key={idx} className="text-xs md:text-sm text-gray-700 flex gap-2">
+                      <span className="text-blue-500 font-bold flex-shrink-0">•</span>
                       <span>{dica}</span>
                     </li>
                   ))}
@@ -340,14 +340,14 @@ export default function ProfissionaisAjuda({ open, onOpenChange }) {
 
               {/* Best Practices */}
               <div>
-                <div className="flex items-center gap-2 mb-3 font-semibold text-green-700">
-                  <CheckCircle2 size={18} />
+                <div className="flex items-center gap-2 mb-2 md:mb-3 font-semibold text-green-700 text-sm md:text-base">
+                  <CheckCircle2 size={16} className="md:w-5 md:h-5" />
                   Melhores Práticas
                 </div>
-                <div className="space-y-2 pl-6">
+                <div className="space-y-1 md:space-y-2 pl-4 md:pl-6">
                   {passo.bestPractices.map((practice, idx) => (
-                    <div key={idx} className="text-sm text-gray-700 flex gap-2">
-                      <span className="text-green-600 font-bold"></span>
+                    <div key={idx} className="text-xs md:text-sm text-gray-700 flex gap-2">
+                      <span className="text-green-600 font-bold flex-shrink-0">✓</span>
                       <span>{practice}</span>
                     </div>
                   ))}
@@ -356,18 +356,18 @@ export default function ProfissionaisAjuda({ open, onOpenChange }) {
 
               {/* Alertas contextualizados */}
               {passoAtual === 2 && (
-                <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 flex gap-3">
-                  <AlertCircle className="text-amber-600 flex-shrink-0" size={20} />
-                  <div className="text-sm text-amber-900">
+                <div className="bg-amber-50 border border-amber-200 rounded-lg p-3 md:p-4 flex gap-2 md:gap-3">
+                  <AlertCircle className="text-amber-600 flex-shrink-0" size={18} />
+                  <div className="text-xs md:text-sm text-amber-900">
                     <strong>Dica de Busca:</strong> A busca é case-insensitive (não diferencia maiúsculas de minúsculas) e procura em todos os campos simultaneamente. Teste diferentes palavras-chave para melhores resultados.
                   </div>
                 </div>
               )}
 
               {passoAtual === 4 && (
-                <div className="bg-red-50 border border-red-200 rounded-lg p-4 flex gap-3">
-                  <AlertCircle className="text-red-600 flex-shrink-0" size={20} />
-                  <div className="text-sm text-red-900">
+                <div className="bg-red-50 border border-red-200 rounded-lg p-3 md:p-4 flex gap-2 md:gap-3">
+                  <AlertCircle className="text-red-600 flex-shrink-0" size={18} />
+                  <div className="text-xs md:text-sm text-red-900">
                     <strong>ATENÇÃO:</strong> Deletar é permanente e não pode ser desfeito. Sempre verifique que está deletando o profissional CORRETO antes de confirmar.
                   </div>
                 </div>
@@ -377,13 +377,13 @@ export default function ProfissionaisAjuda({ open, onOpenChange }) {
 
           {/* Índice de Passos (Desktop) */}
           <div className="hidden md:block bg-gray-50 rounded-lg p-4">
-            <p className="text-sm font-semibold text-gray-700 mb-3">Todos os Passos:</p>
-            <div className="grid grid-cols-2 gap-2">
+            <p className="text-xs md:text-sm font-semibold text-gray-700 mb-3">Todos os Passos:</p>
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
               {passos.map((p, idx) => (
                 <button
                   key={idx}
                   onClick={() => irParaPasso(idx)}
-                  className={`text-left text-sm p-2 rounded transition-colors ${
+                  className={`text-left text-xs md:text-sm p-2 rounded transition-colors ${
                     idx === passoAtual
                       ? 'bg-blue-500 text-white font-semibold'
                       : idx < passoAtual
@@ -399,20 +399,22 @@ export default function ProfissionaisAjuda({ open, onOpenChange }) {
         </div>
 
         {/* Botões de Navegação */}
-        <div className="flex justify-between gap-3 pt-6 border-t">
+        <div className="flex flex-col md:flex-row gap-2 md:gap-3 pt-4 md:pt-6 border-t">
           <Button
             variant="outline"
             onClick={passoAnterior}
             disabled={passoAtual === 0}
+            className="text-xs md:text-sm w-full md:w-auto"
           >
             ← Anterior
           </Button>
 
-          <div className="flex gap-2">
+          <div className="flex gap-1 md:gap-2 flex-col md:flex-row w-full">
             {passoAtual > 0 && (
               <Button
                 variant="ghost"
                 onClick={() => irParaPasso(0)}
+                className="text-xs md:text-sm w-full md:w-auto"
               >
                 Voltar ao Início
               </Button>
@@ -422,17 +424,17 @@ export default function ProfissionaisAjuda({ open, onOpenChange }) {
           {passoAtual === passos.length - 1 ? (
             <Button
               onClick={() => onOpenChange(false)}
-              className="bg-green-600 hover:bg-green-700 text-white"
+              className="bg-green-600 hover:bg-green-700 text-white text-xs md:text-sm w-full md:w-auto"
             >
               Entendi! Fechar Guia
             </Button>
           ) : (
             <Button
               onClick={proximoPasso}
-              className="bg-blue-600 hover:bg-blue-700 text-white flex items-center gap-2"
+              className="bg-blue-600 hover:bg-blue-700 text-white flex items-center justify-center gap-2 text-xs md:text-sm w-full md:w-auto"
             >
               Próximo
-              <ChevronRight size={16} />
+              <ChevronRight size={14} className="md:w-4 md:h-4" />
             </Button>
           )}
         </div>

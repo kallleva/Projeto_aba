@@ -161,10 +161,10 @@ export default function Pacientes() {
   return (
     <div className="page-section">
       {/* Header */}
-      <div className="flex justify-between items-center mb-8">
+      <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-4 mb-6 md:mb-8">
         <div>
-          <h1 className="page-title">Pacientes</h1>
-          <p className="page-subtitle">
+          <h1 className="page-title text-2xl md:text-3xl">Pacientes</h1>
+          <p className="page-subtitle text-sm md:text-base">
             {user?.tipo_usuario === 'RESPONSAVEL' 
               ? 'Meus pacientes' 
               : 'Gerencie os pacientes cadastrados no sistema'
@@ -174,13 +174,13 @@ export default function Pacientes() {
         <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
           {user?.tipo_usuario !== 'RESPONSAVEL' && (
             <DialogTrigger asChild>
-              <Button onClick={resetForm} style={{ backgroundColor: '#0ea5e9', color: 'white' }}>
+              <Button onClick={resetForm} className="w-full md:w-auto" style={{ backgroundColor: '#0ea5e9', color: 'white' }}>
                 <Plus className="mr-2 h-4 w-4" />
                 Novo Paciente
               </Button>
             </DialogTrigger>
           )}
-          <DialogContent className="sm:max-w-[425px]">
+          <DialogContent className="sm:max-w-[425px] w-full max-h-screen md:max-h-fit overflow-y-auto">
             <DialogHeader>
               <DialogTitle>
                 {editingPaciente ? 'Editar Paciente' : 'Novo Paciente'}
@@ -271,7 +271,7 @@ export default function Pacientes() {
         </div>
 
         {/* Campo de busca */}
-        <div className="flex items-center gap-2 mb-6 bg-gray-50 px-3 py-2 rounded-lg" style={{ maxWidth: '300px' }}>
+        <div className="flex items-center gap-2 mb-6 bg-gray-50 px-3 py-2 rounded-lg w-full md:w-auto" style={{ maxWidth: '100%' }}>
           <Search className="h-4 w-4 text-gray-500" />
           <Input
             className="border-0 bg-gray-50 p-0"
@@ -292,32 +292,32 @@ export default function Pacientes() {
             <p className="alert-content">Nenhum paciente encontrado.</p>
           </div>
         ) : (
-          <div className="overflow-x-auto">
-            <table className="table">
+          <div className="overflow-x-auto -mx-3 md:mx-0">
+            <table className="table w-full text-xs md:text-sm">
               <thead>
-                <tr>
-                  <th>Nome</th>
-                  <th>Idade</th>
-                  <th>Responsável</th>
-                  <th>Contato</th>
-                  <th>Diagnóstico</th>
-                  <th>Profissionais</th>
-                  <th style={{ textAlign: 'right' }}>Ações</th>
+                <tr className="bg-gray-50">
+                  <th className="text-left">Nome</th>
+                  <th className="text-left hidden sm:table-cell">Idade</th>
+                  <th className="text-left hidden md:table-cell">Responsável</th>
+                  <th className="text-left hidden lg:table-cell">Contato</th>
+                  <th className="text-left">Diagnóstico</th>
+                  <th className="text-left hidden md:table-cell">Profissionais</th>
+                  <th className="text-left">Ações</th>
                 </tr>
               </thead>
               <tbody>
                 {filteredPacientes.map((paciente) => (
-                  <tr key={paciente.id}>
-                    <td className="font-medium">{paciente.nome}</td>
-                    <td>{calcularIdade(paciente.data_nascimento)}</td>
-                    <td>{paciente.responsavel}</td>
-                    <td>{paciente.contato}</td>
-                    <td>
-                      <span className={`badge ${getDiagnosticoBadgeClass(paciente.diagnostico)}`}>
+                  <tr key={paciente.id} className="border-b hover:bg-gray-50">
+                    <td className="font-medium py-2 md:py-3 text-xs md:text-sm">{paciente.nome}</td>
+                    <td className="py-2 md:py-3 hidden sm:table-cell text-xs md:text-sm">{calcularIdade(paciente.data_nascimento)}</td>
+                    <td className="py-2 md:py-3 hidden md:table-cell text-xs md:text-sm">{paciente.responsavel}</td>
+                    <td className="py-2 md:py-3 hidden lg:table-cell text-xs md:text-sm">{paciente.contato}</td>
+                    <td className="py-2 md:py-3">
+                      <span className={`badge text-xs ${getDiagnosticoBadgeClass(paciente.diagnostico)}`}>
                         {paciente.diagnostico}
                       </span>
                     </td>
-                    <td>
+                    <td className="py-2 md:py-3 hidden md:table-cell">
                       <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.25rem' }}>
                         {vinculosPorPaciente[paciente.id]?.length > 0 ? (
                           vinculosPorPaciente[paciente.id].slice(0, 2).map((vinculo) => (
@@ -335,23 +335,25 @@ export default function Pacientes() {
                         )}
                       </div>
                     </td>
-                    <td style={{ textAlign: 'right' }}>
-                      <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '0.5rem' }}>
+                    <td className="py-2 md:py-3">
+                      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(36px, 1fr))', gap: '0.25rem' }}>
                         <Button
                           variant="outline"
                           size="sm"
                           onClick={() => handleViewVinculos(paciente)}
                           title="Ver Vínculos"
+                          className="h-8 w-8 md:h-9 md:w-9 p-0"
                         >
-                          <Users className="h-4 w-4" />
+                          <Users className="h-3 w-3 md:h-4 md:w-4" />
                         </Button>
                         <Button
                           variant="outline"
                           size="sm"
                           onClick={() => handleViewRelatorio(paciente)}
                           title="Ver Relatório"
+                          className="h-8 w-8 md:h-9 md:w-9 p-0"
                         >
-                          <BarChart3 className="h-4 w-4" />
+                          <BarChart3 className="h-3 w-3 md:h-4 md:w-4" />
                         </Button>
                         {user?.tipo_usuario !== 'RESPONSAVEL' && (
                           <>
@@ -360,16 +362,18 @@ export default function Pacientes() {
                               size="sm"
                               onClick={() => handleEdit(paciente)}
                               title="Editar"
+                              className="h-8 w-8 md:h-9 md:w-9 p-0"
                             >
-                              <Edit className="h-4 w-4" />
+                              <Edit className="h-3 w-3 md:h-4 md:w-4" />
                             </Button>
                             <Button
                               variant="outline"
                               size="sm"
                               onClick={() => handleDelete(paciente.id)}
                               title="Excluir"
+                              className="h-8 w-8 md:h-9 md:w-9 p-0"
                             >
-                              <Trash2 className="h-4 w-4" />
+                              <Trash2 className="h-3 w-3 md:h-4 md:w-4" />
                             </Button>
                           </>
                         )}

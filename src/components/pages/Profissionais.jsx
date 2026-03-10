@@ -166,23 +166,23 @@ export default function Profissionais() {
     <div className="space-y-6">
       {/* Header */}
       <div className="page-section">
-        <div className="flex items-center justify-between gap-4 flex-wrap">
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3 md:gap-4">
           <div>
-            <h1 className="page-title">Profissionais</h1>
-            <p className="page-subtitle">
+            <h1 className="page-title text-2xl md:text-3xl">Profissionais</h1>
+            <p className="page-subtitle text-sm md:text-base">
               {isProfissional 
                 ? 'Meus dados profissionais'
                 : 'Gerencie os profissionais cadastrados no sistema'
               }
             </p>
           </div>
-          <div className="flex gap-2 flex-wrap">
+          <div className="flex gap-2 flex-col sm:flex-row w-full sm:w-auto">
             <Button 
               onClick={() => setAjudaOpen(true)}
               variant="outline"
-              className="flex items-center gap-2"
+              className="flex items-center justify-center gap-2 text-xs md:text-sm w-full sm:w-auto"
             >
-              <HelpCircle className="h-4 w-4" />
+              <HelpCircle className="h-3 w-3 md:h-4 md:w-4" />
               Ajuda
             </Button>
             {isAdmin && (
@@ -192,8 +192,9 @@ export default function Profissionais() {
                   setDialogOpen(true)
                 }}
                 style={{ backgroundColor: '#0ea5e9', color: 'white' }}
+                className="flex items-center justify-center gap-2 text-xs md:text-sm w-full sm:w-auto"
               >
-                <Plus className="mr-2 h-4 w-4" />
+                <Plus className="h-3 w-3 md:h-4 md:w-4" />
                 Novo Profissional
               </Button>
             )}
@@ -204,8 +205,9 @@ export default function Profissionais() {
                   setDialogOpen(true)
                 }}
                 style={{ backgroundColor: '#0ea5e9', color: 'white' }}
+                className="flex items-center justify-center gap-2 text-xs md:text-sm w-full sm:w-auto"
               >
-                <Edit className="mr-2 h-4 w-4" />
+                <Edit className="h-3 w-3 md:h-4 md:w-4" />
                 Editar Meus Dados
               </Button>
             )}
@@ -215,12 +217,12 @@ export default function Profissionais() {
 
       {/* Dialog Único para Edição/Criação */}
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-        <DialogContent className="sm:max-w-[425px]">
+        <DialogContent className="sm:max-w-[425px] w-full max-h-screen md:max-h-fit overflow-y-auto p-4 md:p-6">
           <DialogHeader>
-            <DialogTitle>
+            <DialogTitle className="text-lg md:text-xl">
               {editingProfissional ? 'Editar Profissional' : 'Novo Profissional'}
             </DialogTitle>
-            <DialogDescription>
+            <DialogDescription className="text-xs md:text-sm">
               {editingProfissional 
                 ? 'Edite as informações do profissional abaixo.'
                 : 'Preencha as informações do novo profissional abaixo.'
@@ -228,54 +230,59 @@ export default function Profissionais() {
             </DialogDescription>
           </DialogHeader>
           <form onSubmit={handleSubmit}>
-            <div className="grid gap-4 py-4">
+            <div className="grid gap-3 md:gap-4 py-4">
               <div className="grid gap-2">
-                <Label htmlFor="nome">Nome</Label>
+                <Label htmlFor="nome" className="text-xs md:text-sm">Nome</Label>
                 <Input
                   id="nome"
                   value={formData.nome}
                   onChange={(e) => setFormData({...formData, nome: e.target.value})}
+                  className="text-xs md:text-sm"
                   required
                 />
               </div>
               <div className="grid gap-2">
-                <Label htmlFor="especialidade">Especialidade</Label>
+                <Label htmlFor="especialidade" className="text-xs md:text-sm">Especialidade</Label>
                 <Input
                   id="especialidade"
                   value={formData.especialidade}
                   onChange={(e) => setFormData({...formData, especialidade: e.target.value})}
                   placeholder="Ex: Psicólogo, Fonoaudiólogo, Terapeuta Ocupacional"
+                  className="text-xs md:text-sm"
                   required
                 />
               </div>
               <div className="grid gap-2">
-                <Label htmlFor="email">Email</Label>
+                <Label htmlFor="email" className="text-xs md:text-sm">Email</Label>
                 <Input
                   id="email"
                   type="email"
                   value={formData.email}
                   onChange={(e) => setFormData({...formData, email: e.target.value})}
+                  className="text-xs md:text-sm"
                   required
                 />
               </div>
               <div className="grid gap-2">
-                <Label htmlFor="telefone">Telefone</Label>
+                <Label htmlFor="telefone" className="text-xs md:text-sm">Telefone</Label>
                 <Input
                   id="telefone"
                   value={formData.telefone}
                   onChange={(e) => setFormData({...formData, telefone: e.target.value})}
                   placeholder="(11) 99999-9999"
+                  className="text-xs md:text-sm"
                   required
                 />
               </div>
             </div>
-            <DialogFooter>
-              <Button type="button" variant="outline" onClick={() => setDialogOpen(false)}>
+            <DialogFooter className="flex flex-col-reverse sm:flex-row gap-2 sm:gap-3">
+              <Button type="button" variant="outline" onClick={() => setDialogOpen(false)} className="text-xs md:text-sm">
                 Cancelar
               </Button>
               <Button 
                 type="submit"
                 style={{ backgroundColor: '#0ea5e9', color: 'white' }}
+                className="text-xs md:text-sm"
               >
                 {editingProfissional ? 'Atualizar' : 'Cadastrar'}
               </Button>
@@ -286,13 +293,13 @@ export default function Profissionais() {
 
       {/* Card Principal - Lista de Profissionais */}
       <div className="card-spacing">
-        <div className="section-header mb-6">
+        <div className="section-header mb-4 md:mb-6">
           <Users size={18} className="color-info-icon" />
-          <h2 className="section-header-title">
+          <h2 className="section-header-title text-lg md:text-xl">
             {isProfissional ? 'Meu Perfil' : 'Lista de Profissionais'}
           </h2>
         </div>
-        <p className="card-text mb-6">
+        <p className="card-text mb-4 md:mb-6 text-sm md:text-base">
           {isProfissional 
             ? 'Visualize suas informações profissionais'
             : 'Visualize e gerencie todos os profissionais cadastrados'
@@ -301,11 +308,11 @@ export default function Profissionais() {
 
         {/* Campo de busca - apenas para ADMIN */}
         {isAdmin && (
-          <div className="mb-6 flex items-center gap-3 max-w-md">
-            <Search size={18} className="color-neutral-icon" />
+          <div className="mb-4 md:mb-6 flex items-center gap-2 md:gap-3 w-full md:max-w-md">
+            <Search size={16} className="color-neutral-icon flex-shrink-0" />
             <Input
-              className="flex-1"
-              placeholder="Buscar por nome, especialidade, email ou telefone..."
+              className="flex-1 text-xs md:text-sm"
+              placeholder="Buscar profissional..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
             />
@@ -316,51 +323,56 @@ export default function Profissionais() {
         {loading ? (
           <div className="text-center py-12">
             <div className="animate-spin rounded-full h-10 w-10 border-4 mx-auto" style={{borderColor: 'var(--color-info-200)', borderTopColor: 'var(--color-info-500)'}}></div>
-            <p className="mt-4 card-text font-medium">Carregando profissionais...</p>
+            <p className="mt-4 card-text font-medium text-xs md:text-sm">Carregando profissionais...</p>
           </div>
         ) : profissionaisFiltrados.length === 0 ? (
           <div className="alert alert-info">
             <AlertCircle size={18} />
             <div className="alert-content">
-              <p className="font-medium">Nenhum profissional encontrado</p>
-              {search && isAdmin && <p className="text-sm mt-1">Tente ajustar seus critérios de busca</p>}
+              <p className="font-medium text-sm">Nenhum profissional encontrado</p>
+              {search && isAdmin && <p className="text-xs mt-1">Tente ajustar seus critérios de busca</p>}
             </div>
           </div>
         ) : (
-          <div className="overflow-x-auto">
-            <table className="table">
+          <div className="overflow-x-auto -mx-3 md:mx-0">
+            <table className="table w-full text-xs md:text-sm">
               <thead>
-                <tr>
-                  <th>Nome</th>
-                  <th>Especialidade</th>
-                  <th>Email</th>
-                  <th>Telefone</th>
-                  <th className="text-right">Ações</th>
+                <tr className="bg-gray-50">
+                  <th className="text-left">Nome</th>
+                  <th className="text-left hidden sm:table-cell">Especialidade</th>
+                  <th className="text-left hidden lg:table-cell">Email</th>
+                  <th className="text-left hidden md:table-cell">Telefone</th>
+                  <th className="text-left">Ações</th>
                 </tr>
               </thead>
               <tbody>
                 {profissionaisFiltrados.map((profissional) => (
-                  <tr key={profissional.id}>
-                    <td className="font-semibold">{profissional.nome}</td>
-                    <td>
-                      <span className={`badge ${getEspecialidadeBadgeVariant(profissional.especialidade)}`}>
+                  <tr key={profissional.id} className="border-b hover:bg-gray-50">
+                    <td className="font-semibold py-2 md:py-3">
+                      <div>
+                        <div className="text-xs md:text-sm">{profissional.nome}</div>
+                        <div className="sm:hidden text-xs text-gray-600 mt-1">{profissional.especialidade}</div>
+                      </div>
+                    </td>
+                    <td className="py-2 md:py-3 hidden sm:table-cell">
+                      <span className={`badge text-xs ${getEspecialidadeBadgeVariant(profissional.especialidade)}`}>
                         {profissional.especialidade}
                       </span>
                     </td>
-                    <td>
-                      <div className="flex items-center gap-2">
-                        <Mail size={16} className="color-neutral-icon flex-shrink-0" />
-                        <span className="text-sm">{profissional.email}</span>
+                    <td className="py-2 md:py-3 hidden lg:table-cell">
+                      <div className="flex items-center gap-1">
+                        <Mail size={12} className="color-neutral-icon flex-shrink-0 hidden md:block" />
+                        <span className="text-xs md:text-sm truncate">{profissional.email}</span>
                       </div>
                     </td>
-                    <td>
-                      <div className="flex items-center gap-2">
-                        <Phone size={16} className="color-neutral-icon flex-shrink-0" />
-                        <span className="text-sm">{profissional.telefone}</span>
+                    <td className="py-2 md:py-3 hidden md:table-cell">
+                      <div className="flex items-center gap-1">
+                        <Phone size={12} className="color-neutral-icon flex-shrink-0 hidden md:block" />
+                        <span className="text-xs md:text-sm">{profissional.telefone}</span>
                       </div>
                     </td>
-                    <td>
-                      <div className="flex justify-end gap-2">
+                    <td className="py-2 md:py-3">
+                      <div className="flex gap-1">
                         <Button
                           variant="outline"
                           size="sm"
@@ -368,20 +380,20 @@ export default function Profissionais() {
                             handleEdit(profissional)
                             setDialogOpen(true)
                           }}
-                          className="h-9 w-9 p-0"
+                          className="h-8 w-8 md:h-9 md:w-9 p-0"
                           title="Editar"
                         >
-                          <Edit size={16} />
+                          <Edit size={14} className="md:w-4 md:h-4" />
                         </Button>
                         {isAdmin && (
                           <Button
                             variant="outline"
                             size="sm"
                             onClick={() => handleDelete(profissional.id)}
-                            className="h-9 w-9 p-0"
+                            className="h-8 w-8 md:h-9 md:w-9 p-0"
                             title="Deletar"
                           >
-                            <Trash2 size={16} />
+                            <Trash2 size={14} className="md:w-4 md:h-4" />
                           </Button>
                         )}
                       </div>

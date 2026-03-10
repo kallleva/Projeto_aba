@@ -167,15 +167,15 @@ export default function RespostaMetaGrid() {
     <div className="space-y-6">
       {/* Header */}
       <div className="page-section">
-        <div className="flex justify-between items-center gap-4 flex-wrap">
+        <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-4">
           <div>
-            <h1 className="page-title">Respostas de Metas</h1>
-            <p className="page-subtitle">Registre e gerencie a execução das metas terapêuticas</p>
+            <h1 className="page-title text-2xl md:text-3xl">Respostas de Metas</h1>
+            <p className="page-subtitle text-sm md:text-base">Registre e gerencie a execução das metas terapêuticas</p>
           </div>
           <Button 
             onClick={() => navigate('/resposta-meta/edit/novo')}
             style={{ backgroundColor: '#8b5cf6', color: 'white' }}
-            className="flex items-center gap-2"
+            className="flex items-center gap-2 w-full md:w-auto justify-center md:justify-start"
           >
             <Plus className="h-4 w-4" />
             📋 Nova Resposta
@@ -185,16 +185,16 @@ export default function RespostaMetaGrid() {
 
       {/* Filtros */}
       <div className="card-spacing">
-        <div className="section-header mb-6">
+        <div className="section-header mb-4 md:mb-6">
           <Search size={18} className="color-info-icon" />
-          <h2 className="section-header-title">Filtros de Busca</h2>
+          <h2 className="section-header-title text-lg md:text-xl">Filtros de Busca</h2>
         </div>
-        <p className="card-text mb-6">Filtre as respostas por meta, paciente e data</p>
+        <p className="card-text mb-4 md:mb-6 text-sm md:text-base">Filtre as respostas por meta, paciente e data</p>
         
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4 mb-6">
           {/* Paciente */}
           <div className="grid gap-2">
-            <Label className="text-xs font-semibold">Paciente</Label>
+            <Label className="text-xs md:text-sm font-semibold">Paciente</Label>
             <div className="flex gap-2">
               <Select
                 value={filtros.paciente_id || "todos"}
@@ -225,7 +225,7 @@ export default function RespostaMetaGrid() {
 
           {/* Profissional */}
           <div className="grid gap-2">
-            <Label className="text-xs font-semibold">Profissional</Label>
+            <Label className="text-xs md:text-sm font-semibold">Profissional</Label>
             <div className="flex gap-2">
               <Select
                 value={filtros.profissional_id || "todos"}
@@ -256,7 +256,7 @@ export default function RespostaMetaGrid() {
 
           {/* Data Início */}
           <div className="grid gap-2">
-            <Label className="text-xs font-semibold">Data Início</Label>
+            <Label className="text-xs md:text-sm font-semibold">Data Início</Label>
             <div className="flex gap-2">
               <Input
                 type="date"
@@ -278,7 +278,7 @@ export default function RespostaMetaGrid() {
 
           {/* Data Fim */}
           <div className="grid gap-2">
-            <Label className="text-xs font-semibold">Data Fim</Label>
+            <Label className="text-xs md:text-sm font-semibold">Data Fim</Label>
             <div className="flex gap-2">
               <Input
                 type="date"
@@ -299,11 +299,11 @@ export default function RespostaMetaGrid() {
           </div>
         </div>
 
-        <div className="flex justify-end pt-4 border-t" style={{borderTopColor: 'var(--color-neutral-200)'}}>
+        <div className="flex flex-col md:flex-row md:justify-end gap-3 pt-4 md:pt-6 border-t" style={{borderTopColor: 'var(--color-neutral-200)'}}>
           <Button 
             variant="outline" 
             onClick={limparFiltros}
-            className="flex items-center gap-2"
+            className="flex items-center gap-2 w-full md:w-auto justify-center"
           >
             <X className="h-4 w-4" />
             Limpar Filtros
@@ -313,11 +313,11 @@ export default function RespostaMetaGrid() {
 
       {/* Tabela de Respostas */}
       <div className="card-spacing">
-        <div className="section-header mb-6">
+        <div className="section-header mb-4 md:mb-6">
           <Calendar size={18} className="color-info-icon" />
-          <h2 className="section-header-title">Histórico de Respostas</h2>
+          <h2 className="section-header-title text-lg md:text-xl">Histórico de Respostas</h2>
         </div>
-        <p className="card-text mb-6">
+        <p className="card-text mb-4 md:mb-6 text-sm md:text-base">
           Visualize e gerencie todas as respostas de metas
           {respostasFiltradas.length !== respostas.length && (
             <span style={{color: 'var(--color-info-600)', fontWeight: '600'}}>
@@ -347,56 +347,56 @@ export default function RespostaMetaGrid() {
             </div>
           </div>
         ) : (
-          <div className="overflow-x-auto">
-            <table className="table">
+          <div className="overflow-x-auto -mx-3 md:mx-0">
+            <table className="table w-full text-xs md:text-sm">
               <thead>
-                <tr>
-                  <th>Sessão</th>
-                  <th>Paciente</th>
-                  <th>Profissional</th>
-                  <th>Data</th>
-                  <th>Horário</th>
-                  <th className="text-right">Ações</th>
+                <tr className="bg-gray-50">
+                  <th className="text-left">Sessão</th>
+                  <th className="text-left hidden sm:table-cell">Paciente</th>
+                  <th className="text-left hidden md:table-cell">Profissional</th>
+                  <th className="text-left">Data</th>
+                  <th className="text-left hidden lg:table-cell">Horário</th>
+                  <th className="text-left">Ações</th>
                 </tr>
               </thead>
               <tbody>
                 {respostasPaginadas.map(r => (
-                  <tr key={r.id}>
-                    <td className="font-semibold">{r.sessao || '-'}</td>
-                    <td>{r.paciente_nome}</td>
-                    <td>{r.profissional_nome}</td>
-                    <td>
-                      <span className="text-sm" style={{color: 'var(--color-neutral-700)'}}>
+                  <tr key={r.id} className="border-b hover:bg-gray-50">
+                    <td className="font-semibold py-2 md:py-3 text-xs md:text-sm">{r.sessao || '-'}</td>
+                    <td className="py-2 md:py-3 hidden sm:table-cell text-xs md:text-sm" style={{color: 'var(--color-neutral-700)'}}>{r.paciente_nome}</td>
+                    <td className="py-2 md:py-3 hidden md:table-cell text-xs md:text-sm" style={{color: 'var(--color-neutral-700)'}}>{r.profissional_nome}</td>
+                    <td className="py-2 md:py-3">
+                      <span className="text-xs md:text-sm" style={{color: 'var(--color-neutral-700)'}}>
                         {formatData(r.data_sessao)}
                       </span>
                     </td>
-                    <td>
-                      <span className="text-sm" style={{color: 'var(--color-neutral-700)'}}>
+                    <td className="py-2 md:py-3 hidden lg:table-cell">
+                      <span className="text-xs md:text-sm" style={{color: 'var(--color-neutral-700)'}}>
                         {r.hr_inicio && r.hr_termino 
                           ? `${formatHora(r.hr_inicio)} - ${formatHora(r.hr_termino)}`
                           : '-'
                         }
                       </span>
                     </td>
-                    <td>
-                      <div className="flex justify-end gap-2">
+                    <td className="py-2 md:py-3">
+                      <div className="flex gap-1">
                         <Button 
                           variant="outline" 
                           size="sm" 
                           onClick={() => handleEdit(r)}
-                          className="h-9 w-9 p-0"
+                          className="h-8 w-8 md:h-9 md:w-9 p-0"
                           title="Editar"
                         >
-                          <Edit size={16} />
+                          <Edit size={14} className="md:w-4 md:h-4" />
                         </Button>
                         <Button 
                           variant="outline" 
                           size="sm" 
                           onClick={() => handleDelete(r.id)}
-                          className="h-9 w-9 p-0"
+                          className="h-8 w-8 md:h-9 md:w-9 p-0"
                           title="Deletar"
                         >
-                          <Trash2 size={16} />
+                          <Trash2 size={14} className="md:w-4 md:h-4" />
                         </Button>
                       </div>
                     </td>
@@ -407,20 +407,21 @@ export default function RespostaMetaGrid() {
 
             {/* Paginação */}
             {totalPaginas > 1 && (
-              <div className="flex items-center justify-between mt-6 pt-6 border-t" style={{borderTopColor: 'var(--color-neutral-200)'}}>
-                <p className="text-sm" style={{color: 'var(--color-neutral-600)'}}>
+              <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3 md:gap-6 mt-4 md:mt-6 pt-4 md:pt-6 border-t" style={{borderTopColor: 'var(--color-neutral-200)'}}>
+                <p className="text-xs md:text-sm" style={{color: 'var(--color-neutral-600)'}}>
                   Mostrando {indiceInicio + 1} a {Math.min(indiceFim, respostasFiltradas.length)} de {respostasFiltradas.length} respostas
                 </p>
-                <div className="flex gap-2">
+                <div className="flex flex-col md:flex-row gap-2 items-center justify-center md:justify-end">
                   <Button
                     variant="outline"
                     size="sm"
                     onClick={() => setPaginaAtual(p => Math.max(1, p - 1))}
                     disabled={paginaAtual === 1}
+                    className="text-xs md:text-sm"
                   >
                     ← Anterior
                   </Button>
-                  <div className="flex gap-1">
+                  <div className="flex gap-0.5 md:gap-1 overflow-x-auto">
                     {Array.from({ length: totalPaginas }, (_, i) => i + 1).map(pagina => (
                       <Button
                         key={pagina}
@@ -428,7 +429,7 @@ export default function RespostaMetaGrid() {
                         size="sm"
                         onClick={() => setPaginaAtual(pagina)}
                         style={paginaAtual === pagina ? { backgroundColor: 'var(--color-info-500)', color: 'white' } : {}}
-                        className="h-9 w-9 p-0"
+                        className="h-8 w-8 md:h-9 md:w-9 p-0 text-xs"
                       >
                         {pagina}
                       </Button>
@@ -439,6 +440,7 @@ export default function RespostaMetaGrid() {
                     size="sm"
                     onClick={() => setPaginaAtual(p => Math.min(totalPaginas, p + 1))}
                     disabled={paginaAtual === totalPaginas}
+                    className="text-xs md:text-sm"
                   >
                     Próxima →
                   </Button>

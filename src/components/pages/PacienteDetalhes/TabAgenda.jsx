@@ -129,15 +129,15 @@ export default function TabAgenda({ pacienteId, agendamentos, profissionais, onU
 
   return (
     <div className="space-y-4">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-4">
         <div>
-          <h3 className="text-lg font-semibold">Agendamentos</h3>
-          <p className="text-sm text-muted-foreground">
+          <h3 className="text-lg md:text-xl font-semibold">Agendamentos</h3>
+          <p className="text-xs md:text-sm text-muted-foreground">
             Gerencie os agendamentos deste paciente
           </p>
         </div>
-        <Button onClick={() => setShowAgendamentoForm(true)}>
-          <Plus className="mr-2 h-4 w-4" />
+        <Button onClick={() => setShowAgendamentoForm(true)} className="w-full md:w-auto">
+          <Plus className="mr-2 h-3 w-3 md:h-4 md:w-4" />
           Novo Agendamento
         </Button>
       </div>
@@ -215,12 +215,12 @@ export default function TabAgenda({ pacienteId, agendamentos, profissionais, onU
                 </div>
               </div>
 
-              <div className="flex justify-end gap-2">
-                <Button type="button" variant="outline" onClick={resetAgendamentoForm}>
+              <div className="flex flex-col-reverse sm:flex-row justify-end gap-2 md:gap-3">
+                <Button type="button" variant="outline" onClick={resetAgendamentoForm} className="w-full sm:w-auto">
                   Cancelar
                 </Button>
-                <Button type="submit">
-                  <Save className="mr-2 h-4 w-4" />
+                <Button type="submit" className="w-full sm:w-auto">
+                  <Save className="mr-2 h-3 w-3 md:h-4 md:w-4" />
                   Salvar
                 </Button>
               </div>
@@ -241,34 +241,35 @@ export default function TabAgenda({ pacienteId, agendamentos, profissionais, onU
         ) : (
           agendamentos.map(agendamento => (
             <Card key={agendamento.id}>
-              <CardContent className="pt-6">
-                <div className="flex items-start justify-between">
-                  <div className="space-y-2">
-                    <div className="flex items-center gap-2">
-                      <Clock className="h-4 w-4" />
-                      <span className="font-semibold">{formatDateTime(agendamento.data_hora)}</span>
-                      <Badge variant={getStatusBadgeVariant(agendamento.status)}>
+              <CardContent className="pt-4 md:pt-6">
+                <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
+                  <div className="space-y-2 flex-1">
+                    <div className="flex flex-col md:flex-row md:items-center gap-2 md:gap-3">
+                      <Clock className="h-3 w-3 md:h-4 md:w-4 flex-shrink-0" />
+                      <span className="text-xs md:text-sm font-semibold">{formatDateTime(agendamento.data_hora)}</span>
+                      <Badge variant={getStatusBadgeVariant(agendamento.status)} className="w-fit">
                         {getStatusLabel(agendamento.status)}
                       </Badge>
                       {agendamento.presente !== null && (
-                        <Badge variant={getPresencaBadgeVariant(agendamento.presente)}>
+                        <Badge variant={getPresencaBadgeVariant(agendamento.presente)} className="w-fit">
                           {getPresencaLabel(agendamento.presente)}
                         </Badge>
                       )}
                     </div>
-                    <p className="text-sm text-muted-foreground">
+                    <p className="text-xs md:text-sm text-muted-foreground">
                       Duração: {agendamento.duracao_minutos} min
                       {agendamento.profissional_nome && ` • Com: ${agendamento.profissional_nome}`}
                     </p>
                     {agendamento.observacoes && (
-                      <p className="text-sm">{agendamento.observacoes}</p>
+                      <p className="text-xs md:text-sm">{agendamento.observacoes}</p>
                     )}
-                    <div className="flex gap-2 mt-2">
+                    <div className="flex flex-col sm:flex-row gap-2 mt-3">
                       <Button
                         variant="outline"
                         size="sm"
                         onClick={() => handleUpdatePresenca(agendamento.id, true)}
                         disabled={agendamento.presente === true}
+                        className="text-xs md:text-sm"
                       >
                         Presente
                       </Button>
@@ -277,25 +278,28 @@ export default function TabAgenda({ pacienteId, agendamentos, profissionais, onU
                         size="sm"
                         onClick={() => handleUpdatePresenca(agendamento.id, false)}
                         disabled={agendamento.presente === false}
+                        className="text-xs md:text-sm"
                       >
                         Faltou
                       </Button>
                     </div>
                   </div>
-                  <div className="flex gap-2">
+                  <div className="flex gap-1 md:gap-2 flex-shrink-0">
                     <Button
                       variant="outline"
                       size="sm"
                       onClick={() => handleEditAgendamento(agendamento)}
+                      className="h-8 w-8 md:h-9 md:w-9 p-0"
                     >
-                      <Edit className="h-4 w-4" />
+                      <Edit className="h-3 w-3 md:h-4 md:w-4" />
                     </Button>
                     <Button
                       variant="destructive"
                       size="sm"
                       onClick={() => handleDeleteAgendamento(agendamento.id)}
+                      className="h-8 w-8 md:h-9 md:w-9 p-0"
                     >
-                      <Trash2 className="h-4 w-4" />
+                      <Trash2 className="h-3 w-3 md:h-4 md:w-4" />
                     </Button>
                   </div>
                 </div>

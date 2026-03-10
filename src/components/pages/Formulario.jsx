@@ -56,15 +56,16 @@ export default function Formularios() {
     <div className="space-y-6">
       {/* Header */}
       <div className="page-section">
-        <div className="flex justify-between items-center gap-4 flex-wrap">
+        <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-4">
           <div>
-            <h1 className="page-title">Protocolo</h1>
-            <p className="page-subtitle">
+            <h1 className="page-title text-2xl md:text-3xl">Protocolo</h1>
+            <p className="page-subtitle text-sm md:text-base">
               Cadastre modelos de Protocolo com perguntas estruturadas para checklists diários
             </p>
           </div>
           <Button 
             onClick={() => navigate("/protocolo/novo")}
+            className="w-full md:w-auto justify-center md:justify-start"
             style={{ backgroundColor: '#0ea5e9', color: 'white' }}
           >
             <Plus className="mr-2 h-4 w-4" />
@@ -75,11 +76,11 @@ export default function Formularios() {
 
       {/* Lista de Protocolos */}
       <div className="card-spacing">
-        <div className="section-header mb-6">
+        <div className="section-header mb-4 md:mb-6">
           <FileText size={18} className="color-info-icon" />
-          <h2 className="section-header-title">Lista de Protocolo</h2>
+          <h2 className="section-header-title text-lg md:text-xl">Lista de Protocolo</h2>
         </div>
-        <p className="card-text mb-6">Visualize e gerencie os Protocolos criados para checklists diários</p>
+        <p className="card-text mb-4 md:mb-6 text-sm md:text-base">Visualize e gerencie os Protocolos criados para checklists diários</p>
 
         {loading ? (
           <div className="text-center py-12">
@@ -104,16 +105,16 @@ export default function Formularios() {
           </div>
         ) : (
           <div className="overflow-x-auto">
-            <table className="table">
+            <table className="table w-full text-xs md:text-sm">
               <thead>
-                <tr>
-                  <th>Nome</th>
-                  <th>Categoria</th>
-                  <th>Descrição</th>
-                  <th>Perguntas</th>
-                  <th>Tipos</th>
-                  <th>Última Atualização</th>
-                  <th className="text-right">Ações</th>
+                <tr className="bg-gray-50">
+                  <th className="text-left">Nome</th>
+                  <th className="text-left hidden sm:table-cell">Categoria</th>
+                  <th className="text-left hidden md:table-cell">Descrição</th>
+                  <th className="text-left">Perguntas</th>
+                  <th className="text-left hidden lg:table-cell">Tipos</th>
+                  <th className="text-left hidden md:table-cell">Atualização</th>
+                  <th className="text-left">Ações</th>
                 </tr>
               </thead>
               <tbody>
@@ -123,32 +124,32 @@ export default function Formularios() {
                   const temPercentual = tiposPerguntas.includes('PERCENTUAL')
                   
                   return (
-                    <tr key={form.id}>
-                      <td>
-                        <div className="flex items-center gap-2">
-                          <FileText size={16} className="color-info-icon flex-shrink-0" />
-                          <span className="font-semibold">{form.nome}</span>
+                    <tr key={form.id} className="border-b hover:bg-gray-50">
+                      <td className="py-2 md:py-3">
+                        <div className="flex items-center gap-1 md:gap-2">
+                          <FileText size={14} className="color-info-icon flex-shrink-0 hidden md:block" />
+                          <span className="font-semibold text-xs md:text-sm">{form.nome}</span>
                         </div>
                       </td>
-                      <td>
+                      <td className="py-2 md:py-3 hidden sm:table-cell">
                         <span className="badge badge-info text-xs">
                           {form.categoria || 'Sem categoria'}
                         </span>
                       </td>
-                      <td>
+                      <td className="py-2 md:py-3 hidden md:table-cell">
                         <div 
-                          className="max-w-xs truncate text-sm"
+                          className="max-w-xs truncate text-xs md:text-sm"
                           title={form.descricao}
                           style={{color: 'var(--color-neutral-700)'}}
                         >
                           {form.descricao || '-'}
                         </div>
                       </td>
-                      <td>
-                        <span className="font-semibold text-sm">{form.perguntas?.length || 0}</span>
+                      <td className="py-2 md:py-3">
+                        <span className="font-semibold text-xs md:text-sm">{form.perguntas?.length || 0}</span>
                       </td>
-                      <td>
-                        <div className="flex flex-wrap gap-1">
+                      <td className="py-2 md:py-3 hidden lg:table-cell">
+                        <div className="flex flex-wrap gap-0.5 md:gap-1">
                           {temFormula && (
                             <span className="badge badge-warning text-xs" title="Com Fórmulas">
                               📐 Fórmula
@@ -160,13 +161,13 @@ export default function Formularios() {
                             </span>
                           )}
                           {!temFormula && !temPercentual && (
-                            <span style={{color: 'var(--color-neutral-400)', fontSize: '0.875rem'}}>-</span>
+                            <span style={{color: 'var(--color-neutral-400)', fontSize: '0.75rem'}}>-</span>
                           )}
                         </div>
                       </td>
-                      <td>
-                        <div className="flex items-center gap-1 text-sm" style={{color: 'var(--color-neutral-600)'}}>
-                          <Clock size={14} />
+                      <td className="py-2 md:py-3 hidden md:table-cell">
+                        <div className="flex items-center gap-0.5 md:gap-1 text-xs md:text-sm" style={{color: 'var(--color-neutral-600)'}}>
+                          <Clock size={12} className="hidden md:block" />
                           {form.atualizadoEm || form.atualizado_em ? 
                             new Date(form.atualizadoEm || form.atualizado_em).toLocaleDateString('pt-BR') : 
                             (form.criadoEm || form.criado_em ? 
@@ -176,25 +177,25 @@ export default function Formularios() {
                           }
                         </div>
                       </td>
-                      <td>
-                        <div className="flex justify-end gap-2">
+                      <td className="py-2 md:py-3">
+                        <div className="flex gap-1">
                           <Button 
                             variant="outline" 
                             size="sm" 
                             onClick={() => navigate(`/protocolo/${form.id}`)}
-                            className="h-9 w-9 p-0"
+                            className="h-8 w-8 md:h-9 md:w-9 p-0"
                             title="Editar Protocolo"
                           >
-                            <Edit size={16} />
+                            <Edit size={14} className="md:w-4 md:h-4" />
                           </Button>
                           <Button 
                             variant="outline" 
                             size="sm" 
                             onClick={() => handleDeleteFormulario(form.id)}
-                            className="h-9 w-9 p-0"
+                            className="h-8 w-8 md:h-9 md:w-9 p-0"
                             title="Excluir Protocolo"
                           >
-                            <Trash2 size={16} />
+                            <Trash2 size={14} className="md:w-4 md:h-4" />
                           </Button>
                         </div>
                       </td>
