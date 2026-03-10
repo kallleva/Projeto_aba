@@ -228,6 +228,10 @@ class ApiService {
     return this.request('/planos-terapeuticos')
   }
 
+  async getPlanoTerapeutico(id) {
+    return this.request(`/planos-terapeuticos/${id}`)
+  }
+
   async createPlanoTerapeutico(data) {
     return this.request('/planos-terapeuticos', {
       method: 'POST',
@@ -805,6 +809,47 @@ class ApiService {
 
   async deleteRespostaTabulacao(id) {
     return this.request(`/resposta-tabulacao/${id}`, {
+      method: 'DELETE',
+    })
+  }
+
+  // ========================
+  // Resposta de Metas
+  // ========================
+  async listarRespostasMeta(filters = {}) {
+    const params = new URLSearchParams()
+    Object.entries(filters).forEach(([key, value]) => {
+      if (value) params.append(key, value)
+    })
+    
+    const url = params.toString() ? `/resposta-meta?${params.toString()}` : '/resposta-meta'
+    return this.request(url)
+  }
+
+  async getRespostasMeta() {
+    return this.request('/resposta-meta')
+  }
+
+  async getRespostaMeta(id) {
+    return this.request(`/resposta-meta/${id}`)
+  }
+
+  async createRespostaMeta(data) {
+    return this.request('/resposta-meta', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    })
+  }
+
+  async updateRespostaMeta(id, data) {
+    return this.request(`/resposta-meta/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(data),
+    })
+  }
+
+  async deleteRespostaMeta(id) {
+    return this.request(`/resposta-meta/${id}`, {
       method: 'DELETE',
     })
   }

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { useParams, useNavigate } from "react-router-dom"
+import { useParams, useNavigate, useSearchParams } from "react-router-dom"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -12,12 +12,17 @@ import ApiService from "@/lib/api"
 export default function MetasTerapeuticasEditor() {
   const { id } = useParams()
   const navigate = useNavigate()
+  const [searchParams] = useSearchParams()
   const { toast } = useToast()
+  
+  const planoIdFromQuery = searchParams.get('planoId')
+  const initialRedirectPath = planoIdFromQuery ? `/planos-terapeuticos/edit/${planoIdFromQuery}` : '/metas-terapeuticas'
   
   const [loading, setLoading] = useState(id && id !== 'novo')
   const [saving, setSaving] = useState(false)
   const [planos, setPlanos] = useState([])
   const [formularios, setFormularios] = useState([])
+  const [redirectPath, setRedirectPath] = useState(initialRedirectPath)
   
   const [selectedFormularios, setSelectedFormularios] = useState([])
   const [objetivos, setObjetivos] = useState([])
@@ -61,6 +66,11 @@ export default function MetasTerapeuticasEditor() {
       setLoading(true)
       const meta = await ApiService.getMetaTerapeutica(metaId)
       
+      // Se não veio planoId na query, extrair da meta e usar para redirecionar
+      if (!planoIdFromQuery && meta.plano_id) {
+        setRedirectPath(`/planos-terapeuticos/edit/${meta.plano_id}`)
+      }
+      
       setFormData({
         plano_id: meta.plano_id.toString(),
         titulo: meta.titulo,
@@ -73,7 +83,7 @@ export default function MetasTerapeuticasEditor() {
       setObjetivos(meta.objetivos || [])
     } catch (error) {
       toast({ title: "Erro", description: "Erro ao carregar meta", variant: "destructive" })
-      navigate('/metas-terapeuticas')
+      navigate(redirectPath)
     } finally {
       setLoading(false)
     }
@@ -134,7 +144,7 @@ export default function MetasTerapeuticasEditor() {
         toast({ title: "Sucesso", description: "Meta criada com sucesso!" })
       }
 
-      navigate('/metas-terapeuticas')
+      navigate(redirectPath)
     } catch (error) {
       toast({ title: "Erro", description: error.message, variant: "destructive" })
     } finally {
@@ -162,7 +172,7 @@ export default function MetasTerapeuticasEditor() {
             <Button
               variant="outline"
               size="icon"
-              onClick={() => navigate('/metas-terapeuticas')}
+              onClick={() => navigate(redirectPath)}
               className="h-10 w-10"
             >
               <ArrowLeft className="h-4 w-4" />
@@ -177,7 +187,7 @@ export default function MetasTerapeuticasEditor() {
           <div className="flex gap-2">
             <Button
               variant="outline"
-              onClick={() => navigate('/metas-terapeuticas')}
+              onClick={() => navigate(redirectPath)}
               className="h-10 px-4"
             >
               <X className="h-4 w-4 mr-2" />
@@ -452,7 +462,7 @@ export default function MetasTerapeuticasEditor() {
               <Button
                 type="button"
                 variant="outline"
-                onClick={() => navigate('/metas-terapeuticas')}
+                onClick={() => navigate(redirectPath)}
                 className="h-10 px-4"
               >
                 Cancelar

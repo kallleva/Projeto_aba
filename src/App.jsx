@@ -11,6 +11,7 @@ import Pacientes from '@/components/pages/Pacientes'
 import PacienteDetalhes from '@/components/pages/PacienteDetalhes'
 import Profissionais from '@/components/pages/Profissionais'
 import PlanosTerapeuticos from '@/components/pages/PlanosTerapeuticos'
+import PlanosTerapeuticosEditor from '@/components/pages/PlanosTerapeuticosEditor'
 import MetasTerapeuticas from '@/components/pages/MetasTerapeuticas'
 import MetasTerapeuticasEditor from '@/components/pages/MetasTerapeuticasEditor'
 import RegistroDiario from '@/components/pages/RegistroDiario'
@@ -29,6 +30,8 @@ import Tabulacao from '@/components/pages/Tabulacao'
 import TabulacaoEditor from '@/components/pages/TabulacaoEditor'
 import RespostaTabulacaoGrid from '@/components/pages/RespostaTabulacaoGrid'
 import RespostaTabulacaoEditor from '@/components/pages/RespostaTabulacaoEditor'
+import RespostaMetaGrid from '@/components/pages/RespostaMetaGrid'
+import RespostaMetaEditor from '@/components/pages/RespostaMetaEditor'
 import './App.css'
 
 function App() {
@@ -76,6 +79,11 @@ function App() {
                     <Route path="/planos-terapeuticos" element={
                       <ProtectedRoute requireRole={['PROFISSIONAL', 'ADMIN']}>
                         <PlanosTerapeuticos />
+                      </ProtectedRoute>
+                    } />
+                    <Route path="/planos-terapeuticos/edit/:id" element={
+                      <ProtectedRoute requireRole={['PROFISSIONAL', 'ADMIN']}>
+                        <PlanosTerapeuticosEditor />
                       </ProtectedRoute>
                     } />
                     <Route path="/metas-terapeuticas" element={
@@ -185,6 +193,23 @@ function App() {
                     <Route path="/resposta-tabulacao/edit/:id" element={
                       <ProtectedRoute requireRole={['PROFISSIONAL', 'ADMIN']}>
                         <RespostaTabulacaoEditor />
+                      </ProtectedRoute>
+                    } />
+
+                    {/* PROFISSIONAL + ADMIN - Respostas de Metas */}
+                    <Route path="/resposta-meta" element={
+                      <ProtectedRoute requireRole={['PROFISSIONAL', 'ADMIN']}>
+                        <RespostaMetaGrid />
+                      </ProtectedRoute>
+                    } />
+                    <Route path="/resposta-meta/edit/novo" element={
+                      <ProtectedRoute requireRole={['PROFISSIONAL', 'ADMIN']}>
+                        <RespostaMetaEditor />
+                      </ProtectedRoute>
+                    } />
+                    <Route path="/resposta-meta/edit/:id" element={
+                      <ProtectedRoute requireRole={['PROFISSIONAL', 'ADMIN']}>
+                        <RespostaMetaEditor />
                       </ProtectedRoute>
                     } />
                   </Routes>

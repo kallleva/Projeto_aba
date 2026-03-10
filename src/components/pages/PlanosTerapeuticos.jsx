@@ -1,30 +1,20 @@
 import { useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-import { Textarea } from '@/components/ui/textarea'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
 import { useToast } from '@/hooks/use-toast'
 import { Plus, Edit, Trash2, User, UserCheck, Search, AlertCircle, FileText, HelpCircle } from 'lucide-react'
 import ApiService from '@/lib/api'
 import PlanosTerapeuticosAjuda from './PlanosTerapeuticosAjuda'
 
 export default function PlanosTerapeuticos() {
+  const navigate = useNavigate()
   const [planos, setPlanos] = useState([])
   const [pacientes, setPacientes] = useState([])
   const [profissionais, setProfissionais] = useState([])
   const [loading, setLoading] = useState(true)
   const [ajudaOpen, setAjudaOpen] = useState(false)
-  const [dialogOpen, setDialogOpen] = useState(false)
-  const [editingPlano, setEditingPlano] = useState(null)
-  const [searchTerm, setSearchTerm] = useState("") // 🔎 filtro de busca
-  const [formData, setFormData] = useState({
-    paciente_id: '',
-    profissional_id: '',
-    objetivo_geral: '',
-    data_criacao: ''
-  })
+  const [searchTerm, setSearchTerm] = useState("")
   const { toast } = useToast()
 
   useEffect(() => {
@@ -53,51 +43,6 @@ export default function PlanosTerapeuticos() {
     }
   }
 
-  const handleSubmit = async (e) => {
-    e.preventDefault()
-    try {
-      const dataToSend = {
-        ...formData,
-        paciente_id: parseInt(formData.paciente_id),
-        profissional_id: parseInt(formData.profissional_id)
-      }
-
-      if (editingPlano) {
-        await ApiService.updatePlanoTerapeutico(editingPlano.id, dataToSend)
-        toast({
-          title: 'Sucesso',
-          description: 'Plano terapêutico atualizado com sucesso!'
-        })
-      } else {
-        await ApiService.createPlanoTerapeutico(dataToSend)
-        toast({
-          title: 'Sucesso',
-          description: 'Plano terapêutico criado com sucesso!'
-        })
-      }
-      setDialogOpen(false)
-      resetForm()
-      loadData()
-    } catch (error) {
-      toast({
-        title: 'Erro',
-        description: error.message,
-        variant: 'destructive'
-      })
-    }
-  }
-
-  const handleEdit = (plano) => {
-    setEditingPlano(plano)
-    setFormData({
-      paciente_id: plano.paciente_id.toString(),
-      profissional_id: plano.profissional_id.toString(),
-      objetivo_geral: plano.objetivo_geral,
-      data_criacao: plano.data_criacao
-    })
-    setDialogOpen(true)
-  }
-
   const handleDelete = async (id) => {
     if (window.confirm('Tem certeza que deseja excluir este plano terapêutico?')) {
       try {
@@ -117,16 +62,6 @@ export default function PlanosTerapeuticos() {
     }
   }
 
-  const resetForm = () => {
-    setFormData({
-      paciente_id: '',
-      profissional_id: '',
-      objetivo_geral: '',
-      data_criacao: ''
-    })
-    setEditingPlano(null)
-  }
-
   const formatDate = (dateString) => {
     if (!dateString) return '-'
     const [ano, mes, dia] = dateString.split('T')[0].split('-')
@@ -144,14 +79,14 @@ export default function PlanosTerapeuticos() {
     <div className="space-y-6">
       {/* Header */}
       <div className="page-section">
-        <div className="flex justify-between items-center gap-4 flex-wrap">
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
           <div>
             <h1 className="page-title">Planos Terapêuticos</h1>
             <p className="page-subtitle">
               Gerencie os planos terapêuticos dos pacientes
             </p>
           </div>
-          <div className="flex gap-2 flex-wrap">
+          <div className="flex gap-2 flex-wrap w-full md:w-auto">
             <Button 
               onClick={() => setAjudaOpen(true)}
               variant="outline"
@@ -160,103 +95,13 @@ export default function PlanosTerapeuticos() {
               <HelpCircle className="h-4 w-4" />
               Ajuda
             </Button>
-            <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-              <DialogTrigger asChild>
-                <Button 
-                  onClick={resetForm}
-                  style={{ backgroundColor: '#0ea5e9', color: 'white' }}
-                >
-                  <Plus className="mr-2 h-4 w-4" />
-                  Novo Plano
-                </Button>
-              </DialogTrigger>
-            <DialogContent className="sm:max-w-[500px]">
-              <DialogHeader>
-                <DialogTitle>
-                  {editingPlano ? 'Editar Plano Terapêutico' : 'Novo Plano Terapêutico'}
-                </DialogTitle>
-                <DialogDescription>
-                  {editingPlano 
-                    ? 'Edite as informações do plano terapêutico abaixo.'
-                    : 'Preencha as informações do novo plano terapêutico abaixo.'
-                  }
-                </DialogDescription>
-              </DialogHeader>
-              <form onSubmit={handleSubmit}>
-                <div className="grid gap-4 py-4">
-                  <div className="grid gap-2">
-                    <Label htmlFor="paciente_id">Paciente</Label>
-                    <Select 
-                      value={formData.paciente_id} 
-                      onValueChange={(value) => setFormData({...formData, paciente_id: value})}
-                      required
-                    >
-                      <SelectTrigger>
-                        <SelectValue placeholder="Selecione o paciente" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {pacientes.map((paciente) => (
-                          <SelectItem key={paciente.id} value={paciente.id.toString()}>
-                            {paciente.nome} - {paciente.diagnostico}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  <div className="grid gap-2">
-                    <Label htmlFor="profissional_id">Profissional</Label>
-                    <Select 
-                      value={formData.profissional_id} 
-                      onValueChange={(value) => setFormData({...formData, profissional_id: value})}
-                      required
-                    >
-                      <SelectTrigger>
-                        <SelectValue placeholder="Selecione o profissional" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {profissionais.map((profissional) => (
-                          <SelectItem key={profissional.id} value={profissional.id.toString()}>
-                            {profissional.nome} - {profissional.especialidade}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  <div className="grid gap-2">
-                    <Label htmlFor="objetivo_geral">Objetivo Geral</Label>
-                    <Textarea
-                      id="objetivo_geral"
-                      value={formData.objetivo_geral}
-                      onChange={(e) => setFormData({...formData, objetivo_geral: e.target.value})}
-                      placeholder="Descreva o objetivo geral do plano terapêutico..."
-                      rows={4}
-                      required
-                    />
-                  </div>
-                  <div className="grid gap-2">
-                    <Label htmlFor="data_criacao">Data de Criação</Label>
-                    <Input
-                      id="data_criacao"
-                      type="date"
-                      value={formData.data_criacao}
-                      onChange={(e) => setFormData({...formData, data_criacao: e.target.value})}
-                    />
-                  </div>
-                </div>
-                <DialogFooter>
-                  <Button type="button" variant="outline" onClick={() => setDialogOpen(false)}>
-                    Cancelar
-                  </Button>
-                  <Button 
-                    type="submit"
-                    style={{ backgroundColor: '#0ea5e9', color: 'white' }}
-                  >
-                    {editingPlano ? 'Atualizar Plano' : 'Criar Plano'}
-                  </Button>
-                </DialogFooter>
-              </form>
-            </DialogContent>
-            </Dialog>
+            <Button 
+              onClick={() => navigate('/planos-terapeuticos/edit/novo')}
+              style={{ backgroundColor: '#0ea5e9', color: 'white' }}
+            >
+              <Plus className="mr-2 h-4 w-4" />
+              Novo Plano
+            </Button>
           </div>
         </div>
       </div>
@@ -272,10 +117,10 @@ export default function PlanosTerapeuticos() {
         <p className="card-text mb-6">Visualize e gerencie todos os planos terapêuticos cadastrados</p>
 
         {/* Campo de busca */}
-        <div className="mb-6 flex items-center gap-3 max-w-md">
-          <Search size={18} className="color-neutral-icon" />
+        <div className="mb-6 flex flex-col sm:flex-row items-start sm:items-center gap-3 w-full">
+          <Search size={18} className="color-neutral-icon flex-shrink-0 mt-1 sm:mt-0" />
           <Input
-            className="flex-1"
+            className="flex-1 w-full sm:w-auto"
             placeholder="Buscar por paciente, profissional ou objetivo..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
@@ -302,9 +147,9 @@ export default function PlanosTerapeuticos() {
               <thead>
                 <tr>
                   <th>Paciente</th>
-                  <th>Profissional</th>
-                  <th>Objetivo Geral</th>
-                  <th>Data de Criação</th>
+                  <th className="hidden sm:table-cell">Profissional</th>
+                  <th className="hidden md:table-cell">Objetivo Geral</th>
+                  <th className="hidden lg:table-cell">Data de Criação</th>
                   <th className="text-right">Ações</th>
                 </tr>
               </thead>
@@ -317,13 +162,13 @@ export default function PlanosTerapeuticos() {
                         <span className="font-semibold">{plano.paciente_nome}</span>
                       </div>
                     </td>
-                    <td>
+                    <td className="hidden sm:table-cell">
                       <div className="flex items-center gap-2">
                         <UserCheck size={16} className="color-success-icon flex-shrink-0" />
                         <span>{plano.profissional_nome}</span>
                       </div>
                     </td>
-                    <td>
+                    <td className="hidden md:table-cell">
                       <div 
                         className="max-w-xs truncate text-sm" 
                         title={plano.objetivo_geral}
@@ -332,17 +177,17 @@ export default function PlanosTerapeuticos() {
                         {plano.objetivo_geral}
                       </div>
                     </td>
-                    <td>
+                    <td className="hidden lg:table-cell">
                       <span className="text-sm font-medium" style={{color: 'var(--color-neutral-600)'}}>
                         {formatDate(plano.data_criacao)}
                       </span>
                     </td>
                     <td>
-                      <div className="flex justify-end gap-2">
+                      <div className="flex justify-end gap-2 flex-wrap">
                         <Button
                           variant="outline"
                           size="sm"
-                          onClick={() => handleEdit(plano)}
+                          onClick={() => navigate(`/planos-terapeuticos/edit/${plano.id}`)}
                           className="h-9 w-9 p-0"
                           title="Editar"
                         >
